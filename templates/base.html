@@ -1,0 +1,22 @@
+<!-- Plantilla común de la que van a heredar el resto de plantillas -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static '' %}"> <!-- Logito que sale en la pestaña de la web -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block style %}{% endblock %}
+    {% block script %}{% endblock %}
+</head>
+<body>
+
+        <!-- Aqui va a ir el código de cada plantilla individual -->
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+</body>
+</html>
