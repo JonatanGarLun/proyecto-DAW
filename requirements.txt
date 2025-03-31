@@ -1,0 +1,6 @@
+Django>=5.0
+django-extensions
+djangorestframework
+pillow
+ipdb
+httpie
