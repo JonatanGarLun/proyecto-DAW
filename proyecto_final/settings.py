@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-!oh)5!7z2xwoa=qerta5o7!$hiz@t)t9@gago_p$n6c(c#el=s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] # A LA HORA DE DOCKERIZAR Y SUBIR A AWS HAY QUE CAMBIARLO POR LOS HOSTS DE .TECH
+ALLOWED_HOSTS = ['*'] # A LA HORA DE DOCKERIZAR Y SUBIR A AWS HAY QUE CAMBIARLO POR LA IP ELÁSTICA DE LA INSTANCIA
 
 
 # Application definition
