@@ -5,12 +5,21 @@ from django.contrib.auth.models import User
 # JUGADOR
 # ------------------
 class Jugador(models.Model):
+
+    ALINEACIONES = [
+        ('Aliado', 'Aliado'),
+        ('Neutro', 'Neutro'),
+        ('Enemigo', 'Enemigo'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    correo = models.EmailField(max_length=100, unique=True)
     nombre = models.CharField(max_length=100)
     clase = models.CharField(max_length=50)
     nivel = models.IntegerField(default=1)
     experiencia = models.IntegerField(default=0)
     experiencia_maxima = models.IntegerField(default=1000)
+    alineacion = models.CharField(max_length=10, choices=ALINEACIONES, default='Neutro')
 
     salud = models.IntegerField(default=100)
     salud_maxima = models.IntegerField(default=100)
@@ -45,7 +54,6 @@ class Objeto(models.Model):
         ("consumible", "Consumible"),
         ("material", "Material"),
         ("equipable", "Equipable"),
-        ("misión", "Misión"),
     ]
     nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=20, choices=TIPO_OBJETO)

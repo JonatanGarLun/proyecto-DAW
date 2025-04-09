@@ -1,0 +1,166 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: url('../img/fondo_galaxia.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.login-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: rgba(10, 10, 30, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.logo {
+    width: 100px;
+    margin: 0 auto 1rem auto;
+    display: block;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    padding: 0.8rem;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+select option {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.divider {
+    border: 1px solid gold;
+    width: 100%;
+}
+
+.carousel-section {
+    text-align: center;
+}
+
+.carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.side-img {
+    width: 80px;
+    height: auto;
+    opacity: 0.4;
+    filter: blur(1px);
+    transition: 0.3s ease-in-out;
+}
+
+.main-img {
+    width: 150px;
+    height: auto;
+    border: 2px solid gold;
+    border-radius: 12px;
+    box-shadow: 0 0 10px gold;
+    transition: 0.3s ease-in-out;
+}
+
+.arrow {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: gold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.arrow:hover {
+    transform: scale(1.2);
+}
+
+.image-description {
+    margin-top: 1rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 1rem;
+    border-radius: 10px;
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.animated-text {
+    animation: ascendText 12s linear infinite;
+    position: relative;
+    margin: 0;
+}
+
+@keyframes ascendText {
+    0% { top: 100%; }
+    100% { top: -100%; }
+}
+
+button[type="submit"] {
+    padding: 0.8rem 1.5rem;
+    background-color: gold;
+    color: #1a1a1a;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    align-self: center;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #f2c400;
+}
+
+.form-errors {
+    color: #ff8080;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .main-img {
+        width: 120px;
+    }
+
+    .side-img {
+        width: 60px;
+    }
+
+    .carousel {
+        flex-direction: column;
+    }
+
+    .login-container {
+        padding: 1rem;
+    }
+}

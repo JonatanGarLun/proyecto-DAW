@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+</head>
+<body>
+    <form class="login-container" method="POST" action="">
+        {% csrf_token %}
+        <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo App" class="logo">
+
+        <h2>Datos Usuario</h2>
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-section">
+            {{ form.username.label_tag }} {{ form.username }}
+            {{ form.email.label_tag }} {{ form.email }}
+            {{ form.password1.label_tag }} {{ form.password1 }}
+            {{ form.password2.label_tag }} {{ form.password2 }}
+        </div>
+
+        <hr class="divider">
+
+        <h2>Datos Juegos</h2>
+        <div class="form-section">
+            {{ form.nombre.label_tag }} {{ form.nombre }}
+            {{ form.alineacion.label_tag }} {{ form.alineacion }}
+            {{ form.clase }} <!-- Hidden input -->
+        </div>
+
+        <section class="carousel-section">
+            <h2>Selecciona tu clase</h2>
+            <div class="carousel">
+                <button type="button" class="arrow left" onclick="moverCarrusel(-1)">&#8592;</button>
+                <img id="prevImg" class="side-img" src="" alt="Clase anterior">
+                <img id="mainImg" class="main-img" src="" alt="Clase actual" data-clase="">
+                <img id="nextImg" class="side-img" src="" alt="Clase siguiente">
+                <button type="button" class="arrow right" onclick="moverCarrusel(1)">&#8594;</button>
+            </div>
+
+            <div class="image-description">
+                <p class="animated-text" id="textoClase"></p>
+            </div>
+        </section>
+
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <script src="{% static 'js/carrusel.js' %}"></script>
+</body>
+</html>

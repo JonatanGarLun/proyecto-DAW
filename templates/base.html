@@ -1,22 +1,154 @@
-<!-- Plantilla común de la que van a heredar el resto de plantillas -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
+    <title>{% block title %}Mi Aplicación{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{% static '' %}"> <!-- Logito que sale en la pestaña de la web -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    {% block style %}{% endblock %}
-    {% block script %}{% endblock %}
+    {% load static %}
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: none; /* Fondo sin color */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #0e001a; /* Morado oscuro tipo galaxia */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid gold;
+            flex-wrap: wrap;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #1e0030;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 0.5rem 1rem;
+            display: block;
+            text-decoration: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #2a0040;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        button {
+            background-color: #2a0040;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #3d0060;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            background: none; /* fondo transparente */
+        }
+
+        footer {
+            background-color: #1D1D1D;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-        <!-- Aqui va a ir el código de cada plantilla individual -->
-        <div class="content">
-            {% block content %}{% endblock %}
+    <header>
+        <div class="logo">
+            <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo">
         </div>
+        <div class="nav-buttons">
+            <button onclick="toggleMusic()">🎵</button>
+            <div class="dropdown">
+                <button>Enlaces 🔽</button>
+                <div class="dropdown-content">
+                    <a href="#">Enlace 1</a>
+                    <a href="#">Enlace 2</a>
+                </div>
+            </div>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        &copy; {{ current_year|default:"2025" }} Mi Aplicación. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        let isPlaying = false;
+        let audio = new Audio("{% static 'resources/songs/gorila-315977.mp3' %}");
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
 </body>
 </html>
