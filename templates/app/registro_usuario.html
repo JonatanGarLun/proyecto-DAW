@@ -18,19 +18,49 @@
         {% endif %}
 
         <div class="form-section">
-            {{ form.username.label_tag }} {{ form.username }}
-            {{ form.email.label_tag }} {{ form.email }}
-            {{ form.password1.label_tag }} {{ form.password1 }}
-            {{ form.password2.label_tag }} {{ form.password2 }}
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {{ form.username }}
+            {% for error in form.username.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
+
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% for error in form.email.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
+
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            {{ form.password1 }}
+            {% for error in form.password1.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
+
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            {{ form.password2 }}
+            {% for error in form.password2.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
         </div>
 
         <hr class="divider">
 
         <h2>Datos Juegos</h2>
         <div class="form-section">
-            {{ form.nombre.label_tag }} {{ form.nombre }}
-            {{ form.alineacion.label_tag }} {{ form.alineacion }}
-            {{ form.clase }} <!-- Hidden input -->
+            <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+            {{ form.nombre }}
+            {% for error in form.nombre.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
+
+            <label for="{{ form.alineacion.id_for_label }}">{{ form.alineacion.label }}</label>
+            {{ form.alineacion }}
+            {% for error in form.alineacion.errors %}
+                <div class="form-errors">{{ error }}</div>
+            {% endfor %}
+
+            <!-- Campo oculto clase -->
+            <input type="hidden" id="id_clase" name="clase" value="{{ form.clase.value|default:'' }}">
         </div>
 
         <section class="carousel-section">
