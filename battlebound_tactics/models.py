@@ -30,9 +30,9 @@ class Jugador(models.Model):
 #    chance_critico = models.FloatField(default=0.0)
 #    chance_esquivar = models.FloatField(default=0.0)
 
-    defensa = models.IntegerField(default=10)
+    defensa = models.IntegerField(default=15)
     velocidad = models.IntegerField(default=10)
-    ataque = models.IntegerField(default=10)
+    ataque = models.IntegerField(default=20)
 
     arma = models.ForeignKey("Arma", on_delete=models.SET_NULL, null=True, blank=True)
     accesorio = models.ForeignKey("Accesorio", on_delete=models.SET_NULL, null=True, blank=True)
@@ -44,7 +44,7 @@ class Jugador(models.Model):
     piedras_dragon = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.user.username} - {self.nombre}"
 
 # ------------------
 # MOCHILA Y OBJETOS
