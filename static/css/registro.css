@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('../img/fondo_galaxia.jpg') no-repeat center center fixed;
+    background: url('static/resources/imgs/gif_registro.gif') no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, sans-serif;
     color: white;
@@ -20,7 +20,7 @@ body {
 }
 
 .logo {
-    width: 100px;
+    width: 180px;
     margin: 0 auto 1rem auto;
     display: block;
 }
@@ -111,14 +111,14 @@ select option {
 }
 
 .animated-text {
-    animation: ascendText 12s linear infinite;
+    animation: descendText 12s linear infinite;
     position: relative;
     margin: 0;
 }
 
-@keyframes ascendText {
-    0% { top: 100%; }
-    100% { top: -100%; }
+@keyframes descendText {
+    0% { top: -100%; }
+    100% { top: 100%; }
 }
 
 button[type="submit"] {

@@ -1,11 +1,20 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
     <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <style>
+        body{
+            background-image: url("{% static 'resources/imgs/registro_fondo.png' %}");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            
+        }
+    </style>
 </head>
 <body>
     <form class="login-container" method="POST" action="">
