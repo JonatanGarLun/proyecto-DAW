@@ -1,11 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
- <h1>Login</h1>
-    <p>Vete al registro ostia<a href="{% url 'registro' %}"> ya</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'resources/imgs/login.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .login-container {
+        max-width: 500px;
+        margin: 4rem auto;
+        padding: 2rem;
+        background-color: rgba(15, 15, 30, 0.85);
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .logo.grande {
+        width: 220px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    h2 {
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
+
+    .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 0.8rem;
+        border: none;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    input::placeholder {
+        color: #ccc;
+    }
+
+    button[type="submit"] {
+        padding: 0.9rem 1.5rem;
+        background-color: gold;
+        color: #1a1a1a;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #f2c400;
+    }
+
+    .form-errors {
+        color: #ffb3b3;
+        background-color: rgba(255, 0, 0, 0.1);
+        padding: 0.5rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .registro {
+        font-size: 0.9rem;
+    }
+
+    .registro a {
+        color: gold;
+        text-decoration: underline;
+    }
+</style>
+
+<form class="login-container" method="post" action="">
+    {% csrf_token %}
+    <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo del juego" class="logo grande">
+
+    <h2>Iniciar sesión</h2>
+
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="form-section">
+        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="registro">
+        <p>¿Eres un nuevo aventurero? Comienza tu aventura <a href="{% url 'registro' %}">aquí</a></p>
+    </div>
+
+    <button type="submit">Emprende tu aventura</button>
+</form>
+{% endblock %}

@@ -45,6 +45,15 @@ const clases = [
             "El surgimiento de los Sangre Astral tras la caída de un meteorito repleto de energía pura representa, para ellos, un error cósmico. Los Magos los consideran inestables, peligrosos. Han intentado sellar su poder más de una vez.\n" +
             "También han chocado con los Guerreros, que protegieron ruinas del Relicario sin permiso. Aunque los usan como protectores temporales, no los consideran iguales.\n" +
             "Utilizan textos perdidos de los Errantes del Viento (Arqueros), lo cual ha generado una cooperación distante pero respetuosa."
+    },
+    {
+        nombre: "Sangre Astral",
+        imagen: "/static/resources/Pixelarts/sangre_astral/sangre_astral_base.png",
+        descripcion: "Legado: Hijos de la Nova\n" +
+            "Durante un eclipse triple, siete meteoritos cayeron sobre el mundo, trayendo consigo la energía viva del cosmos. Quienes sobrevivieron al impacto fueron transformados: cuerpos más fuertes, almas en llamas, y una furia incontrolable. Nacieron los Sangre Astral.\n" +
+            "No eligieron este destino, y por eso muchos vagan buscando propósito. Han sido perseguidos por Magos, estudiados por Guerreros, y entrenados por Luchadores que comprenden el dolor de ser arma y escudo a la vez.\n" +
+            "Los Espiritualistas les temen, y los Arqueros rara vez se cruzan con ellos. Pero algunos Errantes del Viento han guiado a jóvenes Sangre Astral en sus primeros años, cuando aún eran frágiles y confundidos.\n" +
+            "A medida que su poder despierta, muchos Sangre Astral escuchan un llamado, una voz de entre las estrellas. Algo, o alguien, los llama a regresar al cráter del primer impacto…"
     }
 ];
 
@@ -61,9 +70,18 @@ function actualizarCarrusel() {
     document.getElementById('nextImg').src = clases[next].imagen;
     document.getElementById('textoClase').textContent = clases[indiceActual].descripcion;
 
-    // Campo oculto
+    // Actualizar nombre debajo de la imagen
+    document.getElementById('nombreClaseSeleccionada').textContent = clases[indiceActual].nombre;
+
+
+    // Actualizar input hidden del formulario
     document.getElementById('id_clase').value = clases[indiceActual].nombre;
+
 }
+
+// Reiniciar la animación del texto
+const texto = document.getElementById('textoClase');
+texto.textContent = clases[indiceActual].descripcion;
 
 function moverCarrusel(direccion) {
     const total = clases.length;

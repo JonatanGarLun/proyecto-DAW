@@ -8,88 +8,106 @@
     <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
     <link rel="stylesheet" href="{% static 'css/registro.css' %}">
     <style>
-        body{
+        body {
             background-image: url("{% static 'resources/imgs/registro_fondo.png' %}");
             background-repeat: no-repeat;
             background-size: 100% 100%;
-            
+
         }
     </style>
 </head>
 <body>
-    <form class="login-container" method="POST" action="">
-        {% csrf_token %}
-        <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo App" class="logo">
+<form class="login-container" method="POST" action="">
 
-        <h2>Datos Usuario</h2>
-        {% if form.non_field_errors %}
-            <div class="form-errors">{{ form.non_field_errors }}</div>
-        {% endif %}
+    {% csrf_token %}
 
-        <div class="form-section">
-            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-            {{ form.username }}
-            {% for error in form.username.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
+    <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo App" class="logo">
 
-            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-            {{ form.email }}
-            {% for error in form.email.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
+    <h2>Datos Usuario</h2>
 
-            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
-            {{ form.password1 }}
-            {% for error in form.password1.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
+    {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
 
-            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
-            {{ form.password2 }}
-            {% for error in form.password2.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
+    <div class="form-section">
+    
+        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+    
+        {% for error in form.username.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        {{ form.email }}
+    
+        {% for error in form.email.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+        {{ form.password1 }}
+    
+        {% for error in form.password1.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+        {{ form.password2 }}
+    
+        {% for error in form.password2.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+    
+    </div>
+
+    <hr class="divider">
+
+    <h2>Datos Juegos</h2>
+    <div class="form-section">
+    
+        <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+        {{ form.nombre }}
+    
+        {% for error in form.nombre.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <label for="{{ form.alineacion.id_for_label }}">{{ form.alineacion.label }}</label>
+        {{ form.alineacion }}
+    
+        {% for error in form.alineacion.errors %}
+            <div class="form-errors">{{ error }}</div>
+        {% endfor %}
+
+        <!-- Campo oculto clase -->
+        <input type="hidden" id="id_clase" name="clase" value="{{ form.clase.value|default:'' }}">
+    </div>
+
+    <section class="carousel-section">
+        
+        <h2>Selecciona tu clase</h2>
+        
+        <div class="carousel">
+            <button type="button" class="arrow left" onclick="moverCarrusel(-1)">&#8592;</button>
+            <img id="prevImg" class="side-img" src="" alt="Clase anterior">
+            <img id="mainImg" class="main-img" src="" alt="Clase actual" data-clase="">
+            <img id="nextImg" class="side-img" src="" alt="Clase siguiente">
+            <button type="button" class="arrow right" onclick="moverCarrusel(1)">&#8594;</button>
         </div>
-
-        <hr class="divider">
-
-        <h2>Datos Juegos</h2>
-        <div class="form-section">
-            <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
-            {{ form.nombre }}
-            {% for error in form.nombre.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
-
-            <label for="{{ form.alineacion.id_for_label }}">{{ form.alineacion.label }}</label>
-            {{ form.alineacion }}
-            {% for error in form.alineacion.errors %}
-                <div class="form-errors">{{ error }}</div>
-            {% endfor %}
-
-            <!-- Campo oculto clase -->
-            <input type="hidden" id="id_clase" name="clase" value="{{ form.clase.value|default:'' }}">
+        
+        <div class="class-name">
+            <h3 id="nombreClaseSeleccionada"></h3>
         </div>
+        
+        <div class="image-description">
+            <p class="animated-text" id="textoClase"></p>
+        </div>
+    </section>
 
-        <section class="carousel-section">
-            <h2>Selecciona tu clase</h2>
-            <div class="carousel">
-                <button type="button" class="arrow left" onclick="moverCarrusel(-1)">&#8592;</button>
-                <img id="prevImg" class="side-img" src="" alt="Clase anterior">
-                <img id="mainImg" class="main-img" src="" alt="Clase actual" data-clase="">
-                <img id="nextImg" class="side-img" src="" alt="Clase siguiente">
-                <button type="button" class="arrow right" onclick="moverCarrusel(1)">&#8594;</button>
-            </div>
+    <button type="submit">Empieza tu aventura</button>
+</form>
 
-            <div class="image-description">
-                <p class="animated-text" id="textoClase"></p>
-            </div>
-        </section>
-
-        <button type="submit">Registrarse</button>
-    </form>
-
-    <script src="{% static 'js/carrusel.js' %}"></script>
+<script src="{% static 'js/carrusel.js' %}"></script>
 </body>
 </html>

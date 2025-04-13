@@ -13,8 +13,9 @@ from .models import Jugador
 # Create your views here.
 
 # Home
-class HomePageView(TemplateView, LoginRequiredMixin):
+class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/home.html'
+#    redirect_field_name = 'next'
 
 # Registro
 

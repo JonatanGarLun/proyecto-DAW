@@ -1,7 +1,6 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('static/resources/imgs/gif_registro.gif') no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, sans-serif;
     color: white;
@@ -69,21 +68,27 @@ select option {
     flex-wrap: wrap;
 }
 
-.side-img {
-    width: 80px;
-    height: auto;
-    opacity: 0.4;
-    filter: blur(1px);
-    transition: 0.3s ease-in-out;
-}
-
+/* Imagen central del carrusel */
 .main-img {
     width: 150px;
-    height: auto;
+    height: 150px;
+    object-fit: contain;
     border: 2px solid gold;
     border-radius: 12px;
     box-shadow: 0 0 10px gold;
+    background-color: #00000020;
+}
+
+/* Imágenes laterales */
+.side-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    opacity: 0.4;
+    filter: blur(1px);
+    border-radius: 8px;
     transition: 0.3s ease-in-out;
+    background-color: #00000020;
 }
 
 .arrow {
@@ -99,26 +104,40 @@ select option {
     transform: scale(1.2);
 }
 
+.class-name {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: gold;
+    text-align: center;
+}
+
 .image-description {
     margin-top: 1rem;
     background-color: rgba(0, 0, 0, 0.4);
     padding: 1rem;
     border-radius: 10px;
-    max-height: 100px;
+    height: 100px;
     overflow: hidden;
     position: relative;
     text-align: center;
 }
 
+
 .animated-text {
-    animation: descendText 12s linear infinite;
     position: relative;
+    animation: scrollUpLoop 40s linear infinite;
     margin: 0;
+    white-space: pre-line;
 }
 
-@keyframes descendText {
-    0% { top: -100%; }
-    100% { top: 100%; }
+
+@keyframes scrollUpLoop {
+    0% {
+        transform: translateY(45%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
 }
 
 button[type="submit"] {

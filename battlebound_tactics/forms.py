@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from .models import Jugador
@@ -56,3 +56,18 @@ class RegistroForm(forms.ModelForm):
         )
 
         return jugador
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label="Nombre de usuario",
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingresa tu nombre de héroe',
+        })
+    )
+    password = forms.CharField(
+        label="Contraseña",
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Escribe tu contraseña secreta',
+        })
+    )
