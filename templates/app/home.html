@@ -1,6 +1,50 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Página principal{% endblock %}
+
+{% block title %}Pantalla de Inicio{% endblock %}
+
 {% block content %}
-    <h1>Prueba</h1>
+<link rel="stylesheet" href="{% static 'css/inicio.css' %}">
+<script defer src="{% static 'js/inicio.js' %}"></script>
+
+<div class="hud">
+    <div class="hud-izquierda">
+<img src="{% static 'resources/Pixelarts/'|add:jugador.clase|lower|add:'/arquero_base.png' %}" alt="Imagen base">
+        <div class="nivel">Nivel {{ jugador.nivel }}</div>
+        <div class="barra salud">
+            <div class="progreso" style="width: {{ jugador.salud|floatformat:2 }}/{{ jugador.salud_maxima }} * 100%;"></div>
+        </div>
+        <div class="barra energia">
+            <div class="progreso" style="width: {{ jugador.energia_espiritual|floatformat:2 }}/{{ jugador.energia_espiritual_maxima }} * 100%;"></div>
+        </div>
+        <div class="barra exp">
+            <div class="progreso" style="width: {{ jugador.experiencia|floatformat:2 }}/{{ jugador.experiencia_maxima }} * 100%;"></div>
+        </div>
+    </div>
+
+    <div class="hud-central">
+        <div id="pantalla-fade"></div>
+        <img id="imagen-central" src="{% static 'resources/imgs/aventura.png' %}" alt="Vista principal">
+    </div>
+
+    <div class="hud-inferior">
+        <div class="estrella" onclick="navegarIzquierda()">⬅️</div>
+
+        <div class="opciones-menu">
+            {% for opcion in opciones %}
+            <div class="opcion {% if forloop.first %}activa{% endif %}" data-index="{{ forloop.counter0 }}" data-img="{% static opcion.imagen %}" data-url="{% url opcion.url %}">
+                <img src="{% static opcion.imagen %}" alt="{{ opcion.nombre }}">
+                <p>{{ opcion.nombre }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="estrella" onclick="navegarDerecha()">➡️</div>
+    </div>
+
+    <div class="controles">
+        <p>⬅️ ➡️ para navegar | ⏎ Enter para seleccionar</p>
+    </div>
+</div>
+
 {% endblock %}

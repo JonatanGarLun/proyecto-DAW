@@ -38,8 +38,6 @@ class Jugador(models.Model):
     accesorio = models.ForeignKey("Accesorio", on_delete=models.SET_NULL, null=True, blank=True)
     habilidad_pasiva = models.ForeignKey("Pasiva", on_delete=models.SET_NULL, null=True, blank=True)
     medidor_definitiva = models.IntegerField(default=0)
-
-    foto = models.ImageField(upload_to="jugadores/", null=True, blank=True)
     oro = models.IntegerField(default=0)
     piedras_dragon = models.IntegerField(default=0)
 

@@ -1,37 +1,37 @@
 const clases = [
     {
-        nombre: "Arquero",
+        nombre: "arquero",
         imagen: "/static/resources/Pixelarts/arquero/arquero_base.png",
         descripcion: "La Sombra certera\n" +
             "Nadie escapa de su arco, y nadie lo alcanza.\n" +
-            "🏹 “Si puedes verlo, ya es tarde.”\n\n"+"El Arquero domina la agilidad y el daño técnico. Gracias a su altísima probabilidad de esquivar y a su velocidad, puede evitar la mayoría de los golpes enemigos y responder con ataques certeros, incluso ataques especiales adicionales. Cuanto más tiempo pasa en combate, más fuerte se vuelve, acumulando bonificaciones ofensivas y probabilidad de crítico. Es la clase perfecta para jugadores que disfrutan de un estilo de juego rápido, esquivo y demoledor a largo plazo."
+            "🏹 “Si puedes verlo, ya es tarde.”\n\n" + "El Arquero domina la agilidad y el daño técnico. Gracias a su altísima probabilidad de esquivar y a su velocidad, puede evitar la mayoría de los golpes enemigos y responder con ataques certeros, incluso ataques especiales adicionales. Cuanto más tiempo pasa en combate, más fuerte se vuelve, acumulando bonificaciones ofensivas y probabilidad de crítico. Es la clase perfecta para jugadores que disfrutan de un estilo de juego rápido, esquivo y demoledor a largo plazo."
     },
     {
-        nombre: "Espiritualista",
-        imagen: "/static/resources/Pixelarts/espiritualista/Espiritualista_base.png",
+        nombre: "espiritualista",
+        imagen: "/static/resources/Pixelarts/espiritualista/espiritualista_base.png",
         descripcion: "El Eco del Alma\n" +
             "Convierte el dolor en fuerza y la calma en poder.\n" +
-            "🌫️ “Donde otros caen, yo me elevo.”\n\n"+
+            "🌫️ “Donde otros caen, yo me elevo.”\n\n" +
             "El Espiritualista es el maestro de la energía y la transformación espiritual. Aumenta rápidamente su poder si gestiona bien su energía, y reacciona con mejoras significativas cada vez que es atacado. A mitad del combate se vuelve más difícil de derribar, puede ejecutar críticos letales y tiene acceso a una defensa casi impenetrable si es presionado por habilidades especiales. Una clase ideal para soporte ofensivo o duelos técnicos, donde el jugador debe leer al enemigo y contraatacar con precisión mística."
     },
     {
-        nombre: "Guerrero",
+        nombre: "guerrero",
         imagen: "/static/resources/Pixelarts/guerrero/guerrero_base.png",
         descripcion: "El Muro Imparable\n" +
             "Una fuerza bruta que aumenta con cada golpe recibido.\n" +
-            "🗡️ “Cuando el hierro sangra, la guerra empieza.”\n\n"+
+            "🗡️ “Cuando el hierro sangra, la guerra empieza.”\n\n" +
             "El Guerrero es un coloso imparable, diseñado para resistir el daño más brutal y devolverlo con fuerza multiplicada. Su defensa es descomunal desde el primer turno, y cada golpe que recibe lo hace más fuerte. Cuanto más tiempo permanezca en combate, más crítico y ataque acumula, convirtiéndose en una muralla ofensiva impenetrable. Ideal para los jugadores que disfrutan aguantar el frente, crecer por acumulación y terminar aplastando al enemigo con fuerza abrumadora."
     },
     {
-        nombre: "Luchador",
+        nombre: "luchador",
         imagen: "/static/resources/Pixelarts/luchador/luchador_base.png",
         descripcion: "El Puño del Equilibrio y la justicia\n" +
             "Golpea, resiste y se levanta una vez más.\n" +
-            "💥 “Mi cuerpo es mi escudo. Mis puños, mi destino.”\n\n"+
+            "💥 “Mi cuerpo es mi escudo. Mis puños, mi destino.”\n\n" +
             "El Luchador es versatilidad y contundencia combinadas. Equilibrado entre ataque y defensa, puede adaptarse a la situación: realizar técnicas poderosas, defender con guardia automática y curarse cuando está al borde de la muerte. Cuanto más ataca y recibe daño, más se potencia. Es ideal para quienes disfrutan una mezcla de agresividad, resistencia y mecánicas de recuperación, con un pico de poder masivo si la energía espiritual se gestiona bien."
     },
     {
-        nombre: "Mago",
+        nombre: "mago",
         imagen: "/static/resources/Pixelarts/mago/mago_base.png",
         descripcion: "El Tormento Arcano\n" +
             "Un canal de magia pura que se desborda con cada hechizo.\n" +
@@ -39,11 +39,11 @@ const clases = [
             "El Mago es una tormenta desatada de energía espiritual. Especializado en ataques mágicos consecutivos, lanza múltiples habilidades especiales en los primeros turnos, regenerando su energía cada ronda. Acumula poder con cada hechizo y se convierte en un verdadero cañón mágico si sobrevive más allá del turno cinco. Su pasiva le permite adaptarse y devastar todo el campo con precisión, defensa mágica y poder acumulativo."
     },
     {
-        nombre: "Sangre Astral",
-        imagen: "/static/resources/Pixelarts/sangre_astral/sangre_astral_base.png",
+        nombre: "astral",
+        imagen: "/static/resources/Pixelarts/astral/astral_base.png",
         descripcion: "El Renacido del cosmos\n" +
             "Cuanto más cerca de la muerte, más cerca de su verdad.\n" +
-            "🔥 “No me has vencido… solo has despertado mi verdadero yo.”\n\n"+
+            "🔥 “No me has vencido… solo has despertado mi verdadero yo.”\n\n" +
             "Los Sangre Astral son una clase única. Débil al principio, pero con un potencial destructivo que escala con cada golpe recibido y ataque realizado. Gana ataques adicionales, críticos asegurados, guardia permanente y buffs masivos cuando su salud es baja. En el momento más crítico del combate, revive en su forma más poderosa, borrando los efectos negativos y reventando con un daño descomunal. Es la clase más arriesgada pero también la más recompensante del juego, ideal para jugadores que aman el riesgo extremo, las transformaciones y los finales espectaculares."
     }
 ];
@@ -62,7 +62,10 @@ function actualizarCarrusel() {
     document.getElementById('textoClase').textContent = clases[indiceActual].descripcion;
 
     // Actualizar nombre debajo de la imagen
-    document.getElementById('nombreClaseSeleccionada').textContent = clases[indiceActual].nombre;
+    const clase = clases[indiceActual].nombre;
+    document.getElementById('nombreClaseSeleccionada').textContent = clase.charAt(0).toUpperCase() + clase.slice(1).toLowerCase();
+
+    // Actualizar nombre debajo de la imagen
 
 
     // Actualizar input hidden del formulario
