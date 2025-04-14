@@ -2,12 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
-from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-
 from .forms import RegistroForm
-from .models import Jugador
 
 
 # Create your views here.
