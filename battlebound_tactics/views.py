@@ -23,24 +23,24 @@ class HomePageView(LoginRequiredMixin, TemplateView):
             return redirect('registro')
 
         context['jugador'] = jugador
-        context['opciones'] = [
-            {
-                'nombre': 'Aventura',
-                'imagen': 'resources/imgs/aventura_icono.png',
-                'url': 'aventura',
-            },
-            {
-                'nombre': 'Inventario',
-                'imagen': 'resources/imgs/inventario_icono.png',
-                'url': 'inventario',
-            },
-            {
-                'nombre': 'Tienda',
-                'imagen': 'resources/imgs/tienda_icono.png',
-                'url': 'tienda',
-            },
+        #context['opciones'] = [
+        #            {
+        #       'nombre': 'Aventura',
+        #       'imagen': 'resources/imgs/aventura_icono.png',
+        #        'url': 'aventura',
+        #   },
+        #   {
+        #      'nombre': 'Inventario',
+        #       'imagen': 'resources/imgs/inventario_icono.png',
+        #       'url': 'inventario',
+        #   },
+        #   {
+        #       'nombre': 'Tienda',
+        #       'imagen': 'resources/imgs/tienda_icono.png',
+        #       'url': 'tienda',
+        #   },
             # Puedes seguir añadiendo más secciones aquí
-        ]
+        #]
 
         return context
 
