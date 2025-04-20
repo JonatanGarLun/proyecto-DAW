@@ -1,140 +1,164 @@
-body {
-    margin: 0;
-    background-color: black;
-    color: white;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
+/* static/css/inicio.css */
+
+/* Ajustar el contenedor principal */
+.game-container {
+  position: relative;
+  width: 100%;
+  min-height: 80vh;
+  margin: 0 auto;
+  background-color: #f3f3f3; /* color de fondo temporal */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.hud {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
+/* HUD Superior Izquierda */
+.hud-top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.hud-izquierda {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.foto-jugador {
-    height: 80px;
-    width: 80px;
-    border-radius: 8px;
-    border: 2px solid gold;
+.foto-clase {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
 }
 
 .nivel {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-right: 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
+/* Barras */
 .barra {
-    width: 150px;
-    height: 15px;
-    background-color: #333;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 4px;
+  position: relative;
+  width: 200px;
+  height: 20px;
+  background-color: #444;
+  border: 2px solid #222;
+  margin-bottom: 0.4rem;
+  overflow: hidden;
+  border-radius: 5px;
 }
 
-.barra .progreso {
-    height: 100%;
-    transition: width 0.5s ease-in-out;
+.barra-fill {
+  height: 100%;
+  transition: width 0.5s ease;
 }
 
-.barra.salud .progreso { background-color: #4caf50; }
-.barra.energia .progreso { background-color: #ffc107; }
-.barra.exp .progreso { background-color: #2196f3; }
-
-.hud-central {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
+.barra-salud-fill {
+  background-color: #f00; /* rojo */
 }
 
-#pantalla-fade {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black;
-    z-index: 2;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s;
+.barra-energia-fill {
+  background-color: #0cf; /* azul claro */
+}
+
+.barra-exp-fill {
+  background-color: #ff9f00; /* naranja */
+}
+
+.barra-texto {
+  position: absolute;
+  font-size: 0.8rem;
+  color: #fff;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Sección Central */
+.hud-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
 }
 
 #imagen-central {
-    max-height: 400px;
-    z-index: 1;
-    border-radius: 8px;
-    box-shadow: 0 0 10px gold;
+  max-width: 600px;
+  max-height: 400px;
+  object-fit: contain;
+  transition: opacity 0.4s ease; /* para animaciones fade */
 }
 
-.hud-inferior {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    margin-top: 1rem;
+/* Menú inferior */
+.hud-bottom {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }
 
-.opciones-menu {
-    display: flex;
-    gap: 1.5rem;
-    transition: all 0.5s ease;
+/* Flechas */
+.flecha {
+  cursor: pointer;
+  margin: 0 1rem;
+}
+
+.flecha-icon {
+  font-size: 2rem;
+  user-select: none;
+}
+
+/* Carrusel */
+.carrusel {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  width: 50%;
+  justify-content: center;
 }
 
 .opcion {
-    text-align: center;
-    opacity: 0.5;
-    transform: scale(0.9);
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-}
-
-.opcion.activa {
-    opacity: 1;
-    transform: scale(1.1);
-    border: 2px solid gold;
-    padding: 0.3rem;
-    border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  margin: 0 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  user-select: none;
 }
 
 .opcion img {
-    width: 60px;
-    height: 60px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
 }
 
-.estrella {
-    font-size: 2rem;
-    cursor: pointer;
-    color: gold;
+.opcion-nombre {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
-.controles {
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0.6;
-    margin-top: 0.5rem;
+.opcion:hover {
+  transform: scale(1.1);
 }
 
-@media (max-width: 768px) {
-    .hud-izquierda {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .opciones-menu {
-        flex-direction: column;
-        align-items: center;
-    }
+.guia-teclado {
+  position: absolute;
+  bottom: -2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Animaciones de fade (para la imagen central) */
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
 }

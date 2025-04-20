@@ -12,10 +12,19 @@ class Jugador(models.Model):
         ('Enemigo', 'Enemigo'),
     ]
 
+    CLASES = [
+        ('Guerrero', 'Guerrero'),
+        ('Mago', 'Mago'),
+        ('Arquero', 'Arquero'),
+        ('Luchador', 'Luchador'),
+        ('Espiritualista', 'Espiritualista'),
+        ('Astral', 'Astral'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     correo = models.EmailField(max_length=100, unique=True)
     nombre = models.CharField(max_length=100)
-    clase = models.CharField(max_length=50)
+    clase = models.CharField(max_length=50, choices=CLASES, default='Guerrero')
     nivel = models.IntegerField(default=1)
     experiencia = models.IntegerField(default=0)
     experiencia_maxima = models.IntegerField(default=1000)
@@ -25,10 +34,6 @@ class Jugador(models.Model):
     salud_maxima = models.IntegerField(default=100)
     energia_espiritual = models.IntegerField(default=50)
     energia_espiritual_maxima = models.IntegerField(default=50)
-
-#    chance_adicional = models.FloatField(default=0.0)
-#    chance_critico = models.FloatField(default=0.0)
-#    chance_esquivar = models.FloatField(default=0.0)
 
     defensa = models.IntegerField(default=15)
     velocidad = models.IntegerField(default=10)
@@ -43,6 +48,7 @@ class Jugador(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.nombre}"
+
 
 # ------------------
 # MOCHILA Y OBJETOS
