@@ -41,21 +41,21 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         opciones = [
             {
                 'nombre': 'Aventura',
-                'imagen': '/static/resources/menus/aventura.png',
+                'imagen': '/static/resources/menus/aventura.png', #Imagen pequeña
                 'url': '/aventura/',
-                'imagen_central': '/static/resources/screens/aventura.png',
+                'imagen_central': '/static/resources/menus/aventura.png', #Imagen grande
             },
             {
                 'nombre': 'Inventario',
-                'imagen': '/static/resources/menus/inventario.png',
+                'imagen': '/static/resources/menus/inventario.png', #Imagen pequeña
                 'url': '/inventario/',
-                'imagen_central': '/static/resources/screens/inventario.png',
+                'imagen_central': '/static/resources/menus/inventario.png', #Imagen grande
             },
             {
                 'nombre': 'Tienda',
-                'imagen': '/static/resources/menus/tienda.png',
+                'imagen': '/static/resources/menus/tienda.png', #Imagen pequeña
                 'url': '/tienda/',
-                'imagen_central': '/static/resources/screens/tienda.png',
+                'imagen_central': '/static/resources/menus/tienda.png', #Imagen grande
             },
         ]
 
