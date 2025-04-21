@@ -72,7 +72,7 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 class RegistroPageView(FormView):
     template_name = 'app/registro_usuario.html'
     form_class = RegistroForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('inicio')
 
     def form_valid(self, form):
         form.save()

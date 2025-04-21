@@ -1,7 +1,7 @@
 const clases = [
     {
         nombre: "Arquero",
-        imagen: "/static/resources/Pixelarts/AArquero/Arquero_base.png",
+        imagen: "/static/resources/Pixelarts/Arquero/Arquero_base.png",
         descripcion: "La Sombra certera\n" +
             "Nadie escapa de su arco, y nadie lo alcanza.\n" +
             "🏹 “Si puedes verlo, ya es tarde.”\n\n" + "El Arquero domina la agilidad y el daño técnico. Gracias a su altísima probabilidad de esquivar y a su velocidad, puede evitar la mayoría de los golpes enemigos y responder con ataques certeros, incluso ataques especiales adicionales. Cuanto más tiempo pasa en combate, más fuerte se vuelve, acumulando bonificaciones ofensivas y probabilidad de crítico. Es la clase perfecta para jugadores que disfrutan de un estilo de juego rápido, esquivo y demoledor a largo plazo."
