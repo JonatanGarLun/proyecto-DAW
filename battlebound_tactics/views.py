@@ -20,24 +20,12 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         # Obtener la instancia de Jugador vinculada al usuario
         jugador = get_object_or_404(Jugador, user=self.request.user)
 
-        # Ejemplo de cálculo de porcentajes de barra (ajusta a tu conveniencia)
-        # Aquí asumimos que la salud, energía_espiritual y experiencia tienen un máximo fijo,
-        # pero lo más común es que consultes estos valores en tu modelo o definas tu propia lógica.
-        max_salud = 100
-        max_energia = 100
-        # Suponiendo que la experiencia para el nivel actual es de 1000 (por ejemplo)
-        max_experiencia = 1000
-
-        porcentaje_salud = (jugador.salud / max_salud) * 100 if max_salud else 0
-        porcentaje_energia = (jugador.energia_espiritual / max_energia) * 100 if max_energia else 0
-        porcentaje_exp = (jugador.experiencia / max_experiencia) * 100 if max_experiencia else 0
-
         # Opciones del carrusel
-        # Puedes agregar/editar más opciones; cada opción tiene:
+        # Podemos agregar/editar más opciones; cada opción tiene:
         # - nombre: texto que se muestra
-        # - imagen: ruta de la imagen del menú (icono)
+        # - imagen: ruta de la imagen del menú (imagen pequeña que aparece abajo)
         # - url: hacia dónde navega cuando se selecciona la opción
-        # - imagen_central: la imagen que se mostrará en el centro al seleccionar esta opción
+        # - imagen_central: la imagen que se mostrará en el centro al seleccionar esta opción (imagen grande que ocupa toda la pantalla)
         opciones = [
             {
                 'nombre': 'Aventura',
@@ -60,9 +48,9 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         ]
 
         context['jugador'] = jugador
-        context['porcentaje_salud'] = porcentaje_salud
-        context['porcentaje_energia'] = porcentaje_energia
-        context['porcentaje_exp'] = porcentaje_exp
+        context['porcentaje_salud'] = int((jugador.salud / jugador.salud_maxima) * 100)
+        context['porcentaje_energia'] = int((jugador.energia_espiritual / jugador.energia_espiritual_maxima) * 100)
+        context['porcentaje_exp'] = int((jugador.experiencia / jugador.experiencia_maxima) * 100)
         context['opciones'] = opciones
 
         return context
