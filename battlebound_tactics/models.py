@@ -49,6 +49,10 @@ class Jugador(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.nombre}"
 
+    class Meta:
+        verbose_name = "Jugador"
+        verbose_name_plural = "Jugadores"
+
 
 # ------------------
 # MOCHILA Y OBJETOS
@@ -67,7 +71,7 @@ class Objeto(models.Model):
     precio = models.IntegerField(default=20)
     descripcion = models.TextField()
     efecto = models.JSONField(default=dict, blank=True, null=True)
-    foto = models.ImageField(upload_to="objetos/", null=True, blank=True)
+    foto = models.ImageField(upload_to="resources/objetos/", null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -92,7 +96,8 @@ class Arma(models.Model):
     ataque = models.IntegerField(default=0)
     defensa = models.IntegerField(default=0)
     velocidad = models.IntegerField(default=0)
-    foto = models.ImageField(upload_to="armas/", null=True, blank=True)
+    nivel_necesario = models.IntegerField(default=1)
+    foto = models.ImageField(upload_to="resources/armas/", null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -101,13 +106,11 @@ class Accesorio(models.Model):
     nombre = models.CharField(max_length=100)
     salud = models.IntegerField(default=0)
     energia_espiritual = models.IntegerField(default=0)
-    chance_adicional = models.FloatField(default=0.0)
-    chance_critico = models.FloatField(default=0.0)
-    chance_esquivar = models.FloatField(default=0.0)
     defensa = models.IntegerField(default=0)
     velocidad = models.IntegerField(default=0)
     ataque = models.IntegerField(default=0)
-    foto = models.ImageField(upload_to="accesorios/", null=True, blank=True)
+    nivel_necesario = models.IntegerField(default=1)
+    foto = models.ImageField(upload_to="resources/accesorios/", null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -191,7 +194,7 @@ class Enemigo(models.Model):
     experiencia_otorgada = models.IntegerField(default=0)
     oro_otorgado = models.IntegerField(default=0)
     recompensa_especial = models.JSONField(default=dict, blank=True, null=True)
-    imagen = models.ImageField(upload_to="enemigos/", null=True, blank=True)
+    imagen = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre
