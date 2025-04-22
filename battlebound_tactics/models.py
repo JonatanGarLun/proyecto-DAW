@@ -30,10 +30,10 @@ class Jugador(models.Model):
     experiencia_maxima = models.IntegerField(default=1000)
     alineacion = models.CharField(max_length=10, choices=ALINEACIONES, default='Neutro')
 
-    salud = models.IntegerField(default=100)
     salud_maxima = models.IntegerField(default=100)
-    energia_espiritual = models.IntegerField(default=50)
+    salud = models.IntegerField(default=salud_maxima)
     energia_espiritual_maxima = models.IntegerField(default=50)
+    energia_espiritual = models.IntegerField(default=energia_espiritual_maxima)
 
     defensa = models.IntegerField(default=15)
     velocidad = models.IntegerField(default=10)
@@ -57,10 +57,14 @@ class Objeto(models.Model):
     TIPO_OBJETO = [
         ("consumible", "Consumible"),
         ("material", "Material"),
-        ("equipable", "Equipable"),
+        ("historia", "Historia"),
+        ("coleccionable", "Coleccionable"),
+        ("botin", "Botin"),
+
     ]
     nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=20, choices=TIPO_OBJETO)
+    precio = models.IntegerField(default=20)
     descripcion = models.TextField()
     efecto = models.JSONField(default=dict, blank=True, null=True)
     foto = models.ImageField(upload_to="objetos/", null=True, blank=True)
