@@ -130,21 +130,21 @@ class Pasiva(models.Model):
 # ------------------
 # HIDDEN POTENTIAL
 # ------------------
-class HiddenPotentialNodeTemplate(models.Model):
-    nivel = models.IntegerField()
-    descripcion = models.TextField()
-    efecto = models.JSONField(default=dict)
-    coste_monedas = models.IntegerField(default=0)
-    coste_especiales = models.IntegerField(default=0)
-    clase_objetivo = models.CharField(max_length=50)
+#class HiddenPotentialNodeTemplate(models.Model):
+    #    nivel = models.IntegerField()
+    #descripcion = models.TextField()
+    #efecto = models.JSONField(default=dict)
+    #coste_monedas = models.IntegerField(default=0)
+    #coste_especiales = models.IntegerField(default=0)
+    #clase_objetivo = models.CharField(max_length=50)
 
-class HiddenPotential(models.Model):
-    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="hidden_potential")
-    nodo = models.ForeignKey(HiddenPotentialNodeTemplate, on_delete=models.CASCADE)
-    desbloqueado = models.BooleanField(default=False)
+#class HiddenPotential(models.Model):
+    #   jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="hidden_potential")
+    #nodo = models.ForeignKey(HiddenPotentialNodeTemplate, on_delete=models.CASCADE)
+    #desbloqueado = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"{self.jugador.nombre} - Nivel {self.nodo.nivel}"
+    #def __str__(self):
+#    return f"{self.jugador.nombre} - Nivel {self.nodo.nivel}"
 
 # ------------------
 # COMBATE Y TURNOS
