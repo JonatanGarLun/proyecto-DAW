@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import (
     Jugador, Mochila, Objeto, ObjetoEnMochila,
     Arma, Accesorio, Pasiva,
-    HiddenPotential, HiddenPotentialNodeTemplate,
     Combate, Turno,
     Estado, EstadoActivo,
     Enemigo, Jefe
@@ -21,8 +20,6 @@ admin.site.register(Arma)
 admin.site.register(Accesorio)
 admin.site.register(Pasiva)
 
-admin.site.register(HiddenPotential)
-admin.site.register(HiddenPotentialNodeTemplate)
 
 admin.site.register(Combate)
 admin.site.register(Turno)
