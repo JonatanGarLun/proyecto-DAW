@@ -44,6 +44,11 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
                 'imagen': '/static/resources/menus/tienda.png', #Imagen pequeña
                 'url': '/tienda/',
                 'imagen_central': '/static/resources/menus/tienda.png', #Imagen grande
+            },            {
+                'nombre': 'Tienda',
+                'imagen': '/static/resources/menus/tienda.png', #Imagen pequeña
+                'url': '/tienda/',
+                'imagen_central': '/static/resources/menus/tienda.png', #Imagen grande
             },
         ]
 

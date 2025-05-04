@@ -1,56 +1,76 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Inicio{% endblock %}
+
 {% block links %}
     <link rel="stylesheet" href="{% static 'css/inicio.css' %}"/>
 {% endblock %}
+
+
+{% block hud %}
+    <div class="hud-wrapper">
+        <div class="hud-frame">
+            <div class="hud-top-left">
+                <!-- Imagen de la clase del jugador -->
+                <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_base.png' %}"
+                     class="foto-clase" alt="Foto del personaje del jugador">
+
+                <!-- Estadísticas del jugador -->
+                <div class="player-info">
+                    <p><span class="label">Nombre:</span> <span class="value">{{ jugador.nombre }}</span></p>
+                    <p><span class="label">Nivel:</span> <span class="value">{{ jugador.nivel }}</span></p>
+                    <p><span class="label">Clase:</span> <span class="value">{{ jugador.clase.capitalize }}</span></p>
+                </div>
+
+                <!-- Línea de separación -->
+                <div class="separator-line"></div>
+
+                <!-- Barras de estadística -->
+                <div class="status-bars">
+                    <div class="barra-container">
+                        <span class="status-label">Salud:</span>
+                        <div class="barra barra-salud">
+                            <div class="barra-fill barra-salud-fill"
+                                 style="width: {{ porcentaje_salud }}%;"></div>
+                            <span class="barra-texto">{{ jugador.salud }}/{{ jugador.salud_maxima }} ({{ porcentaje_salud }}%)</span>
+                        </div>
+                    </div>
+                    <div class="barra-container">
+                        <span class="status-label">Energía:</span>
+                        <div class="barra barra-energia">
+                            <div class="barra-fill barra-energia-fill"
+                                 style="width: {{ porcentaje_energia }}%;"></div>
+                            <span class="barra-texto">{{ jugador.energia_espiritual }}/{{ jugador.energia_espiritual_maxima }} ({{ porcentaje_energia }}%)</span>
+                        </div>
+                    </div>
+                    <div class="barra-container">
+                        <span class="status-label">EXP:</span>
+                        <div class="barra barra-exp">
+                            <div class="barra-fill barra-exp-fill"
+                                 style="width: {{ porcentaje_exp }}%;"></div>
+                            <span class="barra-texto">{{ jugador.experiencia }}/{{ jugador.experiencia_maxima }} ({{ porcentaje_exp }}%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <div class="game-container">
+        <!-- Fondo dinámico -->
+        <div id="fondo-dinamico"></div>
+        <div id="fade-overlay"></div>
 
-        <!-- Sección superior izquierda con HUD del jugador -->
-        <div class="hud-top-left">
-            <!-- Imagen de la clase del jugador -->
-            <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_base.png' %}" class="foto-clase" alt="Foto de la clase del jugador">
-
-            <!-- Nivel del jugador -->
-            <div class="nivel" style="color: gold;">
-                Nivel {{ jugador.nivel }}
-            </div>
-
-            <!-- Barra de salud -->
-            <div class="barra barra-salud">
-                <div class="barra-fill barra-salud-fill" style="width: {{ porcentaje_salud }}%;"></div>
-                <span class="barra-texto">{{ jugador.salud }}/{{ jugador.salud_maxima }} ({{ porcentaje_salud }}%)</span>
-                {# Ajusta si tu máximo no es 100 #}
-            </div>
-
-            <!-- Barra de energía espiritual -->
-            <div class="barra barra-energia">
-                <div class="barra-fill barra-energia-fill" style="width: {{ porcentaje_energia }}%;"></div>
-                <span class="barra-texto">{{ jugador.energia_espiritual }}/{{ jugador.energia_espiritual_maxima }} ({{ porcentaje_energia }}%)</span>
-            </div>
-
-            <!-- Barra de experiencia -->
-            <div class="barra barra-exp">
-                <div class="barra-fill barra-exp-fill" style="width: {{ porcentaje_exp }}%;"></div>
-                <span class="barra-texto">{{ jugador.experiencia }}/{{ jugador.experiencia_maxima }} ({{ porcentaje_exp }}%)</span>
-            </div>
-        </div>
-
-        <!-- Imagen central de la sección actual -->
-        <div class="hud-center">
-            <img id="imagen-central" src="{% static 'resources/imgs/fondo_aventura.png' %}" alt="Imagen Sección Actual"/>
-        </div>
 
         <!-- Menú inferior con carrusel -->
         <div class="hud-bottom">
-            <!-- Flecha de navegación izquierda -->
             <div class="flecha flecha-izquierda" id="flecha-izquierda">
-                <!-- Usa el ícono o imagen que desees -->
                 <span class="flecha-icon">⭐</span>
             </div>
 
-            <!-- Carrusel de opciones -->
             <div class="carrusel" id="carrusel-opciones">
                 {% for opcion in opciones %}
                     <div class="opcion" data-url="{{ opcion.url }}" data-imagen-central="{{ opcion.imagen_central }}">
@@ -60,18 +80,15 @@
                 {% endfor %}
             </div>
 
-            <!-- Flecha de navegación derecha -->
             <div class="flecha flecha-derecha" id="flecha-derecha">
                 <span class="flecha-icon">⭐</span>
             </div>
 
-            <!-- Guía de teclado -->
             <div class="guia-teclado">
                 ⬅️ ➡️ para navegar | ⏎ para seleccionar
             </div>
         </div>
     </div>
 
-    <!-- Importar el JS específico para esta vista -->
     <script src="{% static 'js/inicio.js' %}"></script>
-{% endblock content %}
+{% endblock %}

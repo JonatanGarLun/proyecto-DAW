@@ -1,166 +1,229 @@
-/* static/css/inicio.css */
-
-/* Ajustar el contenedor principal */
-.game-container {
-  position: relative;
-  width: 100%;
-  min-height: 80vh;
-  margin: 0 auto;
-  background-color: #f3f3f3; /* color de fondo temporal */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+/* ======================= */
+/* Fondo dinámico */
+/* ======================= */
+#fondo-dinamico {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out;
 }
 
-/* HUD Superior Izquierda */
+/* Fade overlay */
+#fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease-in-out;
+    z-index: -1;
+}
+
+/* ======================= */
+/* Estructura de página */
+/* ======================= */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ============================= */
+/* HUD Superior Izquierdo (Cabecera) */
+/* ============================= */
+.hud-wrapper {
+    padding-top: 1rem;
+}
+
+.hud-frame {
+    margin-left: 2rem;
+    display: inline-flex;
+}
+
 .hud-top-left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(92, 64, 51, 0.9); /* Fondo negro casi opaco */
+    padding: 10px 20px;
+    border-radius: 8px;
 }
 
 .foto-clase {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 0.5rem;
+    width: 80px;
+    height: 80px;
+    border: 3px solid #000;
+    background: #fff;
+    object-fit: cover;
 }
 
-.nivel {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+.player-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* Barras */
+.player-info p {
+    margin: 2px 0;
+    font-size: 16px;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.player-info .label {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.player-info .value {
+    margin-left: 4px;
+    font-weight: normal;
+    color: #eee;
+}
+
+.separator-line {
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-self: stretch;
+    min-height: 100px;
+    margin: 0 12px;
+}
+
+/* ----------------------------- */
+/* Status Bars */
+/* ----------------------------- */
+.status-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
 .barra {
-  position: relative;
-  width: 200px;
-  height: 20px;
-  background-color: #444;
-  border: 2px solid #222;
-  margin-bottom: 0.4rem;
-  overflow: hidden;
-  border-radius: 5px;
+    position: relative;
+    width: 220px;
+    height: 16px;
+    background: #444;
+    border: 1px solid #000;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .barra-fill {
     height: 100%;
-    transition: width 0.5s ease;
-    white-space: nowrap;
-    overflow: hidden;
+    transition: width 0.3s ease;
 }
 
 .barra-salud-fill {
-  background-color: #f00; /* rojo */
+    background: limegreen;
 }
 
 .barra-energia-fill {
-  background-color: #0cf; /* azul claro */
+    background: deepskyblue;
 }
 
 .barra-exp-fill {
-  background-color: #ff9f00; /* naranja */
+    background: gold;
 }
 
 .barra-texto {
-  position: absolute;
-  font-size: 0.8rem;
-  color: #fff;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  text-shadow: 1px 1px 2px #000;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
 }
 
-/* Sección Central */
-.hud-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
+.barra-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 3px;
 }
 
-#imagen-central {
-  max-width: 600px;
-  max-height: 400px;
-  object-fit: contain;
-  transition: opacity 0.4s ease; /* para animaciones fade */
+.status-label {
+    width: 80px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffd700;
 }
 
-/* Menú inferior */
+/* ================================= */
+/* Menú Inferior / Carrusel de Opciones */
+/* ================================= */
 .hud-bottom {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+    margin-top: auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
-/* Flechas */
 .flecha {
-  cursor: pointer;
-  margin: 0 1rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.flecha-icon {
-  font-size: 2rem;
-  user-select: none;
-}
-
-/* Carrusel */
 .carrusel {
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  width: 50%;
-  justify-content: center;
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+    justify-content: center;
 }
 
 .opcion {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px;
-  margin: 0 1rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  user-select: none;
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .opcion img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-}
-
-.opcion-nombre {
-  margin-top: 0.5rem;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-.opcion:hover {
-  transform: scale(1.1);
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .guia-teclado {
-  position: absolute;
-  bottom: -2rem;
-  width: 100%;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #333;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
 }
 
-/* Animaciones de fade (para la imagen central) */
-.fade-out {
-  opacity: 0;
-}
-.fade-in {
-  opacity: 1;
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

@@ -1,105 +1,105 @@
-// static/js/inicio.js
-
 document.addEventListener("DOMContentLoaded", () => {
-  const carrusel = document.getElementById("carrusel-opciones");
-  const opciones = Array.from(carrusel.getElementsByClassName("opcion"));
-  const flechaIzquierda = document.getElementById("flecha-izquierda");
-  const flechaDerecha = document.getElementById("flecha-derecha");
-  const imagenCentral = document.getElementById("imagen-central");
+    const carrusel = document.getElementById("carrusel-opciones");
+    const opciones = Array.from(carrusel.getElementsByClassName("opcion"));
+    const flechaIzquierda = document.getElementById("flecha-izquierda");
+    const flechaDerecha = document.getElementById("flecha-derecha");
+    const fondo = document.getElementById("fondo-dinamico");
+    const overlay = document.getElementById("fade-overlay");
 
-  let indexActivo = 0; // Opción seleccionada por defecto
-
-  // Función para actualizar estilo visual de la opción activa
-  function actualizarOpcionActiva() {
-    opciones.forEach((opcion, idx) => {
-      if (idx === indexActivo) {
-        opcion.classList.add("opcion-activa");
-      } else {
-        opcion.classList.remove("opcion-activa");
-      }
-    });
-  }
-
-  // Función para cambiar la imagen central con fade
-  function cambiarImagenCentral(nuevaImagen) {
-    // fade-out
-    imagenCentral.classList.add("fade-out");
-    setTimeout(() => {
-      // Cambiamos la src
-      imagenCentral.src = nuevaImagen;
-      // Removemos fade-out y agregamos fade-in
-      imagenCentral.classList.remove("fade-out");
-      imagenCentral.classList.add("fade-in");
-
-      // Quitamos fade-in después de un tiempo
-      setTimeout(() => {
-        imagenCentral.classList.remove("fade-in");
-      }, 400);
-    }, 400);
-  }
-
-  // Avanzar o retroceder en el carrusel
-  function moverCarrusel(direccion) {
-    if (direccion === "left") {
-      indexActivo = (indexActivo - 1 + opciones.length) % opciones.length;
-    } else if (direccion === "right") {
-      indexActivo = (indexActivo + 1) % opciones.length;
+    if (!fondo || !overlay) {
+        console.error("No se encontró el fondo dinámico o el overlay.");
+        return;
     }
-    actualizarOpcionActiva();
-    // Cambiar imagen central según la opción activa
-    const opcionActiva = opciones[indexActivo];
-    const nuevaImagen = opcionActiva.getAttribute("data-imagen-central");
-    cambiarImagenCentral(nuevaImagen);
-  }
 
-  // Al hacer clic en flecha izquierda
-  flechaIzquierda.addEventListener("click", () => {
-    moverCarrusel("left");
-  });
+    let indexActivo = 0; // Opción seleccionada por defecto
 
-  // Al hacer clic en flecha derecha
-  flechaDerecha.addEventListener("click", () => {
-    moverCarrusel("right");
-  });
+    function actualizarOpcionActiva() {
+        opciones.forEach((opcion, idx) => {
+            if (idx === indexActivo) {
+                opcion.classList.add("opcion-activa");
+            } else {
+                opcion.classList.remove("opcion-activa");
+            }
+        });
+    }
 
-  // Al hacer clic en una opción directamente
-  opciones.forEach((opcion, idx) => {
-    opcion.addEventListener("click", () => {
-      indexActivo = idx;
-      actualizarOpcionActiva();
-      const nuevaImagen = opcion.getAttribute("data-imagen-central");
-      cambiarImagenCentral(nuevaImagen);
-    });
+    function cambiarImagenCentral(nuevaImagen) {
+        if (!nuevaImagen) {
+            console.warn("No se proporcionó ninguna imagen para el fondo.");
+            return;
+        }
 
-    // Al hacer doble clic, redirige
-    opcion.addEventListener("dblclick", () => {
-      const url = opcion.getAttribute("data-url");
-      window.location.href = url;
-    });
-  });
+        // Fade to black
+        overlay.style.opacity = 1;
 
-  // Control por teclado
-  document.addEventListener("keydown", (e) => {
-    switch(e.key) {
-      case "ArrowLeft":
-        moverCarrusel("left");
-        break;
-      case "ArrowRight":
-        moverCarrusel("right");
-        break;
-      case "Enter":
-        // Redirigir a la opción activa
+        setTimeout(() => {
+            fondo.style.backgroundImage = `url('${nuevaImagen}')`;
+            overlay.style.opacity = 0;
+        }, 400);
+    }
+
+    function moverCarrusel(direccion) {
+        if (direccion === "left") {
+            indexActivo = (indexActivo - 1 + opciones.length) % opciones.length;
+        } else if (direccion === "right") {
+            indexActivo = (indexActivo + 1) % opciones.length;
+        }
+        actualizarOpcionActiva();
         const opcionActiva = opciones[indexActivo];
-        const url = opcionActiva.getAttribute("data-url");
-        window.location.href = url;
-        break;
+        const nuevaImagen = opcionActiva.getAttribute("data-imagen-central");
+        cambiarImagenCentral(nuevaImagen);
     }
-  });
 
-  // Inicializar el carrusel
-  actualizarOpcionActiva();
-  // Opcional: actualizar la imagen central de inicio si deseas
-  const opcionInicial = opciones[indexActivo];
-  const imagenInicial = opcionInicial.getAttribute("data-imagen-central");
-  imagenCentral.src = imagenInicial;
+    flechaIzquierda.addEventListener("click", () => {
+        moverCarrusel("left");
+    });
+
+    flechaDerecha.addEventListener("click", () => {
+        moverCarrusel("right");
+    });
+
+    opciones.forEach((opcion, idx) => {
+        opcion.addEventListener("click", () => {
+            indexActivo = idx;
+            actualizarOpcionActiva();
+            const nuevaImagen = opcion.getAttribute("data-imagen-central");
+            cambiarImagenCentral(nuevaImagen);
+        });
+
+        opcion.addEventListener("dblclick", () => {
+            const url = opcion.getAttribute("data-url");
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+
+    document.addEventListener("keydown", (e) => {
+        switch(e.key) {
+            case "ArrowLeft":
+                moverCarrusel("left");
+                break;
+            case "ArrowRight":
+                moverCarrusel("right");
+                break;
+            case "Enter":
+                const opcionActiva = opciones[indexActivo];
+                const url = opcionActiva.getAttribute("data-url");
+                if (url) {
+                    window.location.href = url;
+                }
+                break;
+        }
+    });
+
+    // Inicializar carrusel
+    actualizarOpcionActiva();
+    const opcionInicial = opciones[indexActivo];
+    const imagenInicial = opcionInicial.getAttribute("data-imagen-central");
+
+    if (imagenInicial) {
+        cambiarImagenCentral(imagenInicial);
+    } else {
+        console.warn("La opción inicial no tiene una imagen de fondo asignada.");
+    }
 });
