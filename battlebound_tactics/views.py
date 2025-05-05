@@ -50,6 +50,12 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
                 'url': '/tienda/',
                 'imagen_central': '/static/resources/menus/tienda.png', #Imagen grande
             },
+            {
+                'nombre': 'Mapa',
+                'imagen': '/static/resources/menus/mapas.png', #Imagen pequeña
+                'url': '/mapas/',
+                'imagen_central': '/static/resources/menus/mapas.png', #Imagen grande
+            },
         ]
 
         context['jugador'] = jugador
@@ -73,3 +79,6 @@ class RegistroPageView(FormView):
 
 class LoginUserView(LoginView):
     template_name = 'registration/login.html'
+
+class AventuraPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'app/aventura.html'

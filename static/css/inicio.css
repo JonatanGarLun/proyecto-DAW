@@ -15,7 +15,6 @@
     transition: opacity 0.4s ease-in-out;
 }
 
-/* Fade overlay */
 #fade-overlay {
     position: fixed;
     top: 0;
@@ -64,9 +63,14 @@ html, body {
     display: flex;
     align-items: center;
     gap: 12px;
-    background-color: rgba(92, 64, 51, 0.9); /* Fondo negro casi opaco */
+    /*background-color: rgba(92, 64, 51, 0.9); */
     padding: 10px 20px;
     border-radius: 8px;
+    background-image: url("../resources/imgs/tablones.png");
+    background-size: 100% 100% ;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 3px solid #000;
 }
 
 .foto-clase {

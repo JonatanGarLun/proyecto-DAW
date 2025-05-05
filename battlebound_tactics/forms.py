@@ -10,9 +10,9 @@ class RegistroForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput)
 
-    # Campos para Jugador (los ya existentes en el modelo)
+    # Campos para Jugador
     email = forms.EmailField(label="Correo electrónico")
-    nombre = forms.CharField(label="Nombre de personaje", max_length=100)
+    nombre = forms.CharField(label="Nombre de personaje", max_length=30)
     clase = forms.CharField(widget=forms.HiddenInput())
     alineacion = forms.ChoiceField(choices=Jugador.ALINEACIONES, label="Alineación")
 
@@ -54,7 +54,6 @@ class RegistroForm(forms.ModelForm):
             clase=cleaned_data["clase"],
             alineacion=cleaned_data["alineacion"]
         )
-
         return jugador
 
 class LoginForm(AuthenticationForm):
