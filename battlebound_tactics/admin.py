@@ -2,8 +2,7 @@ from django.contrib import admin
 from .models import (
     Jugador, Mochila, Objeto, ObjetoEnMochila,
     Arma, Accesorio, Pasiva,
-    Combate, Turno,
-    Estado, EstadoActivo,
+    Combate,
     Enemigo, Jefe
 )
 
@@ -20,12 +19,7 @@ admin.site.register(Arma)
 admin.site.register(Accesorio)
 admin.site.register(Pasiva)
 
-
 admin.site.register(Combate)
-admin.site.register(Turno)
-
-admin.site.register(Estado)
-admin.site.register(EstadoActivo)
 
 admin.site.register(Enemigo)
 admin.site.register(Jefe)

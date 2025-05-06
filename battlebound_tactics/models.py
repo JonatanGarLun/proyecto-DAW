@@ -43,6 +43,9 @@ class Jugador(models.Model):
     arma = models.ForeignKey("Arma", on_delete=models.SET_NULL, null=True, blank=True)
     accesorio = models.ForeignKey("Accesorio", on_delete=models.SET_NULL, null=True, blank=True)
     habilidad_pasiva = models.ForeignKey("Pasiva", on_delete=models.SET_NULL, null=True, blank=True)
+    habilidad_1 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_1")
+    habilidad_2 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_2")
+    habilidad_3 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_3")
     medidor_definitiva = models.IntegerField(default=0)
     oro = models.IntegerField(default=0)
     piedras_dragon = models.IntegerField(default=0)
@@ -117,7 +120,7 @@ class Accesorio(models.Model):
         return self.nombre
 
 # ------------------
-# PASIVAS
+# HABILIDADES PASIVAS Y ACTIVAS
 # ------------------
 class Pasiva(models.Model):
     nombre = models.CharField(max_length=100)
@@ -127,6 +130,11 @@ class Pasiva(models.Model):
     def __str__(self):
         return self.nombre
 
+class Activa(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    efecto = models.JSONField(default=dict)
+    nivel_necesario = models.IntegerField(default=1)
 # ------------------
 # HIDDEN POTENTIAL
 # ------------------
@@ -147,38 +155,23 @@ class Pasiva(models.Model):
 #    return f"{self.jugador.nombre} - Nivel {self.nodo.nivel}"
 
 # ------------------
-# COMBATE Y TURNOS
-# ------------------
-class Combate(models.Model):
-    nombre = models.CharField(max_length=100)
-    registro = models.TextField(blank=True, null=True)
-    turnos = models.IntegerField(default=0)
-    luchador_1 = models.ForeignKey(Jugador, related_name='combates_como_j1', on_delete=models.CASCADE)
-    luchador_2 = models.ForeignKey(Jugador, related_name='combates_como_j2', on_delete=models.CASCADE)
-
-class Turno(models.Model):
-    combate = models.ForeignKey(Combate, on_delete=models.CASCADE, related_name="turnos_info")
-    numero = models.IntegerField()
-    acciones = models.TextField()
-
-# ------------------
 # EFECTOS DE ESTADO
 # ------------------
-class Estado(models.Model):
-    nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    efecto = models.JSONField(default=dict)
-
-    def __str__(self):
-        return self.nombre
-
-class EstadoActivo(models.Model):
-    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="estados")
-    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
-    turnos_restantes = models.IntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.estado.nombre} en {self.jugador.nombre}"
+# class Estado(models.Model):
+#     nombre = models.CharField(max_length=100)
+#     descripcion = models.TextField()
+#     efecto = models.JSONField(default=dict)
+#
+#     def __str__(self):
+#         return self.nombre
+#
+# class EstadoActivo(models.Model):
+#     jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="estados")
+#     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+#     turnos_restantes = models.IntegerField(default=1)
+#
+#     def __str__(self):
+#         return f"{self.estado.nombre} en {self.jugador.nombre}"
 
 # ------------------
 # ENEMIGOS Y JEFES
@@ -186,10 +179,11 @@ class EstadoActivo(models.Model):
 class Enemigo(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
-    salud = models.IntegerField()
-    ataque = models.IntegerField()
-    defensa = models.IntegerField()
-    velocidad = models.IntegerField()
+    salud_maxima = models.IntegerField(default=100)
+    salud = models.IntegerField(default=salud_maxima)
+    ataque = models.IntegerField(default=10)
+    defensa = models.IntegerField(default=10)
+    velocidad = models.IntegerField(default=10)
     dificultad = models.CharField(max_length=50)
     experiencia_otorgada = models.IntegerField(default=0)
     oro_otorgado = models.IntegerField(default=0)
@@ -206,3 +200,13 @@ class Jefe(Enemigo):
     class Meta:
         verbose_name = "Jefe"
         verbose_name_plural = "Jefes"
+
+# ------------------
+# COMBATE Y TURNOS
+# ------------------
+class Combate(models.Model):
+    nombre = models.CharField(max_length=100)
+    registro = models.TextField(blank=True, null=True)
+    turnos = models.IntegerField(default=0)
+    jugador = models.ForeignKey(Jugador, related_name='Jugador', on_delete=models.CASCADE)
+    enemigo = models.ForeignKey(Enemigo, related_name='Enemigo', on_delete=models.CASCADE)
