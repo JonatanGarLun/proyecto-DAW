@@ -1,5 +1,4 @@
 import random
-from random import randint
 
 
 def inicializar_stats(jugador):
@@ -84,10 +83,12 @@ def accion_basica(jugador):
 
 def ataque_adicional(jugador):
     if _probabilidades():
-        mensaje = f"¡Ver para creer! Gracias a su velocidad y estrategia, {jugador.nombre} ha logrado anteponerse a su rival y ataca de nuevo"
-        return accion_basica(jugador), mensaje
+        golpe, mensaje_base = accion_basica(jugador)
+        mensaje_extra = f"¡Ver para creer! Gracias a su velocidad y estrategia, {jugador.nombre} ha logrado anteponerse a su rival y ataca de nuevo. "
+        mensaje = f"{mensaje_extra}{mensaje_base}"
+        return golpe, mensaje
     mensaje = f"El enemigo ha evitado que {jugador.nombre} continue su ataque, mala suerte"
-    return -1, mensaje
+    return 0, mensaje
 
 
 def calcular_golpe_recibido(golpe, jugador):
@@ -109,12 +110,15 @@ def calcular_golpe_recibido(golpe, jugador):
             danio = 2
 
         if 999 <= golpe < 10000:
-            danio = randint(1, 10)
+            danio = random.randint(1, 10)
         if 10000 <= golpe < 100000:
             danio = random.randint(10, 50)
         if golpe >= 100000:
             danio = random.randint(1, 200)
 
-        mensaje = f"{jugador.nombre} ha encajado el golpe del enemigo y recibe {danio} puntos de daño"
+        mensaje = f"{jugador.nombre} ha encajado el golpe, pero su defensa ha mitigado el daño. Recibe {danio} puntos de daño."
 
     return danio, mensaje
+
+def uso_habilidad(jugador, habilidad):
+    pass
