@@ -90,7 +90,7 @@ class LoginUserView(LoginView):
     template_name = 'registration/login.html'
 
 class EstadisticasPageView(LoginRequiredMixin, TemplateView):
-    template_name = 'app/estadisticas.html'
+    template_name = 'app/registro_usuario.html'
 
 
 

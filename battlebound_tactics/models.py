@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -32,9 +33,9 @@ class Jugador(models.Model):
     alineacion = models.CharField(max_length=10, choices=ALINEACIONES, default='Neutro')
 
     salud_maxima = models.IntegerField(default=100)
-    salud = models.IntegerField(default=salud_maxima)
+    salud = models.IntegerField(default=100)
     energia_espiritual_maxima = models.IntegerField(default=50)
-    energia_espiritual = models.IntegerField(default=energia_espiritual_maxima)
+    energia_espiritual = models.IntegerField(default=50)
 
     defensa = models.IntegerField(default=15)
     velocidad = models.IntegerField(default=10)
@@ -132,9 +133,17 @@ class Pasiva(models.Model):
 
 class Activa(models.Model):
     nombre = models.CharField(max_length=100)
+    coste_energia = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    coste_salud = models.FloatField(
+        default=0.0,
+        validators=[
+            MinValueValidator(0.0),
+            MaxValueValidator(0.99)
+        ]
+    )
     descripcion = models.TextField()
     efecto = models.JSONField(default=dict)
-    nivel_necesario = models.IntegerField(default=1)
+    nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)])
 # ------------------
 # HIDDEN POTENTIAL
 # ------------------

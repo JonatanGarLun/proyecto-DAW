@@ -64,26 +64,99 @@ def ajuste_stats(jugador, stats):
 
     return stats
 
-
-def _probabilidades():
-    return random.randint(1, 10) == 1
-
-
-def accion_basica(jugador):
+def obtener_stats_temporales(jugador):
+    """
+    Crea y devuelve una copia de las estadísticas del jugador,
+    incluyendo buffs de pasiva y equipo.
+    Esta copia se usará solo durante el combate.
+    """
     stats = calcular_stats_totales(jugador)
-    golpe = stats["ataque"]
-    if _probabilidades():
-        golpe *= 2
-        mensaje = f"¡GOLPE CRÍTICO, has acertado un golpe certero y le has causado {golpe} puntos de daño!"
+    stats = ajuste_stats(jugador, stats)
+
+    return {
+        "salud_max": stats["salud_max"],
+        "salud": stats["salud"],
+        "energia_max": stats["energia_max"],
+        "energia": stats["energia"],
+        "ataque": stats["ataque"],
+        "defensa": stats["defensa"],
+        "velocidad": stats["velocidad"]
+    }
+
+# =====================
+# PROBABILIDADES POR CLASE
+# =====================
+
+def tirada(probabilidad):
+    return random.random() < probabilidad
+
+def obtener_probabilidades_por_clase(clase):
+    clases = {
+        "GUERRERO": {
+            "critico": 0.15,
+            "esquivar": 0.04,
+            "adicional": 0.10
+        },
+        "ARQUERO": {
+            "critico": 0.22,
+            "esquivar": 0.18,
+            "adicional": 0.22
+        },
+        "MAGO": {
+            "critico": 0.17,
+            "esquivar": 0.05,
+            "adicional": 0.12
+        },
+        "LUCHADOR": {
+            "critico": 0.16,
+            "esquivar": 0.07,
+            "adicional": 0.14
+        },
+        "ESPIRITUALISTA": {
+            "critico": 0.18,
+            "esquivar": 0.09,
+            "adicional": 0.13
+        },
+        "ASTRAL": {
+            "critico": 0.20,
+            "esquivar": 0.10,
+            "adicional": 0.18
+        }
+    }
+    return clases.get(clase.upper(), {
+        "critico": 0.10,
+        "esquivar": 0.05,
+        "adicional": 0.10
+    })
+
+def critico(jugador):
+    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
+    return tirada(probabilidades["critico"])
+
+def esquivar(jugador):
+    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
+    return tirada(probabilidades["esquivar"])
+
+def adicional(jugador):
+    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
+    return tirada(probabilidades["adicional"])
+
+
+def accion_basica(stats_temporales, jugador):
+    golpe = stats_temporales["ataque"]
+
+    if critico(jugador):
+        golpe *= 2.5
+        mensaje = f"¡GOLPE CRÍTICO! Has asestado un golpe certero y causado {golpe} puntos de daño."
     else:
-        mensaje = f"¡Has realizado un ataque básico contra el enemigo! Le has causado {golpe} puntos de daño"
+        mensaje = f"Has realizado un ataque básico y causado {golpe} puntos de daño."
 
     return golpe, mensaje
 
 
-def ataque_adicional(jugador):
-    if _probabilidades():
-        golpe, mensaje_base = accion_basica(jugador)
+def ataque_adicional(stats, jugador):
+    if adicional(jugador):
+        golpe, mensaje_base = accion_basica(stats, jugador)
         mensaje_extra = f"¡Ver para creer! Gracias a su velocidad y estrategia, {jugador.nombre} ha logrado anteponerse a su rival y ataca de nuevo. "
         mensaje = f"{mensaje_extra}{mensaje_base}"
         return golpe, mensaje
@@ -91,34 +164,122 @@ def ataque_adicional(jugador):
     return 0, mensaje
 
 
-def calcular_golpe_recibido(golpe, jugador):
-    stats = calcular_stats_totales(jugador)
-    defensa = stats["defensa"]
-    if _probabilidades():
-        mensaje = f"{jugador.nombre} ha logrado leer a su enemigo y evitar su ataque, ¡buenos reflejos!"
+def calcular_golpe_recibido(golpe, jugador, stats_temporales):
+    defensa = stats_temporales["defensa"]
+
+    if esquivar(jugador):
+        mensaje = f"Gracias a la velocidad y a la estrategia de {jugador.nombre}, ha logrado evitar el ataque."
         return 0, mensaje
 
     danio = golpe - defensa
-    mensaje = f"{jugador.nombre} recibe el golpe del enemigo, se ha llevado una buena y recibe {golpe} de daño"
 
-    if danio <= 0:
+    salud_max = stats_temporales["salud_max"]
+    umbral_minimo = max(1, int(salud_max * 0.01))
 
-        if golpe < 100:
-            danio = 1
+    if danio <= umbral_minimo:
+        danio = umbral_minimo
+        mensaje = f"{jugador.nombre} bloqueó casi todo el daño, pero aún recibe {danio} puntos de daño"
 
-        if 100 <= golpe < 999:
-            danio = 2
-
-        if 999 <= golpe < 10000:
-            danio = random.randint(1, 10)
-        if 10000 <= golpe < 100000:
-            danio = random.randint(10, 50)
-        if golpe >= 100000:
-            danio = random.randint(1, 200)
-
-        mensaje = f"{jugador.nombre} ha encajado el golpe, pero su defensa ha mitigado el daño. Recibe {danio} puntos de daño."
+    else:
+        mensaje = f"{jugador.nombre} recibe el golpe del enemigo, se ha llevado una buena y recibe {danio} puntos de daño"
 
     return danio, mensaje
 
-def uso_habilidad(jugador, habilidad):
-    pass
+
+def uso_habilidad(jugador, habilidad, stats_temporales):
+    """
+    Usa una habilidad activa del jugador y aplica todos sus efectos.
+    Los costes y los efectos se aplican solo sobre las stats temporales.
+    """
+    # 🔹 Selección de habilidad
+    especial = None
+    if habilidad == "habilidad_1":
+        especial = jugador.habilidad_1
+    elif habilidad == "habilidad_2":
+        especial = jugador.habilidad_2
+    elif habilidad == "habilidad_3":
+        especial = jugador.habilidad_3
+
+    if not especial:
+        return [], "El jugador no tiene asignada esa habilidad.", stats_temporales
+
+    coste_energia = especial.coste_energia
+    coste_salud = especial.coste_salud
+
+    # 🔹 Verificar recursos en stats temporales
+    if stats_temporales["energia"] < coste_energia:
+        return [], f"No tienes suficiente energía para usar {especial.nombre}.", stats_temporales
+
+    coste_salud_real = int(stats_temporales["salud_max"] * coste_salud)
+    salud_necesaria = coste_salud_real + 1
+
+    if stats_temporales["salud"] < salud_necesaria:
+        return [], (
+            f"No tienes suficiente salud para usar {especial.nombre}. "
+            f"Necesitas al menos {salud_necesaria} puntos de salud."
+        ), stats_temporales
+
+    # 🔹 Descontar los costes en stats temporales
+    stats_temporales["energia"] -= coste_energia
+    stats_temporales["salud"] -= coste_salud_real
+
+    # 🔹 Leer efectos
+    efecto_data = especial.efecto
+    efectos = efecto_data.get("efectos", [])
+    mensaje_personalizado = efecto_data.get("mensaje_personalizado", "Usas una habilidad.")
+
+    resultados = []
+    mensajes = [mensaje_personalizado]
+
+    # 🔹 Aplicar cada efecto
+    for efecto in efectos:
+        tipo = efecto.get("tipo")
+
+        if tipo == "daño":
+            escala = efecto.get("escala_ataque", 1)
+            bonus_fijo = efecto.get("bonus_fijo", 0)
+            golpe = int(stats_temporales["ataque"] * escala) + bonus_fijo
+            resultados.append(("daño", golpe))
+            mensajes.append(f"Causas {golpe} puntos de daño.")
+
+        elif tipo == "curacion":
+            escala = efecto.get("escala_salud", 0)
+            bonus_fijo = efecto.get("bonus_fijo", 0)
+            curacion = int(stats_temporales["salud_max"] * escala) + bonus_fijo
+            stats_temporales["salud"] = min(
+                stats_temporales["salud"] + curacion,
+                stats_temporales["salud_max"]
+            )
+            resultados.append(("curacion", curacion))
+            mensajes.append(f"Te curas {curacion} puntos de salud.")
+
+        elif tipo == "buff":
+            stat = efecto.get("stat")
+            bonus = efecto.get("bonus", 0)
+            duracion = efecto.get("duracion_turnos", 1)
+            resultados.append(("buff", stat, bonus, duracion))
+            mensajes.append(
+                f"Aumentas tu {stat} en {bonus} durante {duracion} turnos."
+            )
+
+        else:
+            mensajes.append("No se permitirán hechizos del mundo oscuro...")
+
+    mensaje_final = " ".join(mensajes)
+    return resultados, mensaje_final, stats_temporales
+
+
+def actualizar_stats_finales(jugador, stats_temporales):
+    """
+    Al finalizar el combate, actualiza la salud y energía reales del jugador
+    en proporción a las stats temporales finales.
+    """
+    porcentaje_salud = stats_temporales["salud"] / stats_temporales["salud_max"]
+    porcentaje_energia = stats_temporales["energia"] / stats_temporales["energia_max"]
+
+    nueva_salud = max(1, int(jugador.salud_maxima * porcentaje_salud))
+    nueva_energia = max(0, int(jugador.energia_espiritual_maxima * porcentaje_energia))
+
+    jugador.salud = nueva_salud
+    jugador.energia_espiritual = nueva_energia
+    jugador.save()
