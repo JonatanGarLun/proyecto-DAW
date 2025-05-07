@@ -2,6 +2,15 @@ import random
 
 
 def inicializar_stats(jugador):
+    """
+    Inicializa las estadísticas base del jugador.
+
+    Args:
+        jugador: Objeto Jugador con atributos de estadísticas.
+
+    Returns:
+        dict: Diccionario con las estadísticas básicas.
+    """
     stats = {
         "salud_max": jugador.salud_maxima,
         "salud": jugador.salud,
@@ -15,6 +24,16 @@ def inicializar_stats(jugador):
 
 
 def aplicar_pasiva(jugador, stats):
+    """
+    Aplica los bonificadores de la habilidad pasiva del jugador a sus estadísticas.
+
+    Args:
+        jugador: Objeto Jugador con habilidad_pasiva asignada.
+        stats (dict): Estadísticas actuales.
+
+    Returns:
+        dict: Estadísticas actualizadas.
+    """
     pasiva = jugador.habilidad_pasiva
     if pasiva:
         stats["salud_max"] += pasiva.efecto.get("bonus_vida", 0)
@@ -26,6 +45,16 @@ def aplicar_pasiva(jugador, stats):
 
 
 def aplicar_equipo(jugador, stats):
+    """
+    Aplica los bonificadores del arma y equipo del jugador a sus estadísticas.
+
+    Args:
+        jugador: Objeto Jugador con arma y equipo asignados.
+        stats (dict): Estadísticas actuales.
+
+    Returns:
+        dict: Estadísticas actualizadas.
+    """
     arma = jugador.arma if jugador.arma else None
     equipo = jugador.equipo if jugador.equipo else None
     if arma:
@@ -42,6 +71,15 @@ def aplicar_equipo(jugador, stats):
 
 
 def calcular_stats_totales(jugador):
+    """
+    Calcula las estadísticas totales aplicando pasiva y equipo.
+
+    Args:
+        jugador: Objeto Jugador.
+
+    Returns:
+        dict: Estadísticas finales completas.
+    """
     stats = inicializar_stats(jugador)
     stats = aplicar_pasiva(jugador, stats)
     stats = aplicar_equipo(jugador, stats)
@@ -49,6 +87,16 @@ def calcular_stats_totales(jugador):
 
 
 def ajuste_stats(jugador, stats):
+    """
+    Ajusta la salud y energía actuales proporcionalmente a las nuevas estadísticas máximas.
+
+    Args:
+        jugador: Objeto Jugador.
+        stats (dict): Estadísticas actuales.
+
+    Returns:
+        dict: Estadísticas ajustadas.
+    """
     salud_max_antigua = jugador.salud_maxima
     salud_antigua = jugador.salud
     energia_max_antigua = jugador.energia_espiritual_maxima
@@ -66,9 +114,14 @@ def ajuste_stats(jugador, stats):
 
 def obtener_stats_temporales(jugador):
     """
-    Crea y devuelve una copia de las estadísticas del jugador,
-    incluyendo buffs de pasiva y equipo.
-    Esta copia se usará solo durante el combate.
+    Obtiene una copia de las estadísticas totales y ajustadas del jugador
+    que se usarán durante el combate.
+
+    Args:
+        jugador: Objeto Jugador.
+
+    Returns:
+        dict: Estadísticas temporales para el combate.
     """
     stats = calcular_stats_totales(jugador)
     stats = ajuste_stats(jugador, stats)
@@ -88,9 +141,27 @@ def obtener_stats_temporales(jugador):
 # =====================
 
 def tirada(probabilidad):
+    """
+    Realiza una tirada aleatoria según una probabilidad.
+
+    Args:
+        probabilidad (float): Valor entre 0 y 1.
+
+    Returns:
+        bool: True si acierta, False si falla.
+    """
     return random.random() < probabilidad
 
 def obtener_probabilidades_por_clase(clase):
+    """
+    Devuelve las probabilidades de crítico, esquivar y ataque adicional según la clase del jugador.
+
+    Args:
+        clase (str): Nombre de la clase.
+
+    Returns:
+        dict: Probabilidades para crítico, esquivar y adicional.
+    """
     clases = {
         "GUERRERO": {
             "critico": 0.15,
@@ -130,19 +201,56 @@ def obtener_probabilidades_por_clase(clase):
     })
 
 def critico(jugador):
+    """
+    Realiza una tirada para determinar si el ataque es crítico.
+
+    Args:
+        jugador: Objeto Jugador.
+
+    Returns:
+        bool: True si es crítico.
+    """
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["critico"])
 
 def esquivar(jugador):
+    """
+    Realiza una tirada para determinar si el jugador esquiva el ataque.
+
+    Args:
+        jugador: Objeto Jugador.
+
+    Returns:
+        bool: True si esquiva.
+    """
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["esquivar"])
 
 def adicional(jugador):
+    """
+    Realiza una tirada para determinar si el jugador realiza un ataque adicional.
+
+    Args:
+        jugador: Objeto Jugador.
+
+    Returns:
+        bool: True si realiza ataque adicional.
+    """
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["adicional"])
 
 
 def accion_basica(stats_temporales, jugador):
+    """
+    Realiza un ataque básico, considerando posibilidad de golpe crítico.
+
+    Args:
+        stats_temporales (dict): Estadísticas actuales del jugador.
+        jugador: Objeto Jugador.
+
+    Returns:
+        tuple: Daño infligido y mensaje descriptivo.
+    """
     golpe = stats_temporales["ataque"]
 
     if critico(jugador):
@@ -155,6 +263,16 @@ def accion_basica(stats_temporales, jugador):
 
 
 def ataque_adicional(stats, jugador):
+    """
+    Intenta realizar un ataque adicional basado en la probabilidad de clase.
+
+    Args:
+        stats (dict): Estadísticas actuales del jugador.
+        jugador: Objeto Jugador.
+
+    Returns:
+        tuple: Daño infligido y mensaje descriptivo.
+    """
     if adicional(jugador):
         golpe, mensaje_base = accion_basica(stats, jugador)
         mensaje_extra = f"¡Ver para creer! Gracias a su velocidad y estrategia, {jugador.nombre} ha logrado anteponerse a su rival y ataca de nuevo. "
@@ -165,6 +283,18 @@ def ataque_adicional(stats, jugador):
 
 
 def calcular_golpe_recibido(golpe, jugador, stats_temporales):
+    """
+    Calcula el daño recibido considerando defensa y posibilidad de esquivar.
+    Aplica un daño mínimo del 1% de salud máxima.
+
+    Args:
+        golpe (int): Daño del ataque recibido.
+        jugador: Objeto Jugador.
+        stats_temporales (dict): Estadísticas actuales del jugador.
+
+    Returns:
+        tuple: Daño final recibido y mensaje descriptivo.
+    """
     defensa = stats_temporales["defensa"]
 
     if esquivar(jugador):
@@ -188,8 +318,15 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
 
 def uso_habilidad(jugador, habilidad, stats_temporales):
     """
-    Usa una habilidad activa del jugador y aplica todos sus efectos.
-    Los costes y los efectos se aplican solo sobre las stats temporales.
+    Usa una habilidad activa, aplicando su coste y efectos. Los costes y los efectos se aplican solo sobre las stats temporales.
+
+    Args:
+        jugador: Objeto Jugador.
+        habilidad (str): Identificador de la habilidad (habilidad_1, habilidad_2, habilidad_3).
+        stats_temporales (dict): Estadísticas actuales del jugador.
+
+    Returns:
+        tuple: Resultados de los efectos, mensaje y estadísticas actualizadas.
     """
     # 🔹 Selección de habilidad
     especial = None
@@ -272,7 +409,14 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
 def actualizar_stats_finales(jugador, stats_temporales):
     """
     Al finalizar el combate, actualiza la salud y energía reales del jugador
-    en proporción a las stats temporales finales.
+    según el porcentaje restante en las estadísticas temporales.
+
+    Args:
+        jugador: Objeto Jugador.
+        stats_temporales (dict): Estadísticas actuales del combate.
+
+    Returns:
+        None
     """
     porcentaje_salud = stats_temporales["salud"] / stats_temporales["salud_max"]
     porcentaje_energia = stats_temporales["energia"] / stats_temporales["energia_max"]
