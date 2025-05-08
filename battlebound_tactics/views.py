@@ -5,6 +5,8 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
+from .core.combate.efectos import procesar_estados, limpiar_estados_expirados, aplicar_estado
+from .core.combate.jugador import obtener_stats_temporales, uso_habilidad, calcular_golpe_recibido, accion_basica, actualizar_stats_finales
 from .forms import RegistroForm
 from .models import Jugador, Arma, Combate
 
@@ -95,34 +97,73 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
 
 
 @login_required
-def combate(request, combate_id):
+def combate_ejemplo(request, id_enemigo):
+    #Esta view es solo un ejemplo del combate, la modificaré más adelante.
+    jugador = request.user.jugador
+    enemigo = get_object_or_404(Jugador, pk=id_enemigo)
 
-    lucha = get_object_or_404(Combate, id=combate_id)
-    jugador = lucha.jugador
-    enemigo = lucha.enemigo
+    # Obtenemos stats temporales de ambos combatientes
+    stats_jugador = obtener_stats_temporales(jugador)
+    stats_enemigo = obtener_stats_temporales(enemigo)
 
-    if request.method == "POST":
+    log = []
 
-        accion = request.POST.get("accion")
+    # 1️⃣ Procesar estados al inicio del turno
+    log += procesar_estados(stats_jugador, jugador)
+    log += procesar_estados(stats_enemigo, enemigo)
 
-        if jugador.salud <= 0:
-            derrota_j1 = f"{jugador.nombre} ha sido derrotado, se acabó"
-            enemigo.victorias += 1
-            enemigo.save()
-            jugador.salud = 1
-            jugador.derrotas += 1
-            jugador.save()
-            return render(request, "app/resolucion.html", {"combate": lucha, "resolucion_1": derrota_j1})
+    # 2️⃣ Eliminar estados expirados
+    limpiar_estados_expirados(stats_jugador)
+    limpiar_estados_expirados(stats_enemigo)
 
-        return render(request, "app/combate.html", {
-            "combate": lucha,
-            "jugador": jugador,
-            "enemigo": enemigo,
-        })
+    # 3️⃣ El jugador usa una habilidad
+    resultado, mensaje_habilidad = uso_habilidad(jugador, "habilidad_1", stats_jugador)
+    log.append(mensaje_habilidad)
+
+    if isinstance(resultado, tuple):
+        tipo, valor = resultado
+
+        if tipo == "daño":
+            danio_recibido, mensaje_danio = calcular_golpe_recibido(valor, enemigo, stats_enemigo)
+            stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio_recibido)
+            log.append(mensaje_danio)
+
+        elif tipo == "curacion":
+            stats_jugador["salud"] = min(
+                stats_jugador["salud"] + valor, stats_jugador["salud_max"]
+            )
+            log.append(f"Recuperas {valor} puntos de salud.")
+
+    elif isinstance(resultado, list):
+        for estado in resultado:
+            if estado["tipo"] == "negativo" or estado["tipo"] == "debuff":
+                aplicar_estado(stats_enemigo, estado)
+                log.append(f"Aplicas {estado['tipo']} al enemigo: {estado}")
+            elif estado["tipo"] == "buff":
+                aplicar_estado(stats_jugador, estado)
+                log.append(f"Te aplicas un buff: {estado}")
+
+    # 4️⃣ El enemigo ataca (ataque básico para este ejemplo)
+    golpe, mensaje_ataque = accion_basica(stats_enemigo, enemigo)
+    log.append(mensaje_ataque)
+
+    danio_al_jugador, mensaje_danio = calcular_golpe_recibido(golpe, jugador, stats_jugador)
+    stats_jugador["salud"] = max(1, stats_jugador["salud"] - danio_al_jugador)
+    log.append(mensaje_danio)
+
+    # 5️⃣ Aplicar efectos de estados expirados nuevamente
+    limpiar_estados_expirados(stats_jugador)
+    limpiar_estados_expirados(stats_enemigo)
+
+    # 6️⃣ Actualizar stats reales si terminó el combate
+    if stats_jugador["salud"] <= 0 or stats_enemigo["salud"] <= 0:
+        actualizar_stats_finales(jugador, stats_jugador)
+        actualizar_stats_finales(enemigo, stats_enemigo)
+        log.append("¡El combate ha terminado!")
 
     return render(request, "app/combate.html", {
-        "combate": lucha,
-        "jugador": jugador,
-        "enemigo": enemigo,
+        "log": log,
+        "stats_jugador": stats_jugador,
+        "stats_enemigo": stats_enemigo
     })
 
