@@ -1,6 +1,10 @@
 import random
 
 
+# =====================
+# CÁLCULO DE ESTADÍSTICAS
+# =====================
+
 def inicializar_stats(jugador):
     """
     Inicializa las estadísticas base del jugador.
@@ -32,7 +36,7 @@ def aplicar_pasiva(jugador, stats):
         stats (dict): Estadísticas actuales.
 
     Returns:
-        dict: Estadísticas actualizadas.
+        No devuelve nada.
     """
     pasiva = jugador.habilidad_pasiva
     if pasiva:
@@ -41,7 +45,7 @@ def aplicar_pasiva(jugador, stats):
         stats["ataque"] += pasiva.efecto.get("bonus_ataque", 0)
         stats["defensa"] += pasiva.efecto.get("bonus_defensa", 0)
         stats["velocidad"] += pasiva.efecto.get("bonus_velocidad", 0)
-    return stats
+    # No hay return
 
 
 def aplicar_equipo(jugador, stats):
@@ -53,10 +57,10 @@ def aplicar_equipo(jugador, stats):
         stats (dict): Estadísticas actuales.
 
     Returns:
-        dict: Estadísticas actualizadas.
+        No devuelve nada.
     """
-    arma = jugador.arma if jugador.arma else None
-    equipo = jugador.equipo if jugador.equipo else None
+    arma = jugador.arma
+    equipo = jugador.equipo
     if arma:
         stats["ataque"] += arma.ataque
         stats["defensa"] += arma.defensa
@@ -67,7 +71,6 @@ def aplicar_equipo(jugador, stats):
         stats["velocidad"] += equipo.velocidad
         stats["energia_max"] += equipo.energia_espiritual_maxima
         stats["salud_max"] += equipo.salud_maxima
-    return stats
 
 
 def calcular_stats_totales(jugador):
@@ -81,9 +84,10 @@ def calcular_stats_totales(jugador):
         dict: Estadísticas finales completas.
     """
     stats = inicializar_stats(jugador)
-    stats = aplicar_pasiva(jugador, stats)
-    stats = aplicar_equipo(jugador, stats)
+    aplicar_pasiva(jugador, stats)
+    aplicar_equipo(jugador, stats)
     return stats
+
 
 
 def ajuste_stats(jugador, stats):
@@ -102,15 +106,16 @@ def ajuste_stats(jugador, stats):
     energia_max_antigua = jugador.energia_espiritual_maxima
     energia_antigua = jugador.energia_espiritual
 
-    # Calculamos porcentaje actual
-    porcentaje_salud = salud_antigua / salud_max_antigua if salud_max_antigua else 1
-    porcentaje_energia = energia_antigua / energia_max_antigua if energia_max_antigua else 1
+    # Calculamos el porcentaje actual de salud y energía para mantener la proporción tras aplicar los nuevos máximos.
+    porcentaje_salud = salud_antigua / salud_max_antigua if salud_max_antigua else 0.0
+    porcentaje_energia = energia_antigua / energia_max_antigua if energia_max_antigua else 0.0
 
-    # Aplicamos los porcentajes a las nuevas máximas
     stats["salud"] = int(stats["salud_max"] * porcentaje_salud)
     stats["energia"] = int(stats["energia_max"] * porcentaje_energia)
 
-    return stats
+    # Nos aseguramos de que la salud nunca sea menor que 1 y la energía nunca sea negativa.
+    stats["salud"] = max(1, stats["salud"])
+    stats["energia"] = max(0, stats["energia"])
 
 def obtener_stats_temporales(jugador):
     """
@@ -124,7 +129,7 @@ def obtener_stats_temporales(jugador):
         dict: Estadísticas temporales para el combate.
     """
     stats = calcular_stats_totales(jugador)
-    stats = ajuste_stats(jugador, stats)
+    ajuste_stats(jugador, stats)
 
     return {
         "salud_max": stats["salud_max"],
@@ -136,6 +141,7 @@ def obtener_stats_temporales(jugador):
         "velocidad": stats["velocidad"]
     }
 
+
 # =====================
 # PROBABILIDADES POR CLASE
 # =====================
@@ -143,6 +149,7 @@ def obtener_stats_temporales(jugador):
 def tirada(probabilidad):
     """
     Realiza una tirada aleatoria según una probabilidad.
+    Controla que la probabilidad esté entre 0 y 1.
 
     Args:
         probabilidad (float): Valor entre 0 y 1.
@@ -150,7 +157,11 @@ def tirada(probabilidad):
     Returns:
         bool: True si acierta, False si falla.
     """
+
+    # Aseguramos que la probabilidad esté entre 0 y 1 para evitar valores inválidos.
+    probabilidad = max(0.0, min(probabilidad, 1.0))
     return random.random() < probabilidad
+
 
 def obtener_probabilidades_por_clase(clase):
     """
@@ -200,6 +211,7 @@ def obtener_probabilidades_por_clase(clase):
         "adicional": 0.10
     })
 
+
 def critico(jugador):
     """
     Realiza una tirada para determinar si el ataque es crítico.
@@ -213,6 +225,7 @@ def critico(jugador):
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["critico"])
 
+
 def esquivar(jugador):
     """
     Realiza una tirada para determinar si el jugador esquiva el ataque.
@@ -223,8 +236,11 @@ def esquivar(jugador):
     Returns:
         bool: True si esquiva.
     """
+
+    # Si el jugador esquiva, no recibe daño.
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["esquivar"])
+
 
 def adicional(jugador):
     """
@@ -239,6 +255,10 @@ def adicional(jugador):
     probabilidades = obtener_probabilidades_por_clase(jugador.clase)
     return tirada(probabilidades["adicional"])
 
+
+# =====================
+# ACCIONES BÁSICAS DEL COMBATE
+# =====================
 
 def accion_basica(stats_temporales, jugador):
     """
@@ -316,6 +336,10 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
     return danio, mensaje
 
 
+# =====================
+# USO DE HABILIDADES
+# =====================
+
 def uso_habilidad(jugador, habilidad, stats_temporales):
     """
     Usa una habilidad activa, aplicando su coste y efectos. Los costes y los efectos se aplican solo sobre las stats temporales.
@@ -326,9 +350,8 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
         stats_temporales (dict): Estadísticas actuales del jugador.
 
     Returns:
-        tuple: Resultados de los efectos, mensaje y estadísticas actualizadas.
+        tuple: Resultados de los efectos y mensaje descriptivo.
     """
-    # 🔹 Selección de habilidad
     especial = None
     if habilidad == "habilidad_1":
         especial = jugador.habilidad_1
@@ -338,14 +361,13 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
         especial = jugador.habilidad_3
 
     if not especial:
-        return [], "El jugador no tiene asignada esa habilidad.", stats_temporales
+        return [], "El jugador no tiene asignada esa habilidad."
 
     coste_energia = especial.coste_energia
     coste_salud = especial.coste_salud
 
-    # 🔹 Verificar recursos en stats temporales
     if stats_temporales["energia"] < coste_energia:
-        return [], f"No tienes suficiente energía para usar {especial.nombre}.", stats_temporales
+        return [], f"No tienes suficiente energía para usar {especial.nombre}."
 
     coste_salud_real = int(stats_temporales["salud_max"] * coste_salud)
     salud_necesaria = coste_salud_real + 1
@@ -354,13 +376,14 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
         return [], (
             f"No tienes suficiente salud para usar {especial.nombre}. "
             f"Necesitas al menos {salud_necesaria} puntos de salud."
-        ), stats_temporales
+        )
 
-    # 🔹 Descontar los costes en stats temporales
     stats_temporales["energia"] -= coste_energia
-    stats_temporales["salud"] -= coste_salud_real
+    stats_temporales["energia"] = max(0, stats_temporales["energia"])
 
-    # 🔹 Leer efectos
+    stats_temporales["salud"] -= coste_salud_real
+    stats_temporales["salud"] = max(1, stats_temporales["salud"])
+
     efecto_data = especial.efecto
     efectos = efecto_data.get("efectos", [])
     mensaje_personalizado = efecto_data.get("mensaje_personalizado", "Usas una habilidad.")
@@ -368,21 +391,20 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
     resultados = []
     mensajes = [mensaje_personalizado]
 
-    # 🔹 Aplicar cada efecto
     for efecto in efectos:
         tipo = efecto.get("tipo")
 
         if tipo == "daño":
             escala = efecto.get("escala_ataque", 1)
-            bonus_fijo = efecto.get("bonus_fijo", 0)
-            golpe = int(stats_temporales["ataque"] * escala) + bonus_fijo
+            valor = efecto.get("valor", 0)
+            golpe = int(stats_temporales["ataque"] * escala) + valor
             resultados.append(("daño", golpe))
             mensajes.append(f"Causas {golpe} puntos de daño.")
 
         elif tipo == "curacion":
             escala = efecto.get("escala_salud", 0)
-            bonus_fijo = efecto.get("bonus_fijo", 0)
-            curacion = int(stats_temporales["salud_max"] * escala) + bonus_fijo
+            valor = efecto.get("valor", 0)
+            curacion = int(stats_temporales["salud_max"] * escala) + valor
             stats_temporales["salud"] = min(
                 stats_temporales["salud"] + curacion,
                 stats_temporales["salud_max"]
@@ -392,19 +414,41 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
 
         elif tipo == "buff":
             stat = efecto.get("stat")
-            bonus = efecto.get("bonus", 0)
+            valor = efecto.get("valor", 0)
             duracion = efecto.get("duracion_turnos", 1)
-            resultados.append(("buff", stat, bonus, duracion))
+            resultados.append(("buff", stat, valor, duracion))
             mensajes.append(
-                f"Aumentas tu {stat} en {bonus} durante {duracion} turnos."
+                f"Aumentas tu {stat} en {valor} durante {duracion} turnos."
+            )
+
+        elif tipo == "debuff":
+            stat = efecto.get("stat")
+            valor = efecto.get("valor", 0)
+            duracion = efecto.get("duracion_turnos", 1)
+            resultados.append(("debuff", stat, valor, duracion))
+            mensajes.append(
+                f"Reducirás el {stat} de tu enemigo en {valor} durante {duracion} turnos."
+            )
+
+        elif tipo == "negativo":
+            estado = efecto.get("estado")
+            valor = efecto.get("valor", 0)
+            duracion = efecto.get("duracion_turnos", 1)
+            resultados.append(("negativo", estado, valor, duracion))
+            mensajes.append(
+                f"Aplicas el estado negativo {estado} ({valor} por turno, {duracion} turnos)."
             )
 
         else:
             mensajes.append("No se permitirán hechizos del mundo oscuro...")
 
     mensaje_final = " ".join(mensajes)
-    return resultados, mensaje_final, stats_temporales
+    return resultados, mensaje_final
 
+
+# =====================
+# CÁLCULOS POST-COMBATE
+# =====================
 
 def actualizar_stats_finales(jugador, stats_temporales):
     """
@@ -427,3 +471,131 @@ def actualizar_stats_finales(jugador, stats_temporales):
     jugador.salud = nueva_salud
     jugador.energia_espiritual = nueva_energia
     jugador.save()
+
+
+def subir_nivel(jugador, nuevo_nivel):
+    """
+    Sube el jugador desde su nivel actual hasta el nuevo nivel indicado,
+    aplicando escalado acumulativo en cada estadística según su clase.
+
+    Las estadísticas que suben:
+    - salud_maxima
+    - energia_espiritual_maxima
+    - ataque
+    - defensa
+    - velocidad
+
+    El crecimiento depende de:
+    - Curva base por clase.
+    - Multiplicadores personalizados por stat y clase.
+
+    :param jugador: instancia del jugador.
+    :param nuevo_nivel: int, nivel al que subirá el jugador.
+    """
+
+    CURVAS_CLASE = {
+        "GUERRERO": {"salud": 15, "ataque": 5, "defensa": 4, "velocidad": 1, "energia": 3},
+        "ARQUERO": {"salud": 10, "ataque": 6, "defensa": 3, "velocidad": 3, "energia": 5},
+        "MAGO": {"salud": 8, "ataque": 7, "defensa": 2, "velocidad": 2, "energia": 8},
+        "LUCHADOR": {"salud": 13, "ataque": 5, "defensa": 4, "velocidad": 2, "energia": 4},
+        "ESPIRITUALISTA": {"salud": 11, "ataque": 6, "defensa": 3, "velocidad": 2, "energia": 6},
+        "ASTRAL": {"salud": 9, "ataque": 7, "defensa": 3, "velocidad": 3, "energia": 5},
+    }
+
+    MULTIPLICADORES_CLASE = {
+        "GUERRERO": {"salud": 0.15, "ataque": 0.10, "defensa": 0.12, "velocidad": 0.05, "energia": 0.08},
+        "ARQUERO": {"salud": 0.08, "ataque": 0.12, "defensa": 0.07, "velocidad": 0.20, "energia": 0.10},
+        "MAGO": {"salud": 0.07, "ataque": 0.18, "defensa": 0.05, "velocidad": 0.10, "energia": 0.15},
+        "LUCHADOR": {"salud": 0.13, "ataque": 0.12, "defensa": 0.10, "velocidad": 0.10, "energia": 0.10},
+        "ESPIRITUALISTA": {"salud": 0.10, "ataque": 0.14, "defensa": 0.08, "velocidad": 0.10, "energia": 0.12},
+        "ASTRAL": {"salud": 0.09, "ataque": 0.15, "defensa": 0.09, "velocidad": 0.12, "energia": 0.10},
+    }
+
+    clase = jugador.clase.upper()
+    curva = CURVAS_CLASE.get(clase)
+    multiplicadores = MULTIPLICADORES_CLASE.get(clase)
+
+    if not curva or not multiplicadores:
+        raise ValueError(f"La clase {clase} no tiene definidas curvas o multiplicadores.")
+
+    salud = jugador.salud_maxima
+    energia = jugador.energia_espiritual_maxima
+    ataque = jugador.ataque
+    defensa = jugador.defensa
+    velocidad = jugador.velocidad
+
+    nivel_actual = getattr(jugador, "nivel", 1)
+
+    if nuevo_nivel <= nivel_actual:
+        raise ValueError("Nuevo nivel debe ser superior al nivel actual.")
+
+    # Aplicamos las mejoras para cada nivel nuevo (sin repetir el nivel actual). El +1 es necesario porque range excluye el límite superior.
+    for nivel in range(nivel_actual + 1, nuevo_nivel + 1):
+        salud += int(curva["salud"] * (1 + nivel * multiplicadores["salud"]))
+        energia += int(curva["energia"] * (1 + nivel * multiplicadores["energia"]))
+        ataque += int(curva["ataque"] * (1 + nivel * multiplicadores["ataque"]))
+        defensa += int(curva["defensa"] * (1 + nivel * multiplicadores["defensa"]))
+        velocidad += int(curva["velocidad"] * (1 + nivel * multiplicadores["velocidad"]))
+
+    jugador.salud_maxima = salud
+    jugador.energia_espiritual_maxima = energia
+    jugador.ataque = ataque
+    jugador.defensa = defensa
+    jugador.velocidad = velocidad
+    jugador.nivel = nuevo_nivel
+
+    jugador.salud = salud
+    jugador.energia_espiritual = energia
+
+    jugador.save()
+
+
+def obtener_incremento_exp_por_nivel(nivel):
+    if nivel <= 25:
+        return 0.15
+    elif nivel <= 50:
+        return 0.20
+    elif nivel <= 80:
+        return 0.25
+    elif nivel <= 120:
+        return 0.30
+    else:
+        return 0.33
+
+
+def ganar_experiencia(jugador, exp_ganada):
+    """
+    Suma experiencia al jugador. Si alcanza el máximo, sube de nivel
+    y aumenta la experiencia necesaria para el siguiente nivel.
+    """
+
+    log = []
+    jugador.experiencia += exp_ganada
+    log.append(f"Has ganado {exp_ganada} puntos de experiencia.")
+
+    while jugador.experiencia >= jugador.experiencia_maxima:
+        jugador.experiencia -= jugador.experiencia_maxima
+
+        nivel_anterior = jugador.nivel
+        nuevo_nivel = jugador.nivel + 1
+
+        subir_nivel(jugador, nuevo_nivel)
+
+        log.append(
+            f"¡Subiste de nivel! Nivel {nivel_anterior} ➜ {nuevo_nivel}."
+        )
+
+        porcentaje_escalado = obtener_incremento_exp_por_nivel(jugador.nivel)
+
+        # Incrementamos la experiencia máxima requerida para el siguiente nivel según el porcentaje que depende del nivel actual.
+        jugador.experiencia_maxima = int(
+            jugador.experiencia_maxima * (1 + porcentaje_escalado)
+        )
+
+    log.append(
+        f"Ahora necesitas {jugador.experiencia_maxima} puntos de experiencia para el próximo nivel."
+    )
+
+    jugador.save()
+
+    return log

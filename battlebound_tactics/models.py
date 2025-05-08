@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 # JUGADOR
 # ------------------
 class Jugador(models.Model):
-
     ALINEACIONES = [
         ('Aliado', 'Aliado'),
         ('Neutro', 'Neutro'),
@@ -44,9 +43,12 @@ class Jugador(models.Model):
     arma = models.ForeignKey("Arma", on_delete=models.SET_NULL, null=True, blank=True)
     accesorio = models.ForeignKey("Accesorio", on_delete=models.SET_NULL, null=True, blank=True)
     habilidad_pasiva = models.ForeignKey("Pasiva", on_delete=models.SET_NULL, null=True, blank=True)
-    habilidad_1 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_1")
-    habilidad_2 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_2")
-    habilidad_3 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True, related_name="habilidad_3")
+    habilidad_1 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="habilidad_1")
+    habilidad_2 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="habilidad_2")
+    habilidad_3 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="habilidad_3")
     medidor_definitiva = models.IntegerField(default=0)
     oro = models.IntegerField(default=0)
     piedras_dragon = models.IntegerField(default=0)
@@ -81,6 +83,7 @@ class Objeto(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Mochila(models.Model):
     jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE, related_name="mochila")
     objetos = models.ManyToManyField(Objeto, through="ObjetoEnMochila")
@@ -88,10 +91,12 @@ class Mochila(models.Model):
     def __str__(self):
         return f"Mochila de {self.jugador.nombre}"
 
+
 class ObjetoEnMochila(models.Model):
     mochila = models.ForeignKey(Mochila, on_delete=models.CASCADE)
     objeto = models.ForeignKey(Objeto, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=1)
+
 
 # ------------------
 # EQUIPAMIENTO
@@ -107,6 +112,7 @@ class Arma(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Accesorio(models.Model):
     nombre = models.CharField(max_length=100)
     salud = models.IntegerField(default=0)
@@ -120,6 +126,7 @@ class Accesorio(models.Model):
     def __str__(self):
         return self.nombre
 
+
 # ------------------
 # HABILIDADES PASIVAS Y ACTIVAS
 # ------------------
@@ -130,6 +137,7 @@ class Pasiva(models.Model):
 
     def __str__(self):
         return self.nombre
+
 
 class Activa(models.Model):
     nombre = models.CharField(max_length=100)
@@ -144,23 +152,25 @@ class Activa(models.Model):
     descripcion = models.TextField()
     efecto = models.JSONField(default=dict)
     nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)])
+
+
 # ------------------
 # HIDDEN POTENTIAL
 # ------------------
 #class HiddenPotentialNodeTemplate(models.Model):
-    #    nivel = models.IntegerField()
-    #descripcion = models.TextField()
-    #efecto = models.JSONField(default=dict)
-    #coste_monedas = models.IntegerField(default=0)
-    #coste_especiales = models.IntegerField(default=0)
-    #clase_objetivo = models.CharField(max_length=50)
+#    nivel = models.IntegerField()
+#descripcion = models.TextField()
+#efecto = models.JSONField(default=dict)
+#coste_monedas = models.IntegerField(default=0)
+#coste_especiales = models.IntegerField(default=0)
+#clase_objetivo = models.CharField(max_length=50)
 
 #class HiddenPotential(models.Model):
-    #   jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="hidden_potential")
-    #nodo = models.ForeignKey(HiddenPotentialNodeTemplate, on_delete=models.CASCADE)
-    #desbloqueado = models.BooleanField(default=False)
+#   jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="hidden_potential")
+#nodo = models.ForeignKey(HiddenPotentialNodeTemplate, on_delete=models.CASCADE)
+#desbloqueado = models.BooleanField(default=False)
 
-    #def __str__(self):
+#def __str__(self):
 #    return f"{self.jugador.nombre} - Nivel {self.nodo.nivel}"
 
 # ------------------
@@ -202,6 +212,7 @@ class Enemigo(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Jefe(Enemigo):
     habilidades = models.JSONField(default=dict)
     es_jefe_final = models.BooleanField(default=False)
@@ -209,6 +220,7 @@ class Jefe(Enemigo):
     class Meta:
         verbose_name = "Jefe"
         verbose_name_plural = "Jefes"
+
 
 # ------------------
 # COMBATE Y TURNOS
