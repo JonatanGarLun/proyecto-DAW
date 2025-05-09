@@ -206,6 +206,7 @@ class Enemigo(models.Model):
     dificultad = models.CharField(max_length=50)
     experiencia_otorgada = models.IntegerField(default=0)
     oro_otorgado = models.IntegerField(default=0)
+    nivel = models.IntegerField(default=1, validators=[MinValueValidator(1)])
     recompensa_especial = models.JSONField(default=dict, blank=True, null=True)
     imagen = models.ImageField(null=True, blank=True)
 

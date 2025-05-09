@@ -1,5 +1,4 @@
-import random
-
+from globales.probabilidades import critico, esquivar, adicional
 
 # =====================
 # CÁLCULO DE ESTADÍSTICAS
@@ -142,118 +141,7 @@ def obtener_stats_temporales(jugador):
     }
 
 
-# =====================
-# PROBABILIDADES POR CLASE
-# =====================
 
-def tirada(probabilidad):
-    """
-    Realiza una tirada aleatoria según una probabilidad.
-    Controla que la probabilidad esté entre 0 y 1.
-
-    Args:
-        probabilidad (float): Valor entre 0 y 1.
-
-    Returns:
-        bool: True si acierta, False si falla.
-    """
-
-    # Aseguramos que la probabilidad esté entre 0 y 1 para evitar valores inválidos.
-    probabilidad = max(0.0, min(probabilidad, 1.0))
-    return random.random() < probabilidad
-
-
-def obtener_probabilidades_por_clase(clase):
-    """
-    Devuelve las probabilidades de crítico, esquivar y ataque adicional según la clase del jugador.
-
-    Args:
-        clase (str): Nombre de la clase.
-
-    Returns:
-        dict: Probabilidades para crítico, esquivar y adicional.
-    """
-    clases = {
-        "GUERRERO": {
-            "critico": 0.15,
-            "esquivar": 0.04,
-            "adicional": 0.10
-        },
-        "ARQUERO": {
-            "critico": 0.22,
-            "esquivar": 0.18,
-            "adicional": 0.22
-        },
-        "MAGO": {
-            "critico": 0.17,
-            "esquivar": 0.05,
-            "adicional": 0.12
-        },
-        "LUCHADOR": {
-            "critico": 0.16,
-            "esquivar": 0.07,
-            "adicional": 0.14
-        },
-        "ESPIRITUALISTA": {
-            "critico": 0.18,
-            "esquivar": 0.09,
-            "adicional": 0.13
-        },
-        "ASTRAL": {
-            "critico": 0.20,
-            "esquivar": 0.10,
-            "adicional": 0.18
-        }
-    }
-    return clases.get(clase.upper(), {
-        "critico": 0.10,
-        "esquivar": 0.05,
-        "adicional": 0.10
-    })
-
-
-def critico(jugador):
-    """
-    Realiza una tirada para determinar si el ataque es crítico.
-
-    Args:
-        jugador: Objeto Jugador.
-
-    Returns:
-        bool: True si es crítico.
-    """
-    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
-    return tirada(probabilidades["critico"])
-
-
-def esquivar(jugador):
-    """
-    Realiza una tirada para determinar si el jugador esquiva el ataque.
-
-    Args:
-        jugador: Objeto Jugador.
-
-    Returns:
-        bool: True si esquiva.
-    """
-
-    # Si el jugador esquiva, no recibe daño.
-    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
-    return tirada(probabilidades["esquivar"])
-
-
-def adicional(jugador):
-    """
-    Realiza una tirada para determinar si el jugador realiza un ataque adicional.
-
-    Args:
-        jugador: Objeto Jugador.
-
-    Returns:
-        bool: True si realiza ataque adicional.
-    """
-    probabilidades = obtener_probabilidades_por_clase(jugador.clase)
-    return tirada(probabilidades["adicional"])
 
 
 # =====================
