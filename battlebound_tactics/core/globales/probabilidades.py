@@ -31,7 +31,7 @@ def critico(objetivo):
     if hasattr(objetivo, "clase"):
         prob = obtener_probabilidades_por_clase(objetivo.clase)["critico"]
     else:
-        prob = 0.10  # Valor fijo para enemigos
+        prob = 0.10 
     return tirada(prob)
 
 
@@ -42,7 +42,7 @@ def esquivar(objetivo):
     if hasattr(objetivo, "clase"):
         prob = obtener_probabilidades_por_clase(objetivo.clase)["esquivar"]
     else:
-        prob = 0.05  # Valor fijo para enemigos
+        prob = 0.10
     return tirada(prob)
 
 
@@ -53,5 +53,5 @@ def adicional(objetivo):
     if hasattr(objetivo, "clase"):
         prob = obtener_probabilidades_por_clase(objetivo.clase)["adicional"]
     else:
-        prob = 0.10  # Valor fijo para enemigos
+        prob = 0.10
     return tirada(prob)

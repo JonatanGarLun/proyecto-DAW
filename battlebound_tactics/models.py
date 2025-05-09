@@ -132,7 +132,7 @@ class Accesorio(models.Model):
 # ------------------
 class Pasiva(models.Model):
     nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
+    descripcion = models.TextField(max_length=300, blank=True, null=True)
     efecto = models.JSONField(default=dict)
 
     def __str__(self):
@@ -149,10 +149,32 @@ class Activa(models.Model):
             MaxValueValidator(0.99)
         ]
     )
-    descripcion = models.TextField()
+    descripcion = models.TextField(max_length=300, blank=True, null=True)
     efecto = models.JSONField(default=dict)
     nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)])
 
+    def __str__(self):
+        return f"Habilidad: {self.nombre} - Nivel {self.nivel_necesario}"
+
+class ActivaEnemigo(models.Model):
+    nombre= models.CharField(max_length=100)
+    descripcion = models.TextField(max_length=300, blank=True, null=True)
+    efecto = models.JSONField(default=dict)
+    cooldown_actual = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    cooldown_maximo = models.IntegerField(default=0, validators=[MinValueValidator(1)])
+
+    def reducir_cooldown(self):
+        if self.cooldown_actual > 0:
+            self.cooldown_actual -= 1
+
+    def esta_disponible(self):
+        return self.cooldown_actual == 0
+
+    def activar(self):
+        self.cooldown_actual = self.cooldown_maximo
+
+    def __str__(self):
+        return f"{self.nombre} - Cooldown {self.cooldown_maximo}"
 
 # ------------------
 # HIDDEN POTENTIAL
@@ -199,7 +221,7 @@ class Enemigo(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
     salud_maxima = models.IntegerField(default=100)
-    salud = models.IntegerField(default=salud_maxima)
+    salud = models.IntegerField(default=100)
     ataque = models.IntegerField(default=10)
     defensa = models.IntegerField(default=10)
     velocidad = models.IntegerField(default=10)
@@ -209,6 +231,12 @@ class Enemigo(models.Model):
     nivel = models.IntegerField(default=1, validators=[MinValueValidator(1)])
     recompensa_especial = models.JSONField(default=dict, blank=True, null=True)
     imagen = models.ImageField(null=True, blank=True)
+    habilidad_1 = models.ForeignKey(ActivaEnemigo, on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="enemigo_habilidad_1")
+    habilidad_2 = models.ForeignKey(ActivaEnemigo, on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="enemigo_habilidad_2")
+    habilidad_3 = models.ForeignKey(ActivaEnemigo, on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="enemigo_habilidad_3")
 
     def __str__(self):
         return f"{self.nombre} - Dificultad {self.dificultad}"

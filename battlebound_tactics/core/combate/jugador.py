@@ -1,148 +1,145 @@
 from globales.probabilidades import critico, esquivar, adicional
 
 # =====================
-# CÁLCULO DE ESTADÍSTICAS
+# CÁLCULO DE ESTADÍSTICAS / ANTIGUO - Lo he modificado y lo he pasado a un módulo común para el cálculo de estadísticas
 # =====================
 
-def inicializar_stats(jugador):
-    """
-    Inicializa las estadísticas base del jugador.
-
-    Args:
-        jugador: Objeto Jugador con atributos de estadísticas.
-
-    Returns:
-        dict: Diccionario con las estadísticas básicas.
-    """
-    stats = {
-        "salud_max": jugador.salud_maxima,
-        "salud": jugador.salud,
-        "energia_max": jugador.energia_espiritual_maxima,
-        "energia": jugador.energia_espiritual,
-        "ataque": jugador.ataque,
-        "defensa": jugador.defensa,
-        "velocidad": jugador.velocidad
-    }
-    return stats
-
-
-def aplicar_pasiva(jugador, stats):
-    """
-    Aplica los bonificadores de la habilidad pasiva del jugador a sus estadísticas.
-
-    Args:
-        jugador: Objeto Jugador con habilidad_pasiva asignada.
-        stats (dict): Estadísticas actuales.
-
-    Returns:
-        No devuelve nada.
-    """
-    pasiva = jugador.habilidad_pasiva
-    if pasiva:
-        stats["salud_max"] += pasiva.efecto.get("bonus_vida", 0)
-        stats["energia_max"] += pasiva.efecto.get("bonus_energia", 0)
-        stats["ataque"] += pasiva.efecto.get("bonus_ataque", 0)
-        stats["defensa"] += pasiva.efecto.get("bonus_defensa", 0)
-        stats["velocidad"] += pasiva.efecto.get("bonus_velocidad", 0)
-    # No hay return
-
-
-def aplicar_equipo(jugador, stats):
-    """
-    Aplica los bonificadores del arma y equipo del jugador a sus estadísticas.
-
-    Args:
-        jugador: Objeto Jugador con arma y equipo asignados.
-        stats (dict): Estadísticas actuales.
-
-    Returns:
-        No devuelve nada.
-    """
-    arma = jugador.arma
-    equipo = jugador.equipo
-    if arma:
-        stats["ataque"] += arma.ataque
-        stats["defensa"] += arma.defensa
-        stats["velocidad"] += arma.velocidad
-    if equipo:
-        stats["ataque"] += equipo.ataque
-        stats["defensa"] += equipo.defensa
-        stats["velocidad"] += equipo.velocidad
-        stats["energia_max"] += equipo.energia_espiritual_maxima
-        stats["salud_max"] += equipo.salud_maxima
-
-
-def calcular_stats_totales(jugador):
-    """
-    Calcula las estadísticas totales aplicando pasiva y equipo.
-
-    Args:
-        jugador: Objeto Jugador.
-
-    Returns:
-        dict: Estadísticas finales completas.
-    """
-    stats = inicializar_stats(jugador)
-    aplicar_pasiva(jugador, stats)
-    aplicar_equipo(jugador, stats)
-    return stats
-
-
-
-def ajuste_stats(jugador, stats):
-    """
-    Ajusta la salud y energía actuales proporcionalmente a las nuevas estadísticas máximas.
-
-    Args:
-        jugador: Objeto Jugador.
-        stats (dict): Estadísticas actuales.
-
-    Returns:
-        dict: Estadísticas ajustadas.
-    """
-    salud_max_antigua = jugador.salud_maxima
-    salud_antigua = jugador.salud
-    energia_max_antigua = jugador.energia_espiritual_maxima
-    energia_antigua = jugador.energia_espiritual
-
-    # Calculamos el porcentaje actual de salud y energía para mantener la proporción tras aplicar los nuevos máximos.
-    porcentaje_salud = salud_antigua / salud_max_antigua if salud_max_antigua else 0.0
-    porcentaje_energia = energia_antigua / energia_max_antigua if energia_max_antigua else 0.0
-
-    stats["salud"] = int(stats["salud_max"] * porcentaje_salud)
-    stats["energia"] = int(stats["energia_max"] * porcentaje_energia)
-
-    # Nos aseguramos de que la salud nunca sea menor que 1 y la energía nunca sea negativa.
-    stats["salud"] = max(1, stats["salud"])
-    stats["energia"] = max(0, stats["energia"])
-
-def obtener_stats_temporales(jugador):
-    """
-    Obtiene una copia de las estadísticas totales y ajustadas del jugador
-    que se usarán durante el combate.
-
-    Args:
-        jugador: Objeto Jugador.
-
-    Returns:
-        dict: Estadísticas temporales para el combate.
-    """
-    stats = calcular_stats_totales(jugador)
-    ajuste_stats(jugador, stats)
-
-    return {
-        "salud_max": stats["salud_max"],
-        "salud": stats["salud"],
-        "energia_max": stats["energia_max"],
-        "energia": stats["energia"],
-        "ataque": stats["ataque"],
-        "defensa": stats["defensa"],
-        "velocidad": stats["velocidad"]
-    }
-
-
-
-
+# def inicializar_stats(jugador):
+#     """
+#     Inicializa las estadísticas base del jugador.
+#
+#     Args:
+#         jugador: Objeto Jugador con atributos de estadísticas.
+#
+#     Returns:
+#         dict: Diccionario con las estadísticas básicas.
+#     """
+#     stats = {
+#         "salud_max": jugador.salud_maxima,
+#         "salud": jugador.salud,
+#         "energia_max": jugador.energia_espiritual_maxima,
+#         "energia": jugador.energia_espiritual,
+#         "ataque": jugador.ataque,
+#         "defensa": jugador.defensa,
+#         "velocidad": jugador.velocidad
+#     }
+#     return stats
+#
+#
+# def aplicar_pasiva(jugador, stats):
+#     """
+#     Aplica los bonificadores de la habilidad pasiva del jugador a sus estadísticas.
+#
+#     Args:
+#         jugador: Objeto Jugador con habilidad_pasiva asignada.
+#         stats (dict): Estadísticas actuales.
+#
+#     Returns:
+#         No devuelve nada.
+#     """
+#     pasiva = jugador.habilidad_pasiva
+#     if pasiva:
+#         stats["salud_max"] += pasiva.efecto.get("bonus_vida", 0)
+#         stats["energia_max"] += pasiva.efecto.get("bonus_energia", 0)
+#         stats["ataque"] += pasiva.efecto.get("bonus_ataque", 0)
+#         stats["defensa"] += pasiva.efecto.get("bonus_defensa", 0)
+#         stats["velocidad"] += pasiva.efecto.get("bonus_velocidad", 0)
+#     # No hay return
+#
+#
+# def aplicar_equipo(jugador, stats):
+#     """
+#     Aplica los bonificadores del arma y equipo del jugador a sus estadísticas.
+#
+#     Args:
+#         jugador: Objeto Jugador con arma y equipo asignados.
+#         stats (dict): Estadísticas actuales.
+#
+#     Returns:
+#         No devuelve nada.
+#     """
+#     arma = jugador.arma
+#     equipo = jugador.equipo
+#     if arma:
+#         stats["ataque"] += arma.ataque
+#         stats["defensa"] += arma.defensa
+#         stats["velocidad"] += arma.velocidad
+#     if equipo:
+#         stats["ataque"] += equipo.ataque
+#         stats["defensa"] += equipo.defensa
+#         stats["velocidad"] += equipo.velocidad
+#         stats["energia_max"] += equipo.energia_espiritual_maxima
+#         stats["salud_max"] += equipo.salud_maxima
+#
+#
+# def calcular_stats_totales(jugador):
+#     """
+#     Calcula las estadísticas totales aplicando pasiva y equipo.
+#
+#     Args:
+#         jugador: Objeto Jugador.
+#
+#     Returns:
+#         dict: Estadísticas finales completas.
+#     """
+#     stats = inicializar_stats(jugador)
+#     aplicar_pasiva(jugador, stats)
+#     aplicar_equipo(jugador, stats)
+#     return stats
+#
+#
+#
+# def ajuste_stats(jugador, stats):
+#     """
+#     Ajusta la salud y energía actuales proporcionalmente a las nuevas estadísticas máximas.
+#
+#     Args:
+#         jugador: Objeto Jugador.
+#         stats (dict): Estadísticas actuales.
+#
+#     Returns:
+#         dict: Estadísticas ajustadas.
+#     """
+#     salud_max_antigua = jugador.salud_maxima
+#     salud_antigua = jugador.salud
+#     energia_max_antigua = jugador.energia_espiritual_maxima
+#     energia_antigua = jugador.energia_espiritual
+#
+#     # Calculamos el porcentaje actual de salud y energía para mantener la proporción tras aplicar los nuevos máximos.
+#     porcentaje_salud = salud_antigua / salud_max_antigua if salud_max_antigua else 0.0
+#     porcentaje_energia = energia_antigua / energia_max_antigua if energia_max_antigua else 0.0
+#
+#     stats["salud"] = int(stats["salud_max"] * porcentaje_salud)
+#     stats["energia"] = int(stats["energia_max"] * porcentaje_energia)
+#
+#     # Nos aseguramos de que la salud nunca sea menor que 1 y la energía nunca sea negativa.
+#     stats["salud"] = max(1, stats["salud"])
+#     stats["energia"] = max(0, stats["energia"])
+#
+# def obtener_stats_temporales(jugador):
+#     """
+#     Obtiene una copia de las estadísticas totales y ajustadas del jugador
+#     que se usarán durante el combate.
+#
+#     Args:
+#         jugador: Objeto Jugador.
+#
+#     Returns:
+#         dict: Estadísticas temporales para el combate.
+#     """
+#     stats = calcular_stats_totales(jugador)
+#     ajuste_stats(jugador, stats)
+#
+#     return {
+#         "salud_max": stats["salud_max"],
+#         "salud": stats["salud"],
+#         "energia_max": stats["energia_max"],
+#         "energia": stats["energia"],
+#         "ataque": stats["ataque"],
+#         "defensa": stats["defensa"],
+#         "velocidad": stats["velocidad"]
+#     }
+#
 
 # =====================
 # ACCIONES BÁSICAS DEL COMBATE
@@ -172,21 +169,16 @@ def accion_basica(stats_temporales, jugador):
 
 def ataque_adicional(stats, jugador):
     """
-    Intenta realizar un ataque adicional basado en la probabilidad de clase.
-
-    Args:
-        stats (dict): Estadísticas actuales del jugador.
-        jugador: Objeto Jugador.
-
-    Returns:
-        tuple: Daño infligido y mensaje descriptivo.
+    Intenta realizar un ataque adicional (solo uno por llamada).
     """
     if adicional(jugador):
         golpe, mensaje_base = accion_basica(stats, jugador)
-        mensaje_extra = f"¡Ver para creer! Gracias a su velocidad y estrategia, {jugador.nombre} ha logrado anteponerse a su rival y ataca de nuevo. "
-        mensaje = f"{mensaje_extra}{mensaje_base}"
+        mensaje = (
+            f"⚡ ¡{jugador.nombre} no se rinde y se lanza con un ataque extra! {mensaje_base}"
+        )
         return golpe, mensaje
-    mensaje = f"El enemigo ha evitado que {jugador.nombre} continue su ataque, mala suerte"
+
+    mensaje = f"🛡️ {jugador.nombre} buscó una segunda oportunidad... pero el enemigo logró frenarlo justo a tiempo."
     return 0, mensaje
 
 
