@@ -211,7 +211,7 @@ class Enemigo(models.Model):
     imagen = models.ImageField(null=True, blank=True)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} - Dificultad {self.dificultad}"
 
 
 class Jefe(Enemigo):
