@@ -156,25 +156,44 @@ class Activa(models.Model):
     def __str__(self):
         return f"Habilidad: {self.nombre} - Nivel {self.nivel_necesario}"
 
+
 class ActivaEnemigo(models.Model):
-    nombre= models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=300, blank=True, null=True)
     efecto = models.JSONField(default=dict)
-    cooldown_actual = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    cooldown_maximo = models.IntegerField(default=0, validators=[MinValueValidator(1)])
 
-    def reducir_cooldown(self):
+    def __str__(self):
+        return f"{self.nombre}"
+
+
+class HabilidadAsignadaEnemigo(models.Model):
+    enemigo = models.ForeignKey("Enemigo", on_delete=models.CASCADE, related_name="habilidades_asignadas")
+    plantilla = models.ForeignKey("ActivaEnemigo", on_delete=models.CASCADE)
+    cooldown_actual = models.IntegerField(default=0)
+
+    def preparada(self):
+        """Devuelve True si la habilidad está lista para usarse."""
+        return self.cooldown_actual == 0
+
+    def activar(self, cooldown=None):
+        """Activa la habilidad, asignando cooldown desde el efecto o un parámetro explícito."""
+        if cooldown is not None:
+            self.cooldown_actual = cooldown
+        else:
+            self.cooldown_actual = self.plantilla.efecto.get("cooldown", 1)
+
+    def enfriar(self):
+        """Reduce el cooldown actual en 1 si es necesario."""
         if self.cooldown_actual > 0:
             self.cooldown_actual -= 1
 
-    def esta_disponible(self):
-        return self.cooldown_actual == 0
-
-    def activar(self):
-        self.cooldown_actual = self.cooldown_maximo
+    def usar(self, cooldown=None):
+        self.activar(cooldown)
+        self.save()
 
     def __str__(self):
-        return f"{self.nombre} - Cooldown {self.cooldown_maximo}"
+        return f"{self.plantilla.nombre} (CD: {self.cooldown_actual}) para {self.enemigo.nombre}"
+
 
 # ------------------
 # HIDDEN POTENTIAL

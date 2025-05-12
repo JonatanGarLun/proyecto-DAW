@@ -1,3 +1,4 @@
+from combate.utils_combate import leer_efecto
 from globales.probabilidades import critico, esquivar, adicional
 
 # =====================
@@ -159,7 +160,7 @@ def accion_basica(stats_temporales, jugador):
     golpe = stats_temporales["ataque"]
 
     if critico(jugador):
-        golpe *= 2.5
+        golpe = int(golpe*2.5)
         mensaje = f"¡GOLPE CRÍTICO! Has asestado un golpe certero y causado {golpe} puntos de daño."
     else:
         mensaje = f"Has realizado un ataque básico y causado {golpe} puntos de daño."
@@ -264,9 +265,9 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
     stats_temporales["salud"] -= coste_salud_real
     stats_temporales["salud"] = max(1, stats_temporales["salud"])
 
-    efecto_data = especial.efecto
-    efectos = efecto_data.get("efectos", [])
-    mensaje_personalizado = efecto_data.get("mensaje_personalizado", "Usas una habilidad.")
+    efecto_data = leer_efecto(especial, "efecto", {})
+    efectos = efecto_data.get("efectos", [efecto_data]) if isinstance(efecto_data, dict) else []
+    mensaje_personalizado = leer_efecto(especial, "mensaje_personalizado", "Usas una habilidad.")
 
     resultados = []
     mensajes = [mensaje_personalizado]
@@ -324,7 +325,6 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
 
     mensaje_final = " ".join(mensajes)
     return resultados, mensaje_final
-
 
 # =====================
 # CÁLCULOS POST-COMBATE
@@ -411,11 +411,11 @@ def subir_nivel(jugador, nuevo_nivel):
 
     # Aplicamos las mejoras para cada nivel nuevo (sin repetir el nivel actual). El +1 es necesario porque range excluye el límite superior.
     for nivel in range(nivel_actual + 1, nuevo_nivel + 1):
-        salud += int(curva["salud"] * (1 + nivel * multiplicadores["salud"]))
-        energia += int(curva["energia"] * (1 + nivel * multiplicadores["energia"]))
-        ataque += int(curva["ataque"] * (1 + nivel * multiplicadores["ataque"]))
-        defensa += int(curva["defensa"] * (1 + nivel * multiplicadores["defensa"]))
-        velocidad += int(curva["velocidad"] * (1 + nivel * multiplicadores["velocidad"]))
+        salud += int(curva["salud"] * (1 + nivel * multiplicadores["salud"] + (nivel * 0.25)))
+        energia += int(curva["energia"] * (1 + nivel * multiplicadores["energia"] + (nivel * 0.25)))
+        ataque += int(curva["ataque"] * (1 + nivel * multiplicadores["ataque"] + (nivel * 0.25)))
+        defensa += int(curva["defensa"] * (1 + nivel * multiplicadores["defensa"] + (nivel * 0.25)))
+        velocidad += int(curva["velocidad"] * (1 + nivel * multiplicadores["velocidad"] + (nivel * 0.25)))
 
     jugador.salud_maxima = salud
     jugador.energia_espiritual_maxima = energia
