@@ -279,3 +279,24 @@ class Combate(models.Model):
     turnos = models.IntegerField(default=0)
     jugador = models.ForeignKey(Jugador, related_name='Jugador', on_delete=models.CASCADE)
     enemigo = models.ForeignKey(Enemigo, related_name='Enemigo', on_delete=models.CASCADE)
+
+# ------------------
+# UBICACIONES
+# ------------------
+
+class Ubicacion(models.Model):
+    TIPO_CHOICES = [
+        ("combate", "Combate"),
+        ("dialogo", "Diálogo"),
+        ("plantilla", "Plantilla externa"),
+    ]
+
+    nombre = models.CharField(max_length=100)
+    coordenadas = models.CharField(max_length=100, help_text="Formato: x1,y1,x2,y2")
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    enemigo = models.ForeignKey(Enemigo, null=True, blank=True, on_delete=models.SET_NULL)
+    plantilla_destino = models.CharField(max_length=100, blank=True, null=True, help_text="Nombre de plantilla para tipo 'plantilla'")
+    texto_dialogo = models.TextField(blank=True, null=True, help_text="Texto mostrado si el tipo es 'dialogo'")
+
+    def __str__(self):
+        return self.nombre

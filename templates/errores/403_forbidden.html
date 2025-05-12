@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso Denegado{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 5rem;">
+    <h1 style="font-size: 3rem; color: #ff4f4f;">⛔ Acceso Denegado</h1>
+    <p style="font-size: 1.3rem; margin-top: 1rem;">
+        Lo sentimos, no tienes permisos para acceder a esta página.
+    </p>
+    <p style="margin-top: 0.5rem;">
+        Si crees que esto es un error, contacta con un administrador o regresa al <a href="{% url 'inicio' %}" style="color: gold; text-decoration: underline;">menú principal</a>.
+    </p>
+</div>
+{% endblock %}

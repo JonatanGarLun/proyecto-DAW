@@ -94,18 +94,19 @@
             opacity: 0.6;
         }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-buttons {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-        }
+        {#@media (max-width: 768px) {#}
+        {#    header {#}
+        {#        flex-direction: column;#}
+        {#        align-items: flex-start;#}
+        {#    }#}
+        {##}
+        {#    .nav-buttons {#}
+        {#        flex-direction: column;#}
+        {#        align-items: flex-start;#}
+        {#        gap: 0.5rem;#}
+        {#    }#}
+        {# }#}
+        {##}
     </style>
     {% block links %}
         <!-- Bloque para añadir los enlaces de las plantillas que heredan de esta-->
@@ -121,8 +122,11 @@
             <div class="dropdown">
                 <button>Enlaces 🔽</button>
                 <div class="dropdown-content">
-                    <a href="#">Enlace 1</a>
-                    <a href="#">Enlace 2</a>
+                    <a href="{% url 'inicio' %}">Página principal</a>
+                    <a href="#">Inventario</a>
+                    <a href="#">Tienda</a>
+                    <a href="#">Posada</a>
+                    <a href="#">Habilidades</a>
                 </div>
             </div>
             <form action="{% url 'logout' %}" method="post">

@@ -1,7 +1,7 @@
 from random import choices
-from combate.utils_combate import leer_efecto
-from globales.probabilidades import critico, adicional
-from efectos import aplicar_efecto_contrario
+from battlebound_tactics.core.combate.utils_combate import leer_efecto
+from battlebound_tactics.core.globales.probabilidades import critico, adicional
+from battlebound_tactics.core.combate.efectos import aplicar_efecto_contrario
 
 
 # ============================

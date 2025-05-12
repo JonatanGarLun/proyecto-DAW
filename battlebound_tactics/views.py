@@ -1,14 +1,30 @@
-import random
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
-from .core.combate.efectos import procesar_estados, limpiar_estados_expirados, aplicar_estado
-from .core.combate.jugador import obtener_stats_temporales, uso_habilidad, calcular_golpe_recibido, accion_basica, actualizar_stats_finales
 from .forms import RegistroForm
-from .models import Jugador, Arma, Combate
+from .models import Jugador, Combate
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
+from battlebound_tactics.core.combate.efectos import (
+    aplicar_estado,
+    procesar_estados,
+    limpiar_estados_expirados
+)
+from battlebound_tactics.core.combate.jugador import (
+    accion_basica,
+    uso_habilidad,
+    actualizar_stats_finales
+)
+from battlebound_tactics.core.combate.enemigos import (
+    ia_enemiga,
+    usar_habilidad_enemigo,
+    accion_basica_enemigo
+)
+
+
 
 
 # Create your views here.
@@ -97,73 +113,193 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
 
 
 @login_required
-def combate_ejemplo(request, id_enemigo):
-    #Esta view es solo un ejemplo del combate, la modificaré más adelante.
-    jugador = request.user.jugador
-    enemigo = get_object_or_404(Jugador, pk=id_enemigo)
+def combate(request, combate_id):
+    # === 1. CARGA DE COMBATE Y PARTICIPANTES ===
 
-    # Obtenemos stats temporales de ambos combatientes
-    stats_jugador = obtener_stats_temporales(jugador)
-    stats_enemigo = obtener_stats_temporales(enemigo)
-
+    combate_creado = get_object_or_404(Combate, id=combate_id)
+    jugador = combate_creado.jugador
+    enemigo = combate_creado.enemigo
     log = []
 
-    # 1️⃣ Procesar estados al inicio del turno
+    # ======== SEGURIDAD Y CONTROL DE ACCESO =========
+
+    # Solo puede acceder el jugador dueño del combate o un admin
+    if request.user != jugador.user and not request.user.is_staff:
+        if request.user.is_authenticated:
+            return render(request, "errores/403_forbidden.html", status=403)
+        return HttpResponseForbidden("Acceso denegado.")
+
+    # Si el combate ya terminó, redirige a la pantalla de resultado
+    if combate.finalizado:
+        return redirect("resultado_combate", combate_id=combate.id)
+
+    # === 2. CONTROLAMOS SI YA SE INICIÓ ESTE COMBATE EN LA SESIÓN ===
+    combate_key = f"combate_{combate_creado.id}_iniciado"
+
+    if not request.session.get(combate_key, False):
+        # Primera vez: inicializamos stats
+        stats_jugador = obtener_stats_temporales(jugador)
+        stats_jugador["objeto"] = jugador
+        stats_enemigo = obtener_stats_temporales(enemigo)
+        stats_enemigo["objeto"] = enemigo
+
+        request.session["stats_jugador"] = stats_jugador
+        request.session["stats_enemigo"] = stats_enemigo
+        request.session[combate_key] = True
+    else:
+        # Ya está iniciado: recuperamos
+        stats_jugador = request.session["stats_jugador"]
+        stats_enemigo = request.session["stats_enemigo"]
+
+    # === 3. PROCESAR EFECTOS DE ESTADO (INICIO DE TURNO) ===
     log += procesar_estados(stats_jugador, jugador)
     log += procesar_estados(stats_enemigo, enemigo)
 
-    # 2️⃣ Eliminar estados expirados
     limpiar_estados_expirados(stats_jugador)
     limpiar_estados_expirados(stats_enemigo)
 
-    # 3️⃣ El jugador usa una habilidad
-    resultado, mensaje_habilidad = uso_habilidad(jugador, "habilidad_1", stats_jugador)
-    log.append(mensaje_habilidad)
-
-    if isinstance(resultado, tuple):
-        tipo, valor = resultado
-
-        if tipo == "daño":
-            danio_recibido, mensaje_danio = calcular_golpe_recibido(valor, enemigo, stats_enemigo)
-            stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio_recibido)
-            log.append(mensaje_danio)
-
-        elif tipo == "curacion":
-            stats_jugador["salud"] = min(
-                stats_jugador["salud"] + valor, stats_jugador["salud_max"]
-            )
-            log.append(f"Recuperas {valor} puntos de salud.")
-
-    elif isinstance(resultado, list):
-        for estado in resultado:
-            if estado["tipo"] == "negativo" or estado["tipo"] == "debuff":
-                aplicar_estado(stats_enemigo, estado)
-                log.append(f"Aplicas {estado['tipo']} al enemigo: {estado}")
-            elif estado["tipo"] == "buff":
-                aplicar_estado(stats_jugador, estado)
-                log.append(f"Te aplicas un buff: {estado}")
-
-    # 4️⃣ El enemigo ataca (ataque básico para este ejemplo)
-    golpe, mensaje_ataque = accion_basica(stats_enemigo, enemigo)
-    log.append(mensaje_ataque)
-
-    danio_al_jugador, mensaje_danio = calcular_golpe_recibido(golpe, jugador, stats_jugador)
-    stats_jugador["salud"] = max(1, stats_jugador["salud"] - danio_al_jugador)
-    log.append(mensaje_danio)
-
-    # 5️⃣ Aplicar efectos de estados expirados nuevamente
-    limpiar_estados_expirados(stats_jugador)
-    limpiar_estados_expirados(stats_enemigo)
-
-    # 6️⃣ Actualizar stats reales si terminó el combate
-    if stats_jugador["salud"] <= 0 or stats_enemigo["salud"] <= 0:
+    # === 4. VERIFICAR DERROTAS POR EFECTOS ===
+    if stats_jugador["salud"] <= 0:
+        log.append(f"💀 {jugador.nombre} ha sucumbido a los efectos del combate_creado...")
         actualizar_stats_finales(jugador, stats_jugador)
-        actualizar_stats_finales(enemigo, stats_enemigo)
-        log.append("¡El combate ha terminado!")
+        enemigo.salud = 1
+        enemigo.save()
+        combate_creado.finalizado = True
+        combate_creado.resultado = "derrota"
+        combate_creado.save()
+
+        request.session.pop("stats_jugador", None)
+        request.session.pop("stats_enemigo", None)
+        request.session.pop(combate_key, None)
+
+        return render(request, "app/resultado.html", {
+            "log": log,
+            "ganador": enemigo,
+            "combate_creado": combate_creado,
+        })
+
+    if stats_enemigo["salud"] <= 0:
+        log.append(f"🎉 ¡{enemigo.nombre} no pudo resistir los efectos negativos y ha caído!")
+        actualizar_stats_finales(jugador, stats_jugador)
+        enemigo.salud = 1
+        enemigo.save()
+        combate_creado.finalizado = True
+        combate_creado.resultado = "victoria"
+        combate_creado.save()
+
+        request.session.pop("stats_jugador", None)
+        request.session.pop("stats_enemigo", None)
+        request.session.pop(combate_key, None)
+
+        return render(request, "app/resultado.html", {
+            "log": log,
+            "ganador": jugador,
+            "combate_creado": combate_creado,
+        })
+
+    # === 5. ACCIÓN DEL JUGADOR ===
+    if request.method == "POST":
+        accion = request.POST.get("accion")
+
+        if accion == "atacar":
+            danio, mensaje = accion_basica(stats_jugador, jugador)
+            stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
+            log.append(mensaje)
+
+        elif accion in ["habilidad_1", "habilidad_2", "habilidad_3"]:
+            resultados, mensaje = uso_habilidad(jugador, accion, stats_jugador)
+            log.append(mensaje)
+
+            for resultado in resultados:
+                tipo = resultado[0]
+                if tipo == "daño":
+                    danio = resultado[1]
+                    stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
+
+                elif tipo == "curacion":
+                    curacion = resultado[1]
+                    stats_jugador["salud"] = min(stats_jugador["salud_max"], stats_jugador["salud"] + curacion)
+
+                elif tipo == "buff":
+                    stat, valor, duracion = resultado[1:]
+                    estado = {"tipo": "buff", "stat": stat, "valor": valor, "duracion": duracion}
+                    aplicar_estado(stats_jugador, estado)
+
+                elif tipo == "debuff":
+                    stat, valor, duracion = resultado[1:]
+                    estado = {"tipo": "debuff", "stat": stat, "valor": valor, "duracion": duracion}
+                    aplicar_estado(stats_enemigo, estado)
+
+                elif tipo == "negativo":
+                    estado_nombre, valor, duracion = resultado[1:]
+                    estado = {"tipo": "negativo", "estado": estado_nombre, "valor": valor, "duracion": duracion}
+                    aplicar_estado(stats_enemigo, estado)
+
+        else:
+            log.append("⚠️ No permitimos ese tipo de acción en estas tierras. Cuidado con lo que haces...")
+
+        # === 6. VERIFICAR DERROTA DEL ENEMIGO TRAS ATAQUE ===
+        if stats_enemigo["salud"] <= 0:
+            log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
+            actualizar_stats_finales(jugador, stats_jugador)
+            enemigo.salud = 1
+            enemigo.save()
+            combate_creado.finalizado = True
+            combate_creado.resultado = "victoria"
+            combate_creado.save()
+
+            request.session.pop("stats_jugador", None)
+            request.session.pop("stats_enemigo", None)
+            request.session.pop(combate_key, None)
+
+            return render(request, "app/resultado.html", {
+                "log": log,
+                "ganador": jugador,
+                "combate_creado": combate_creado,
+            })
+
+        # === 7. TURNO DEL ENEMIGO ===
+        eleccion = ia_enemiga(enemigo, stats_enemigo, stats_jugador)
+        if eleccion == "basico":
+            danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
+            stats_jugador["salud"] = max(1, stats_jugador["salud"] - danio)
+            log.append(mensaje)
+        else:
+            resultado, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log)
+            if isinstance(resultado, int):
+                stats_jugador["salud"] = max(1, stats_jugador["salud"] - resultado)
+            log.append(mensaje)
+
+        # === 8. VERIFICAR DERROTA DEL JUGADOR ===
+        if stats_jugador["salud"] <= 0:
+            log.append(f"💀 {jugador.nombre} ha sido derrotado...")
+            actualizar_stats_finales(jugador, stats_jugador)
+            enemigo.salud = 1
+            enemigo.save()
+            combate_creado.finalizado = True
+            combate_creado.resultado = "derrota"
+            combate_creado.save()
+
+            request.session.pop("stats_jugador", None)
+            request.session.pop("stats_enemigo", None)
+            request.session.pop(combate_key, None)
+
+            return render(request, "app/resultado.html", {
+                "log": log,
+                "ganador": enemigo,
+                "combate_creado": combate_creado,
+            })
+
+    # === 9. GUARDAR STATS EN SESIÓN Y RENDER ===
+    request.session["stats_jugador"] = stats_jugador
+    request.session["stats_enemigo"] = stats_enemigo
 
     return render(request, "app/combate.html", {
-        "log": log,
+        "combate_creado": combate_creado,
+        "jugador": jugador,
+        "enemigo": enemigo,
         "stats_jugador": stats_jugador,
-        "stats_enemigo": stats_enemigo
+        "stats_enemigo": stats_enemigo,
+        "log": log,
     })
 

@@ -1,5 +1,5 @@
-from combate.utils_combate import leer_efecto
-from globales.probabilidades import critico, esquivar, adicional
+from battlebound_tactics.core.combate.utils_combate import leer_efecto
+from battlebound_tactics.core.globales.probabilidades import critico, esquivar, adicional
 
 # =====================
 # CÁLCULO DE ESTADÍSTICAS / ANTIGUO - Lo he modificado y lo he pasado a un módulo común para el cálculo de estadísticas

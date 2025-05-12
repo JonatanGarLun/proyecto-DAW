@@ -1,4 +1,4 @@
-from globales.probabilidades import tirada
+from ..globales.probabilidades import tirada
 
 def aplicar_estado(stats_temporales, estado_nuevo):
     stats_temporales.setdefault("estados", [])
