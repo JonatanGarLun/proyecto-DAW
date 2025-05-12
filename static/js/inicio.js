@@ -11,27 +11,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    let indexActivo = 0; // Opción seleccionada por defecto
+    let indexActivo = 0;
+    let bloqueoTeclado = false;
 
     function actualizarOpcionActiva() {
         opciones.forEach((opcion, idx) => {
-            if (idx === indexActivo) {
-                opcion.classList.add("opcion-activa");
-            } else {
-                opcion.classList.remove("opcion-activa");
-            }
+            opcion.classList.toggle("opcion-activa", idx === indexActivo);
         });
     }
 
     function cambiarImagenCentral(nuevaImagen) {
-        if (!nuevaImagen) {
-            console.warn("No se proporcionó ninguna imagen para el fondo.");
-            return;
-        }
+        if (!nuevaImagen) return;
 
-        // Fade to black
         overlay.style.opacity = 1;
-
         setTimeout(() => {
             fondo.style.backgroundImage = `url('${nuevaImagen}')`;
             overlay.style.opacity = 0;
@@ -50,13 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cambiarImagenCentral(nuevaImagen);
     }
 
-    flechaIzquierda.addEventListener("click", () => {
-        moverCarrusel("left");
-    });
-
-    flechaDerecha.addEventListener("click", () => {
-        moverCarrusel("right");
-    });
+    flechaIzquierda.addEventListener("click", () => moverCarrusel("left"));
+    flechaDerecha.addEventListener("click", () => moverCarrusel("right"));
 
     opciones.forEach((opcion, idx) => {
         opcion.addEventListener("click", () => {
@@ -68,38 +55,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         opcion.addEventListener("dblclick", () => {
             const url = opcion.getAttribute("data-url");
-            if (url) {
-                window.location.href = url;
-            }
+            if (url) window.location.href = url;
         });
     });
 
     document.addEventListener("keydown", (e) => {
-        switch(e.key) {
-            case "ArrowLeft":
-                moverCarrusel("left");
-                break;
-            case "ArrowRight":
-                moverCarrusel("right");
-                break;
-            case "Enter":
-                const opcionActiva = opciones[indexActivo];
-                const url = opcionActiva.getAttribute("data-url");
-                if (url) {
-                    window.location.href = url;
-                }
-                break;
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            if (bloqueoTeclado) return;
+            bloqueoTeclado = true;
+
+            moverCarrusel(e.key === "ArrowLeft" ? "left" : "right");
+
+            setTimeout(() => {
+                bloqueoTeclado = false;
+            }, 750);
+        }
+
+        if (e.key === "Enter") {
+            const opcionActiva = opciones[indexActivo];
+            const url = opcionActiva.getAttribute("data-url");
+            if (url) window.location.href = url;
         }
     });
 
-    // Inicializar carrusel
     actualizarOpcionActiva();
     const opcionInicial = opciones[indexActivo];
     const imagenInicial = opcionInicial.getAttribute("data-imagen-central");
-
-    if (imagenInicial) {
-        cambiarImagenCentral(imagenInicial);
-    } else {
-        console.warn("La opción inicial no tiene una imagen de fondo asignada.");
-    }
+    if (imagenInicial) cambiarImagenCentral(imagenInicial);
 });
