@@ -49,9 +49,7 @@ class Jugador(models.Model):
                                     related_name="habilidad_2")
     habilidad_3 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True,
                                     related_name="habilidad_3")
-    medidor_definitiva = models.IntegerField(default=0)
     oro = models.IntegerField(default=0)
-    piedras_dragon = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username} - {self.nombre}"
