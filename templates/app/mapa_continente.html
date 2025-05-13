@@ -25,7 +25,7 @@
         left: 0%;
         width: 48%;
         height: 58%;
-        background-color: rgba(0, 255, 0, 0.3);
+        background-color: rgba(0, 255, 0, 0);
         border: 2px solid #00aa00;
         cursor: pointer;
         clip-path: polygon(
@@ -33,24 +33,24 @@
         );
     }
 
-    /* === ZONA ROJA (montaña/derecha) === */
+    /* === ZONA ROJA (nieve/derecha) === */
     .zona-roja {
         position: absolute;
         top: 0%;
         left: 50%;
         width: 47%;
         height: 62%;
-        background-color: rgba(255, 0, 0, 0.3);
+        background-color: rgba(255, 0, 0, 0);
         border: 2px solid #990000;
         cursor: pointer;
         clip-path: polygon(
-            25% 5%, 35% 55%, 80% 95%, 100% 60%, 78% 5%
+            11% 8%, 25% 45%, 60% 70%, 100% 58%, 78% 5%
         );
     }
 </style>
 
 <div class="mapa-container">
-    <a href="#" class="zona-verde" title="Bosque encantado"></a>
+    <a href="{% url 'region' %}" class="zona-verde" title="Región tranquila"></a>
     <a href="#" class="zona-roja" title="Región nevada"></a>
 </div>
 {% endblock %}

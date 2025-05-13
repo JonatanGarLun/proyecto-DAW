@@ -1,10 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block content %}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .region-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background: url("{% static 'resources/maps/region_tranquila.png' %}") no-repeat center center;
+        background-size: 100% 100%;
+    }
+
+    .ubicacion {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.5); /* ← Opacidad ajustada aquí */
+        border: 2px solid transparent;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .ubicacion:hover {
+        border-color: yellow;
+    }
+
+    .brumuhierro {
+        left: calc(258px - 77px);
+        top: calc(290px - 77px);
+        width: 154px;
+        height: 154px;
+    }
+
+    .thalendor {
+        left: calc(282px - 69px);
+        top: calc(563px - 69px);
+        width: 138px;
+        height: 138px;
+    }
+
+    .castelvvr {
+        left: calc(770px - 129px);
+        top: calc(316px - 129px);
+        width: 258px;
+        height: 258px;
+    }
+
+    .bastion-carmesi {
+        left: calc(714px - 71px);
+        top: calc(648px - 71px);
+        width: 142px;
+        height: 142px;
+    }
+
+    .foso-dreknar {
+        left: calc(624px - 96px);
+        top: calc(841px - 96px);
+        width: 192px;
+        height: 192px;
+    }
+
+    .grieta-surnak {
+        left: calc(1275px - 113px);
+        top: calc(264px - 113px);
+        width: 226px;
+        height: 226px;
+    }
+
+    .campamento {
+        left: calc(1250px - 69px);
+        top: calc(575px - 69px);
+        width: 138px;
+        height: 138px;
+    }
+
+    .nido-vrakk {
+        left: calc(1071px - 89px);
+        top: calc(771px - 89px);
+        width: 178px;
+        height: 178px;
+    }
+
+    .torreon {
+        left: calc(1332px - 124px);
+        top: calc(821px - 124px);
+        width: 248px;
+        height: 248px;
+    }
+</style>
+
+<div class="region-container">
+    <a href="#" class="ubicacion brumuhierro" title="Brumuhierro"></a>
+    <a href="#" class="ubicacion thalendor" title="Thalendor"></a>
+    <a href="#" class="ubicacion castelvvr" title="Castelvvr"></a>
+    <a href="#" class="ubicacion bastion-carmesi" title="El Bastión Carmesí"></a>
+    <a href="#" class="ubicacion foso-dreknar" title="Foso de Dreknar"></a>
+    <a href="#" class="ubicacion grieta-surnak" title="La Grieta de Surnak"></a>
+    <a href="#" class="ubicacion campamento" title="Campamento de las Sombras Negras"></a>
+    <a href="#" class="ubicacion nido-vrakk" title="El Nido de Vrakk"></a>
+    <a href="#" class="ubicacion torreon" title="Torreón de los Cuervos Vacíos"></a>
+</div>
+{% endblock %}

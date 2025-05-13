@@ -89,6 +89,9 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 class MapaContinentePageView(LoginRequiredMixin, TemplateView):
     template_name ='app/mapa_continente.html'
 
+class RegionPageView(LoginRequiredMixin, TemplateView):
+    template_name ='app/mapa_region.html'
+
 class RegistroPageView(FormView):
     template_name = 'app/registro_usuario.html'
     form_class = RegistroForm
