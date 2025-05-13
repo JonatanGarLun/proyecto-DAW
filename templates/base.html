@@ -82,16 +82,8 @@
 
         main {
             flex: 1;
-            padding: 2rem;
-            background: none; /* fondo transparente */
-        }
 
-        footer {
-            background-color: #1D1D1D;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            opacity: 0.6;
+            background: none;
         }
 
         {#@media (max-width: 768px) {#}
@@ -123,7 +115,7 @@
                 <button>Enlaces 🔽</button>
                 <div class="dropdown-content">
                     <a href="{% url 'inicio' %}">Página principal</a>
-                    <a href="#">Inventario</a>
+                    <a href="{% url 'continente' %}">Mapa</a>
                     <a href="#">Tienda</a>
                     <a href="#">Posada</a>
                     <a href="#">Habilidades</a>
@@ -141,9 +133,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        &copy; {{ current_year|default:"2025" }} Mi Aplicación. Todos los derechos reservados.
-    </footer>
+
 
     <script>
         let isPlaying = false;

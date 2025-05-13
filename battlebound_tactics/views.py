@@ -86,7 +86,8 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 
         return context
 
-# Registro
+class MapaContinentePageView(LoginRequiredMixin, TemplateView):
+    template_name ='app/mapa_continente.html'
 
 class RegistroPageView(FormView):
     template_name = 'app/registro_usuario.html'

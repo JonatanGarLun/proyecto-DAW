@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .mapa-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background: url("{% static 'resources/maps/continente.png' %}") no-repeat center center;
+        background-size: 100% 100%;
+    }
+
+    /* === ZONA VERDE (bosque/izquierda) === */
+    .zona-verde {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 48%;
+        height: 58%;
+        background-color: rgba(0, 255, 0, 0.3);
+        border: 2px solid #00aa00;
+        cursor: pointer;
+        clip-path: polygon(
+            20% 10%, 70% 0%, 87% 20%, 45% 75%, 10% 65%
+        );
+    }
+
+    /* === ZONA ROJA (montaña/derecha) === */
+    .zona-roja {
+        position: absolute;
+        top: 0%;
+        left: 50%;
+        width: 47%;
+        height: 62%;
+        background-color: rgba(255, 0, 0, 0.3);
+        border: 2px solid #990000;
+        cursor: pointer;
+        clip-path: polygon(
+            25% 5%, 35% 55%, 80% 95%, 100% 60%, 78% 5%
+        );
+    }
+</style>
+
+<div class="mapa-container">
+    <a href="#" class="zona-verde" title="Bosque encantado"></a>
+    <a href="#" class="zona-roja" title="Región nevada"></a>
+</div>
+{% endblock %}
