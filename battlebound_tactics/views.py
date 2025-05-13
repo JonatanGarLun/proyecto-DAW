@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 from .forms import RegistroForm
@@ -24,12 +23,6 @@ from battlebound_tactics.core.combate.enemigos import (
     accion_basica_enemigo
 )
 
-
-
-
-# Create your views here.
-
-#Inicio
 
 class InicioPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/inicio.html'
@@ -122,12 +115,6 @@ def combate(request, combate_id):
     log = []
 
     # ======== SEGURIDAD Y CONTROL DE ACCESO =========
-
-    # Solo puede acceder el jugador dueño del combate o un admin
-    if request.user != jugador.user and not request.user.is_staff:
-        if request.user.is_authenticated:
-            return render(request, "errores/403_forbidden.html", status=403)
-        return HttpResponseForbidden("Acceso denegado.")
 
     # Si el combate ya terminó, redirige a la pantalla de resultado
     if combate.finalizado:
