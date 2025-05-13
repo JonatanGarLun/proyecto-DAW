@@ -4,3 +4,4 @@ djangorestframework
 pillow
 ipdb
 httpie
+django-stubs
