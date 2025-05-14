@@ -48,7 +48,7 @@
             top: 100%;
             background-color: #1e0030;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
             z-index: 1;
         }
 
@@ -105,48 +105,74 @@
     {% endblock %}
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo">
-        </div>
-        <div class="nav-buttons">
-            <button onclick="toggleMusic()">🎵</button>
-            <div class="dropdown">
-                <button>Enlaces 🔽</button>
-                <div class="dropdown-content">
-                    <a href="{% url 'inicio' %}">Página principal</a>
-                    <a href="{% url 'continente' %}">Mapa</a>
-                    <a href="#">Tienda</a>
-                    <a href="#">Posada</a>
-                    <a href="#">Habilidades</a>
-                </div>
+<header>
+    <div class="logo">
+        <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo">
+    </div>
+    <div class="nav-buttons">
+        <button onclick="toggleMusic()">🎵</button>
+        <div class="dropdown">
+            <button>Enlaces 🔽</button>
+            <div class="dropdown-content">
+                <a href="{% url 'inicio' %}">Página principal</a>
+                <a href="{% url 'continente' %}">Mapa</a>
+                <a href="#">Tienda</a>
+                <a href="#">Posada</a>
+                <a href="#">Habilidades</a>
             </div>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Cerrar sesión</button>
-            </form>
         </div>
-    </header>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </div>
+</header>
 
-    <main id="main-content">
-        {% block hud %}{% endblock %}
-        {% block content %}{% endblock %}
-    </main>
+<main id="main-content">
+    {% block hud %}{% endblock %}
+    {% block content %}{% endblock %}
+</main>
 
-
-
+{% block song_data %}
     <script>
-        let isPlaying = false;
-        let audio = new Audio("{% static 'resources/songs/gorila-315977.mp3' %}");
-
-        function toggleMusic() {
-            if (isPlaying) {
-                audio.pause();
-            } else {
-                audio.play();
-            }
-            isPlaying = !isPlaying;
-        }
+        let songs = []; // Valor por defecto si la plantilla hija no lo sobrescribe
     </script>
+{% endblock %}
+
+<script>
+    let isPlaying = false;
+    let currentSongIndex = 0;
+    let audio = songs.length > 0 ? new Audio(songs[0].url) : null;
+
+
+    function toggleMusic() {
+        if (!audio) return;
+        if (isPlaying) {
+            audio.pause();
+        } else {
+            audio.play();
+        }
+        isPlaying = !isPlaying;
+    }
+
+    function nextSong() {
+        if (!songs.length) return;
+        audio.pause();
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        playSong(currentSongIndex);
+    }
+
+    function playSong(index) {
+        if (!songs[index]) return;
+        audio = new Audio(songs[index].url);
+        audio.play();
+        isPlaying = true;
+        audio.onended = () => nextSong();
+    }
+
+    if (audio) {
+        audio.onended = () => nextSong();
+    }
+</script>
 </body>
 </html>

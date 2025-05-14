@@ -2,55 +2,121 @@
 {% load static %}
 
 {% block content %}
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-    }
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
 
-    .mapa-container {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        background: url("{% static 'resources/maps/continente.png' %}") no-repeat center center;
-        background-size: 100% 100%;
-    }
+        .mapa-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url("{% static 'resources/maps/continente.png' %}") no-repeat center center;
+            background-size: 100% 100%;
+        }
 
-    /* === ZONA VERDE (bosque/izquierda) === */
-    .zona-verde {
-        position: absolute;
-        top: 0%;
-        left: 0%;
-        width: 48%;
-        height: 58%;
-        background-color: rgba(0, 255, 0, 0);
-        border: 2px solid #00aa00;
-        cursor: pointer;
-        clip-path: polygon(
-            20% 10%, 70% 0%, 87% 20%, 45% 75%, 10% 65%
-        );
-    }
+        #fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.4s ease-in-out;
+            z-index: 9999;
+        }
 
-    /* === ZONA ROJA (nieve/derecha) === */
-    .zona-roja {
-        position: absolute;
-        top: 0%;
-        left: 50%;
-        width: 47%;
-        height: 62%;
-        background-color: rgba(255, 0, 0, 0);
-        border: 2px solid #990000;
-        cursor: pointer;
-        clip-path: polygon(
-            11% 8%, 25% 45%, 60% 70%, 100% 58%, 78% 5%
-        );
-    }
-</style>
+        /* === ZONA VERDE (bosque/izquierda) === */
+        .zona-verde {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 48%;
+            height: 58%;
+            background-color: rgba(0, 255, 0, 0);
+            border: 2px solid #00aa00;
+            cursor: pointer;
+            clip-path: polygon(
+                    20% 10%, 70% 0%, 87% 20%, 45% 75%, 10% 65%
+            );
+        }
 
-<div class="mapa-container">
-    <a href="{% url 'region' %}" class="zona-verde" title="Región tranquila"></a>
-    <a href="#" class="zona-roja" title="Región nevada"></a>
-</div>
+        /* === ZONA ROJA (nieve/derecha) === */
+        .zona-roja {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 47%;
+            height: 62%;
+            background-color: rgba(255, 0, 0, 0);
+            border: 2px solid #990000;
+            cursor: pointer;
+            clip-path: polygon(
+                    11% 8%, 25% 45%, 60% 70%, 100% 58%, 78% 5%
+            );
+        }
+    </style>
+
+    <div class="mapa-container">
+        <a href="{% url 'region' %}" class="zona-verde" title="Región tranquila"></a>
+        <a href="#" class="zona-roja" title="Región nevada"></a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const overlay = document.getElementById("fade-overlay");
+            if (!overlay) return;
+
+            // Fade-in al cargar
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.pointerEvents = 'none';
+                }, 400);
+            }, 50);
+
+            // Interceptar clics en zonas clickeables del mapa
+            const zonas = document.querySelectorAll(".zona-verde, .zona-roja");
+            zonas.forEach(zona => {
+                zona.addEventListener("click", (e) => {
+                    const href = zona.getAttribute("href");
+                    if (!href || href === "#") return;
+
+                    e.preventDefault();
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'auto';
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                });
+            });
+        });
+
+        // Reaplicar fade-in al volver desde historial
+        window.addEventListener("pageshow", () => {
+            const overlay = document.getElementById("fade-overlay");
+            if (!overlay) return;
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.pointerEvents = 'none';
+                }, 400);
+            }, 50);
+        });
+    </script>
+
+    <div id="fade-overlay"></div>
+
 {% endblock %}
+{% block song_data %}
+{% endblock %}
+

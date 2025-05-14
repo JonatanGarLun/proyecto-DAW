@@ -12,7 +12,7 @@
     background-repeat: no-repeat;
     z-index: -2;
     opacity: 1;
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
 }
 
 #fade-overlay {
@@ -22,10 +22,10 @@
     width: 100vw;
     height: 100vh;
     background-color: black;
-    opacity: 0;
-    pointer-events: none;
+    opacity: 1; /* inicia negro */
+    pointer-events: auto; /* bloquea interacción durante el fade */
     transition: opacity 0.4s ease-in-out;
-    z-index: -1;
+    z-index: 9999;
 }
 
 /* ======================= */
