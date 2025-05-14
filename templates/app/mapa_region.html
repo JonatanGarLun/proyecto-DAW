@@ -25,10 +25,6 @@
             transition: backdrop-filter 0.3s ease;
         }
 
-        {#.zona:hover {#}
-        {#    backdrop-filter: blur(1.5px);#}
-        {# } #}
-
         /* Posiciones de zonas */
         .brumuhierro {
             top: 17%;
@@ -213,6 +209,67 @@
             transition: opacity 0.4s ease-in-out;
             z-index: 9999;
         }
+
+        .modal.animar-modal {
+            animation: modalFadeIn 0.4s ease forwards;
+        }
+
+        .modal-content.animar-modal {
+            animation: modalContentFadeIn 0.4s ease forwards;
+        }
+
+        .modal.cerrar-animacion {
+            animation: modalFadeOut 0.3s ease forwards;
+        }
+
+        .modal-content.cerrar-animacion {
+            animation: modalContentFadeOut 0.3s ease forwards;
+        }
+
+        /* Animaciones importadas del estilo "six" */
+        @keyframes modalFadeIn {
+            0% {
+                background-color: transparent;
+                opacity: 0;
+            }
+            100% {
+                background-color: rgba(0, 0, 0, 0.5);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalFadeOut {
+            0% {
+                background-color: rgba(0, 0, 0, 0.5);
+                opacity: 1;
+            }
+            100% {
+                background-color: transparent;
+                opacity: 0;
+            }
+        }
+
+        @keyframes modalContentFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalContentFadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
     </style>
 
     <div class="mapa-container">
@@ -329,16 +386,33 @@
         let dialogoBloqueado = false;
 
         function abrirModal(id) {
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('.modal-content');
             const dialogoVisible = document.getElementById("dialogo-thalendor").style.display === "flex";
-            if (dialogoVisible) {
-                return;
-            }
+            if (dialogoVisible) return;
 
-            document.getElementById(id).classList.add("active");
+            modal.classList.add("active", "animar-modal");
+            content.classList.add("animar-modal");
+
+            // Limpieza de clases después de la animación
+            setTimeout(() => {
+                modal.classList.remove("animar-modal");
+                content.classList.remove("animar-modal");
+            }, 400); // tiempo igual al de la animación
         }
 
         function cerrarModal(id) {
-            document.getElementById(id).classList.remove("active");
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('.modal-content');
+
+            modal.classList.add("cerrar-animacion");
+            content.classList.add("cerrar-animacion");
+
+            // Esperar a que termine la animación para ocultar
+            setTimeout(() => {
+                modal.classList.remove("active", "cerrar-animacion");
+                content.classList.remove("cerrar-animacion");
+            }, 300);
         }
 
         function mostrarDialogo() {
