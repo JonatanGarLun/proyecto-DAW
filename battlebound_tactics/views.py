@@ -115,7 +115,8 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/registro_usuario.html'
 
 
-
+# El comabte esta hecho de tal forma que nosotros cogemos las stats del enemigo y creamos un "enemigo nuevo" temporal que es con quien pelaremos,
+# gracias a esto no tenemos que modificar al enemigo en la base de datos ya que no lo "usamos" realmente
 @login_required
 def combate(request, combate_id):
     # === 1. CARGA DE COMBATE Y PARTICIPANTES ===
@@ -160,8 +161,6 @@ def combate(request, combate_id):
     if stats_jugador["salud"] <= 0:
         log.append(f"💀 {jugador.nombre} ha sucumbido a los efectos del combate_creado...")
         actualizar_stats_finales(jugador, stats_jugador)
-        enemigo.salud = 1
-        enemigo.save()
         combate_creado.finalizado = True
         combate_creado.resultado = "derrota"
         combate_creado.save()
@@ -179,8 +178,6 @@ def combate(request, combate_id):
     if stats_enemigo["salud"] <= 0:
         log.append(f"🎉 ¡{enemigo.nombre} no pudo resistir los efectos negativos y ha caído!")
         actualizar_stats_finales(jugador, stats_jugador)
-        enemigo.salud = 1
-        enemigo.save()
         combate_creado.finalizado = True
         combate_creado.resultado = "victoria"
         combate_creado.save()
@@ -240,8 +237,6 @@ def combate(request, combate_id):
         if stats_enemigo["salud"] <= 0:
             log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
             actualizar_stats_finales(jugador, stats_jugador)
-            enemigo.salud = 1
-            enemigo.save()
             combate_creado.finalizado = True
             combate_creado.resultado = "victoria"
             combate_creado.save()
@@ -272,8 +267,6 @@ def combate(request, combate_id):
         if stats_jugador["salud"] <= 0:
             log.append(f"💀 {jugador.nombre} ha sido derrotado...")
             actualizar_stats_finales(jugador, stats_jugador)
-            enemigo.salud = 1
-            enemigo.save()
             combate_creado.finalizado = True
             combate_creado.resultado = "derrota"
             combate_creado.save()

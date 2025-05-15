@@ -50,6 +50,8 @@ class Jugador(models.Model):
     habilidad_3 = models.ForeignKey("Activa", on_delete=models.SET_NULL, null=True, blank=True,
                                     related_name="habilidad_3")
     oro = models.IntegerField(default=0)
+    victorias = models.IntegerField(default=0, null=True, blank=True)
+    derrotas = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.nombre}"
@@ -277,6 +279,7 @@ class Combate(models.Model):
     turnos = models.IntegerField(default=0)
     jugador = models.ForeignKey(Jugador, related_name='Jugador', on_delete=models.CASCADE)
     enemigo = models.ForeignKey(Enemigo, related_name='Enemigo', on_delete=models.CASCADE)
+    terminado = models.BooleanField(default=False)
 
 # ------------------
 # UBICACIONES
