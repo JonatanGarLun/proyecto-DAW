@@ -2,6 +2,7 @@ from django.shortcuts import render
 from battlebound_tactics.core.globales.session import limpiar_sesion_combate
 from battlebound_tactics.core.combate.jugador import actualizar_stats_finales
 from battlebound_tactics.core.combate.efectos import procesar_estados, limpiar_estados_expirados
+from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
 
 
 def inicializar_combate(request, combate):
@@ -13,12 +14,8 @@ def inicializar_combate(request, combate):
         jugador = combate.jugador
         enemigo = combate.enemigo
 
-        from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
         stats_jugador = obtener_stats_temporales(jugador)
         stats_enemigo = obtener_stats_temporales(enemigo)
-
-        stats_jugador["objeto"] = jugador
-        stats_enemigo["objeto"] = enemigo
 
         request.session["stats_jugador"] = stats_jugador
         request.session["stats_enemigo"] = stats_enemigo

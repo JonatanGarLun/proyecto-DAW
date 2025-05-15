@@ -317,7 +317,7 @@
             <img src="{{ prueba.imagen.url }}" alt="Dreknar" class="img-modal-enemigo"/>
             <p>Enemigo: {{ prueba.nombre }}</p>
             <p>Dificultad: <strong>{{ prueba.dificultad }}</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <a href="{% url 'iniciar_combate' prueba.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-dreknar')">Retroceder</a>
         </div>
     </div>

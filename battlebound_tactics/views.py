@@ -1,9 +1,12 @@
+from logging import raiseExceptions
+from math import ceil
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import TemplateView, FormView
 from .forms import RegistroForm
 from .models import Jugador, Combate, Enemigo
@@ -49,9 +52,9 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 
         context.update({
             'jugador': jugador,
-            'porcentaje_salud': int((jugador.salud / jugador.salud_maxima) * 100),
-            'porcentaje_energia': int((jugador.energia_espiritual / jugador.energia_espiritual_maxima) * 100),
-            'porcentaje_exp': int((jugador.experiencia / jugador.experiencia_maxima) * 100),
+            'porcentaje_salud': ceil((jugador.salud / jugador.salud_maxima) * 100),
+            'porcentaje_energia': ceil((jugador.energia_espiritual / jugador.energia_espiritual_maxima) * 100),
+            'porcentaje_exp': ceil((jugador.experiencia / jugador.experiencia_maxima) * 100),
             'opciones': opciones
         })
         return context
@@ -107,8 +110,8 @@ def combate(request, combate_id):
 
     stats_jugador, stats_enemigo = inicializar_combate(request, combate)
 
-    registrar_efecto_turno(stats_jugador, jugador, log)
-    registrar_efecto_turno(stats_enemigo, enemigo, log)
+    registrar_efecto_turno(stats_jugador, combate.jugador, log)
+    registrar_efecto_turno(stats_enemigo, combate.enemigo, log)
 
     if stats_jugador["salud"] <= 0:
         return resolver_derrota(request, jugador, enemigo, combate, log, f"💀 {jugador.nombre} ha sucumbido a los efectos...")
@@ -182,6 +185,8 @@ def combate(request, combate_id):
 def abandonar_combate(request, combate_id):
     combate = get_object_or_404(Combate, id=combate_id)
     jugador = combate.jugador
+    if request.user != jugador.user:
+        return JsonResponse({"error": "Acceso denegado"}, status=403)
     jugador.combate_abandonado = True
     jugador.combate_abandonado_id = combate.id
     jugador.save()
@@ -227,3 +232,23 @@ def resolver_abandono(request):
         return JsonResponse({"continuar": False, "redirect_url": reverse("resultado_combate", args=[combate_id])})
 
     return JsonResponse({"error": "Parámetro no válido"}, status=400)
+
+@login_required
+@require_GET
+def iniciar_combate(request, enemigo_id):
+
+    try:
+        usuario = request.user
+        jugador = get_object_or_404(Jugador, user=usuario)
+        enemigo = get_object_or_404(Enemigo, id=enemigo_id)
+
+        # Crear combate
+        combate = Combate.objects.create(jugador=jugador,enemigo=enemigo)
+        print(combate)
+        print(combate.id)
+        id_combate = combate.id
+        return redirect("combate", combate_id=id_combate)
+    except Jugador.DoesNotExist:
+        raise Jugador.DoesNotExist("Este usuario no tiene un jugador registrado. Por favor, registre un jugador primero.")
+
+
