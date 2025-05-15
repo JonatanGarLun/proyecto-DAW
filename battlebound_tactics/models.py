@@ -247,7 +247,7 @@ class Enemigo(models.Model):
     oro_otorgado = models.IntegerField(default=0)
     nivel = models.IntegerField(default=1, validators=[MinValueValidator(1)])
     recompensa_especial = models.JSONField(default=dict, blank=True, null=True)
-    imagen = models.ImageField(null=True, blank=True)
+    imagen = models.ImageField(null=True, blank=True, upload_to="fotos_enemigos/")
     habilidad_1 = models.ForeignKey(ActivaEnemigo, on_delete=models.SET_NULL, null=True, blank=True,
                                     related_name="enemigo_habilidad_1")
     habilidad_2 = models.ForeignKey(ActivaEnemigo, on_delete=models.SET_NULL, null=True, blank=True,

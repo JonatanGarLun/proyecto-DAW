@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 from .forms import RegistroForm
-from .models import Jugador, Combate
+from .models import Jugador, Combate, Enemigo
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
@@ -91,6 +91,13 @@ class MapaContinentePageView(LoginRequiredMixin, TemplateView):
 
 class RegionPageView(LoginRequiredMixin, TemplateView):
     template_name ='app/mapa_region.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['jugador'] = get_object_or_404(Jugador, user=self.request.user)
+        context['enemigos'] = Enemigo.objects.all()
+        context['prueba'] = Enemigo.objects.first()
+        return context
 
 class RegistroPageView(FormView):
     template_name = 'app/registro_usuario.html'

@@ -226,6 +226,13 @@
             animation: modalContentFadeOut 0.3s ease forwards;
         }
 
+        .img-modal-enemigo {
+            width: 150px;
+            height: 225px;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
         /* Animaciones importadas del estilo "six" */
         @keyframes modalFadeIn {
             0% {
@@ -307,8 +314,9 @@
     <div id="modal-dreknar" class="modal">
         <div class="modal-content">
             <h2>Foso Dreknar</h2>
-            <img src="{% static 'resources/enemigos/dreknar.jpg' %}" alt="Dreknar"/>
-            <p>Dificultad: <strong>Alta</strong></p>
+            <img src="{{ prueba.imagen.url }}" alt="Dreknar" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ prueba.nombre }}</p>
+            <p>Dificultad: <strong>{{ prueba.dificultad }}</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-dreknar')">Retroceder</a>
         </div>
@@ -318,7 +326,7 @@
     <div id="modal-brumuhierro" class="modal">
         <div class="modal-content">
             <h2>Brumuhierro</h2>
-            <img src="{% static 'resources/enemigos/brumuhierro.jpg' %}" alt="Brumuhierro"/>
+            <img src="{% static 'resources/enemigos/brumuhierro.jpg' %}" alt="Brumuhierro" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Media</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-brumuhierro')">Retroceder</a>
@@ -329,7 +337,7 @@
     <div id="modal-bastion" class="modal">
         <div class="modal-content">
             <h2>Bastión Carmesí</h2>
-            <img src="{% static 'resources/enemigos/bastion.jpg' %}" alt="Bastión"/>
+            <img src="{% static 'resources/enemigos/bastion.jpg' %}" alt="Bastión" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Alta</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-bastion')">Retroceder</a>
@@ -340,7 +348,7 @@
     <div id="modal-surnak" class="modal">
         <div class="modal-content">
             <h2>Grieta Surnak</h2>
-            <img src="{% static 'resources/enemigos/surnak.jpg' %}" alt="Surnak"/>
+            <img src="{% static 'resources/enemigos/surnak.jpg' %}" alt="Surnak" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Muy alta</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-surnak')">Retroceder</a>
@@ -351,7 +359,7 @@
     <div id="modal-campamento" class="modal">
         <div class="modal-content">
             <h2>Campamento Rebelde</h2>
-            <img src="{% static 'resources/enemigos/campamento.jpg' %}" alt="Campamento"/>
+            <img src="{% static 'resources/enemigos/campamento.jpg' %}" alt="Campamento" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Media</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-campamento')">Retroceder</a>
@@ -362,7 +370,7 @@
     <div id="modal-vrakk" class="modal">
         <div class="modal-content">
             <h2>Nido de Vrakk</h2>
-            <img src="{% static 'resources/enemigos/vrakk.jpg' %}" alt="Vrakk"/>
+            <img src="{% static 'resources/enemigos/vrakk.jpg' %}" alt="Vrakk" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Alta</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-vrakk')">Retroceder</a>
@@ -373,7 +381,7 @@
     <div id="modal-torreon" class="modal">
         <div class="modal-content">
             <h2>Torreón del Este</h2>
-            <img src="{% static 'resources/enemigos/torreon.jpg' %}" alt="Torreón"/>
+            <img src="{% static 'resources/enemigos/torreon.jpg' %}" alt="Torreón" class="img-modal-enemigo"/>
             <p>Dificultad: <strong>Media</strong></p>
             <a href="#" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-torreon')">Retroceder</a>
