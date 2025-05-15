@@ -9,7 +9,9 @@ urlpatterns = [
     path('registro/', RegistroPageView.as_view(), name='registro'),
     path('mapa/', MapaContinentePageView.as_view(), name='continente'),
     path('mapa/region-tranquila', RegionPageView.as_view(), name='region'),
-
-    # path('mapa/<str:ubicacion_nombre>', MapaContinentePageView.as_view(), name='registro'),
+    path("verificar_abandono/", views.verificar_abandono, name="verificar_abandono"),
+    path("resolver_abandono/", views.resolver_abandono, name="resolver_abandono"),
+    path("abandonar_combate/<int:combate_id>/", views.abandonar_combate, name="abandonar_combate"),
+    # path('resultado/<int:combate_id>/', views.resultado_combate, name='resultado_combate'),
     path('combate/', views.combate, name='combate'),
 ]

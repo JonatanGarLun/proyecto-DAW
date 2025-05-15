@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 {% load static %}
+{% load seguridad_tags %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Mi Aplicación{% endblock %}</title>
+    <title>{% block title %}Battlebound Tactics{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -86,19 +87,47 @@
             background: none;
         }
 
-        {#@media (max-width: 768px) {#}
-        {#    header {#}
-        {#        flex-direction: column;#}
-        {#        align-items: flex-start;#}
-        {#    }#}
-        {##}
-        {#    .nav-buttons {#}
-        {#        flex-direction: column;#}
-        {#        align-items: flex-start;#}
-        {#        gap: 0.5rem;#}
-        {#    }#}
-        {# }#}
-        {##}
+        .modal-abandono-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-abandono-content {
+            background: #222;
+            padding: 30px;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 0 15px black;
+        }
+
+        .modal-abandono-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #continuar-combate {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #rendirse-combate {
+            background-color: #dc3545;
+            color: white;
+        }
     </style>
     {% block links %}
         <!-- Bloque para añadir los enlaces de las plantillas que heredan de esta-->
@@ -174,5 +203,56 @@
         audio.onended = () => nextSong();
     }
 </script>
+{% if user.is_authenticated and user|tiene_jugador and user.jugador.combate_abandonado %}
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            fetch("{% url 'verificar_abandono' %}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.pendiente) {
+                        mostrarModalAbandono(data.combate_id);
+                    }
+                });
+        });
+
+        function mostrarModalAbandono(combate_id) {
+            const modal = document.createElement("div");
+            modal.classList.add("modal-abandono-overlay");
+            modal.innerHTML = `
+            <div class="modal-abandono-content">
+                <h3>⚠️ Combate pendiente detectado</h3>
+                <p>¿Deseas continuar el combate? Si no lo haces, lo perderás automáticamente.</p>
+                <button id="continuar-combate">✔️ Continuar</button>
+                <button id="rendirse-combate">❌ Rendirse</button>
+            </div>
+        `;
+            document.body.appendChild(modal);
+
+            document.getElementById("continuar-combate").onclick = () => {
+                fetch("{% url 'resolver_abandono' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({decision: "continuar"})
+                }).then(res => res.json())
+                    .then(data => window.location.href = data.redirect_url);
+            };
+
+            document.getElementById("rendirse-combate").onclick = () => {
+                fetch("{% url 'resolver_abandono' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({decision: "rendirse"})
+                }).then(res => res.json())
+                    .then(data => window.location.href = data.redirect_url);
+            };
+        }
+    </script>
+{% endif %}
 </body>
 </html>

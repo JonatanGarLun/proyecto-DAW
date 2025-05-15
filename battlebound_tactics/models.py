@@ -52,6 +52,14 @@ class Jugador(models.Model):
     oro = models.IntegerField(default=0)
     victorias = models.IntegerField(default=0, null=True, blank=True)
     derrotas = models.IntegerField(default=0, null=True, blank=True)
+    combate_abandonado = models.BooleanField(default=False)
+    combate_abandonado_id = models.IntegerField(null=True, blank=True)
+
+    def clean(self):
+        if self.salud > self.salud_maxima:
+            self.salud = self.salud_maxima
+        if self.energia_espiritual > self.energia_espiritual_maxima:
+            self.energia_espiritual = self.energia_espiritual_maxima
 
     def __str__(self):
         return f"{self.user.username} - {self.nombre}"
@@ -280,6 +288,12 @@ class Combate(models.Model):
     jugador = models.ForeignKey(Jugador, related_name='Jugador', on_delete=models.CASCADE)
     enemigo = models.ForeignKey(Enemigo, related_name='Enemigo', on_delete=models.CASCADE)
     terminado = models.BooleanField(default=False)
+    resultado = models.CharField(
+        max_length=10,
+        choices=[("victoria", "Victoria"), ("derrota", "Derrota")],
+        null=True,
+        blank=True
+    )
 
 # ------------------
 # UBICACIONES
