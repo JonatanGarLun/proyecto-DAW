@@ -1,3 +1,387 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Battlebound Tactics - A luchar!{% endblock %}
+{% load filtros_tags %}
+
+{% block title %}Battlebound Tactics — A luchar!{% endblock %}
+
+{% block content %}
+    <style>
+        html, body {
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .log-combate {
+            background-color: rgba(29, 29, 29, 0.9);
+            color: white;
+            font-family: monospace;
+            padding: 10px;
+            overflow-y: auto;
+            width: 40%;
+            height: 100%;
+            border: 1px solid white;
+            font-size: 13px;
+            white-space: pre-line;
+        }
+
+        .log-combate-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            font-family: monospace;
+            user-select: none;
+        }
+
+        .log-combate-toggle {
+            background-color: #1d1d1d;
+            color: white;
+            border: 1px solid white;
+            padding: 6px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .log-combate-content {
+            background-color: rgba(29, 29, 29, 0.95);
+            color: white;
+            border: 1px solid white;
+            border-top: none;
+            padding: 10px;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: none;
+        }
+
+        .hud-combate {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hud-enemigo {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .barra-vida-enemigo {
+            background: linear-gradient(to right, red, darkred);
+            border: 2px solid #880000;
+            height: 14px;
+            width: 500px;
+            position: relative;
+        }
+
+        .barra-vida-enemigo .relleno {
+            background-color: red;
+            height: 100%;
+            width: 75%;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .barra-vida-enemigo::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            border: 2px inset black;
+            pointer-events: none;
+        }
+
+        .stats-enemigo {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            display: flex;
+            font-size: 14px;
+            color: white;
+            border: 1px solid white;
+            min-width: 240px;
+            height: 70px;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+
+        .stats-enemigo .left, .stats-enemigo .right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stats-enemigo .left {
+            margin-right: 15px;
+            border-right: 1px solid white;
+            padding-right: 10px;
+        }
+
+        .stats-enemigo .right {
+            overflow-y: auto;
+            max-height: 100%;
+            font-size: 13px;
+        }
+
+        /* ENEMIGO VISUAL */
+        .enemigo-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .enemigo-visual img {
+            max-height: 180px;
+            object-fit: contain;
+        }
+
+        .divisor-hud-jugador {
+            width: 100%;
+            height: 4px;
+            background-color: #0c0c0c;
+            margin-top: 5px;
+        }
+
+        .hud-jugador {
+            display: flex;
+            width: 100%;
+            background-color: rgb(28, 24, 125);
+            padding: 10px;
+            gap: 10px;
+            color: white;
+            font-size: 14px;
+            height: 220px;
+            box-sizing: border-box;
+        }
+
+        .info-jugador {
+            display: flex;
+            width: 45%;
+            height: 100%;
+            background-color: #1c187d;
+            padding: 10px;
+            box-sizing: border-box;
+            gap: 10px;
+            border-right: 2px solid white;
+        }
+
+        .info-jugador .retrato {
+            width: 100px;
+            height: 100px;
+            border: 3px solid white;
+            flex-shrink: 0;
+        }
+
+        .info-jugador .retrato img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-jugador .info-datos {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .barras-jugador {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid white;
+        }
+
+        .barra {
+            height: 18px;
+            position: relative;
+            background-color: black;
+            border: 1px solid white;
+        }
+
+        .barra .relleno {
+            height: 100%;
+            width: 70%;
+            background-color: red;
+        }
+
+        .barra.energia .relleno {
+            background-color: #00bfff;
+        }
+
+        .barra .texto {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            line-height: 18px;
+        }
+
+        .stats-jugador {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 6px;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: 12px;
+            height: 30px;
+            padding: 0 10px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+
+        .buffs-jugador {
+            max-height: 40px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .acciones {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 30%;
+            padding-left: 20px;
+            border-left: 2px solid white;
+        }
+
+        .fila-acciones {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .acciones button {
+            flex: 1;
+            padding: 10px;
+            background-color: #2a0040;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .acciones button:hover {
+            background-color: #3d0060;
+        }
+
+        .acciones .despertar {
+            background-color: gold;
+            color: black;
+            display: block;
+        }
+
+    </style>
+
+    <div class="hud-combate">
+
+        <div class="hud-enemigo">
+            <!-- Log de combate a la izquierda -->
+            <div class="log-combate-wrapper">
+                <div class="log-combate-toggle" onclick="toggleLog()">📝 Registro de combate</div>
+                <div class="log-combate-content" id="logContent">
+                    <p>[Turno {{ combate_creado.turnos }}]</p>
+                    <p></p>
+                    <p>[Turno 3] El dragón utilizó “Aliento abrasador de 300 caracteres que podría romper todo el diseño
+                        si no se controla correctamente porque es una frase extremadamente larga que necesita
+                        dividirse”</p>
+                </div>
+            </div>
+
+            <!-- Barra de vida enemiga -->
+            <div class="barra-vida-enemigo">
+                <div class="relleno" style="width: 75%;"></div>
+            </div>
+
+            <!-- Stats del enemigo -->
+            <div class="stats-enemigo">
+                <div class="left">
+                    <div>Ataque: 123</div>
+                    <div>Defensa: 98</div>
+                </div>
+                <div class="right">
+                    <div>🔥 Quemado</div>
+                    <div>🛡️ Defensa ↓</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="enemigo-visual">
+            <img src="{{ enemigo.imagen.url }}" alt="Enemigo">
+        </div>
+
+        <div class="divisor-hud-jugador"></div>
+
+        <div class="hud-jugador">
+            <!-- Bloque Izquierdo: Info jugador -->
+            <div class="info-jugador">
+                <div class="retrato">
+                    <img src="{% static 'resources/Pixelarts/Astral/Astral_ataque.png' %}" alt="Jugador">
+                </div>
+                <div class="info-datos">
+                    <div class="barras-jugador">
+                        <div class="barra">
+                            <div class="relleno" style="width: 70%;"></div>
+                            <div class="texto">700 / 1000 (70%)</div>
+                        </div>
+                        <div class="barra energia">
+                            <div class="relleno" style="width: 60%;"></div>
+                            <div class="texto">60 / 100</div>
+                        </div>
+                    </div>
+                    <div class="stats-jugador">
+                        <div class="stat-box">🗡️ ATK 110</div>
+                        <div class="stat-box">🛡️ DEF 90</div>
+                        <div class="stat-box">💨 SPD 75</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque Centro: Acciones -->
+            <div class="acciones">
+                <div class="fila-acciones">
+                    <button>🗡️ Atacar</button>
+                    <button>✨ Habilidades</button>
+                    <button>🏃 Huir</button>
+                </div>
+                <div class="fila-acciones">
+                    <button>⏭️ Pasar turno</button>
+                    <button class="despertar">🌟 Despertar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleLog() {
+            const log = document.getElementById('logContent');
+            log.style.display = (log.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+{% endblock %}

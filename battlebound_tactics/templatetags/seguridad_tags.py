@@ -1,5 +1,4 @@
 from django import template
-
 from battlebound_tactics.models import Jugador
 
 register = template.Library()
