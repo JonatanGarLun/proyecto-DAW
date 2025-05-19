@@ -9,3 +9,10 @@ def to(value, arg):
         return range(int(value), int(arg))
     except:
         return []
+
+@register.filter
+def porcentaje(valor, maximo):
+    try:
+        return (valor / maximo) * 100
+    except (ZeroDivisionError, TypeError):
+        return 0
