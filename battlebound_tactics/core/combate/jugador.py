@@ -161,9 +161,9 @@ def accion_basica(stats_temporales, jugador):
 
     if critico(jugador):
         golpe = int(golpe*2.5)
-        mensaje = f"¡GOLPE CRÍTICO! Has asestado un golpe certero y causado {golpe} puntos de daño."
+        mensaje = f"¡GOLPE CRÍTICO! Has asestado un golpe certero."
     else:
-        mensaje = f"Has realizado un ataque básico y causado {golpe} puntos de daño."
+        mensaje = f"Has realizado un ataque básico"
 
     return golpe, mensaje
 
@@ -175,11 +175,11 @@ def ataque_adicional(stats, jugador):
     if adicional(jugador):
         golpe, mensaje_base = accion_basica(stats, jugador)
         mensaje = (
-            f"⚡ ¡{jugador.nombre} no se rinde y se lanza con un ataque extra! {mensaje_base}"
+            f"¡{jugador.nombre} no se rinde y se lanza con un ataque extra! {mensaje_base}"
         )
         return golpe, mensaje
 
-    mensaje = f"🛡️ {jugador.nombre} buscó una segunda oportunidad... pero el enemigo logró frenarlo justo a tiempo."
+    mensaje = f" {jugador.nombre} buscó una segunda oportunidad... pero el enemigo logró frenarlo justo a tiempo."
     return 0, mensaje
 
 
