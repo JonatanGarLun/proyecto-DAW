@@ -2,6 +2,7 @@ from random import choices
 from battlebound_tactics.core.combate.utils_combate import leer_efecto
 from battlebound_tactics.core.globales.probabilidades import critico, adicional
 from battlebound_tactics.core.combate.efectos import aplicar_efecto_contrario
+from globales.probabilidades import esquivar
 
 
 # ============================
@@ -58,10 +59,10 @@ def accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador):
 
     if critico(enemigo):
         golpe = int(round(golpe * 2))
-        mensaje = f"{enemigo.nombre} lanza un golpe crítico que inflige {golpe} puntos de daño."
+        mensaje = f"{enemigo.nombre} lanza un golpe crítico, parece fuerte!"
     else:
         golpe = int(round(golpe))
-        mensaje = f"{enemigo.nombre} ataca y causa {golpe} puntos de daño."
+        mensaje = f"{enemigo.nombre} lanza un ataque normal"
 
     return golpe, mensaje
 
@@ -77,6 +78,40 @@ def ataque_adicional_enemigo(stats_enemigo, enemigo, nivel_jugador):
 
     mensaje = f"{enemigo.nombre} intenta una ofensiva rápida... pero el oponente lo anticipa y bloquea el intento."
     return 0, mensaje
+
+
+def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
+    """
+    Calcula el daño recibido considerando defensa y posibilidad de esquivar.
+    Aplica un daño mínimo del 1% de salud máxima.
+
+    Args:
+        golpe (int): Daño del ataque recibido.
+        enemigo: Objeto Enemigo.
+        stats_temporales (dict): Estadísticas actuales del jugador.
+
+    Returns:
+        tuple: Daño final recibido y mensaje descriptivo.
+    """
+    defensa = stats_temporales["defensa"]
+
+    if esquivar(enemigo):
+        mensaje = f"Gracias a la velocidad y a la estrategia de {enemigo.nombre}, ha logrado evitar el ataque."
+        return 0, mensaje
+
+    danio = golpe - defensa
+
+    salud_max = stats_temporales["salud_max"]
+    umbral_minimo = max(1, int(salud_max * 0.01))
+
+    if danio <= umbral_minimo:
+        danio = umbral_minimo
+        mensaje = f"{enemigo.nombre} bloqueó casi todo el daño, pero aún así recibe {danio} puntos de daño"
+
+    else:
+        mensaje = f"{enemigo.nombre} recibe el golpe del enemigo, se ha llevado una buena y recibe {danio} puntos de daño"
+
+    return danio, mensaje
 
 
 # ============================

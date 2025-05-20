@@ -39,7 +39,7 @@ def aplicar_equipo(jugador, stats):
     Aplica bonificadores del arma y equipo. Solo para jugadores.
     """
     arma = getattr(jugador, "arma", None)
-    equipo = getattr(jugador, "equipo", None)
+    equipo = getattr(jugador, "accesorio", None)
 
     if arma:
         stats["ataque"] += arma.ataque
@@ -50,8 +50,8 @@ def aplicar_equipo(jugador, stats):
         stats["ataque"] += equipo.ataque
         stats["defensa"] += equipo.defensa
         stats["velocidad"] += equipo.velocidad
-        stats["energia_max"] += equipo.energia_espiritual_maxima
-        stats["salud_max"] += equipo.salud_maxima
+        stats["energia_max"] += equipo.energia_espiritual
+        stats["salud_max"] += equipo.salud
 
 
 def calcular_stats_totales(objeto):

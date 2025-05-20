@@ -8,6 +8,11 @@ from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import TemplateView, FormView
+
+from combate import jugador
+from combate.enemigos import calcular_golpe_recibido_enemigo
+from combate.jugador import actualizar_stats_finales, calcular_golpe_recibido
+from globales.estadisticas import calcular_stats_totales, ajuste_stats
 from .forms import RegistroForm
 from .models import Jugador, Combate, Enemigo
 from django.shortcuts import render, get_object_or_404, redirect
@@ -42,12 +47,18 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         jugador = get_object_or_404(Jugador, user=self.request.user)
 
         opciones = [
-            {"nombre": "Combate", "imagen": "/static/resources/menus/combate.png", "url": "/combate/", "imagen_central": "/static/resources/menus/combate.png"},
-            {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.png", "url": "/mapa/", "imagen_central": "/static/resources/menus/mapas.png"},
-            {"nombre": "Inventario", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/", "imagen_central": "/static/resources/menus/inventario.png"},
-            {"nombre": "Tienda", "imagen": "/static/resources/menus/tienda.png", "url": "/tienda/", "imagen_central": "/static/resources/menus/tienda.png"},
-            {"nombre": "Posada", "imagen": "/static/resources/menus/posada.png", "url": "/posada/", "imagen_central": "/static/resources/menus/posada.png"},
-            {"nombre": "Estadísticas", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/", "imagen_central": "/static/resources/menus/estadisticas.png"}
+            {"nombre": "Combate", "imagen": "/static/resources/menus/combate.png", "url": "/combate/",
+             "imagen_central": "/static/resources/menus/combate.png"},
+            {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.png", "url": "/mapa/",
+             "imagen_central": "/static/resources/menus/mapas.png"},
+            {"nombre": "Inventario", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/",
+             "imagen_central": "/static/resources/menus/inventario.png"},
+            {"nombre": "Tienda", "imagen": "/static/resources/menus/tienda.png", "url": "/tienda/",
+             "imagen_central": "/static/resources/menus/tienda.png"},
+            {"nombre": "Posada", "imagen": "/static/resources/menus/posada.png", "url": "/posada/",
+             "imagen_central": "/static/resources/menus/posada.png"},
+            {"nombre": "Estadísticas", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
+             "imagen_central": "/static/resources/menus/estadisticas.png"}
         ]
 
         context.update({
@@ -99,6 +110,7 @@ def combate(request, combate_id):
     jugador = combate.jugador
     enemigo = combate.enemigo
     log = []
+    descanso = True
 
     if combate.terminado:
         return redirect("resultado_combate", combate_id=combate.id)
@@ -108,13 +120,21 @@ def combate(request, combate_id):
         jugador.combate_abandonado_id = None
         jugador.save()
 
+    contador = str(combate.turnos)
+
+    print(jugador.salud)
+
+    log.append("[Turno " + contador + "]")
     stats_jugador, stats_enemigo = inicializar_combate(request, combate)
+
+    print(jugador.salud)
 
     registrar_efecto_turno(stats_jugador, combate.jugador, log)
     registrar_efecto_turno(stats_enemigo, combate.enemigo, log)
 
     if stats_jugador["salud"] <= 0:
-        return resolver_derrota(request, jugador, enemigo, combate, log, f"💀 {jugador.nombre} ha sucumbido a los efectos...")
+        return resolver_derrota(request, jugador, enemigo, combate, log,
+                                f"💀 {jugador.nombre} ha sucumbido sido derrotado...")
 
     if stats_enemigo["salud"] <= 0:
         return resolver_victoria(request, jugador, enemigo, combate, log)
@@ -123,17 +143,27 @@ def combate(request, combate_id):
         accion = request.POST.get("accion")
 
         if accion == "atacar":
+            descanso = True
             danio, mensaje = accion_basica(stats_jugador, jugador)
             stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
             log.append(mensaje)
 
+            energia_recuperada = max(1, int(stats_jugador["energia_max"] * 0.01))
+            stats_jugador["energia"] = min(stats_jugador["energia_max"], stats_jugador["energia"] + energia_recuperada)
+            log.append(f"{jugador.nombre} recupera {energia_recuperada} de energía.")
+
         elif accion in ["habilidad_1", "habilidad_2", "habilidad_3"]:
+            descanso = True
             resultados, mensaje = uso_habilidad(jugador, accion, stats_jugador)
             log.append(mensaje)
             for resultado in resultados:
                 tipo = resultado[0]
                 if tipo == "daño":
                     danio = resultado[1]
+                    print(danio)
+                    danio, mensaje = calcular_golpe_recibido_enemigo(danio, enemigo, stats_enemigo)
+                    print(danio)
+                    log.append(mensaje)
                     stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
                 elif tipo == "curacion":
                     curacion = resultado[1]
@@ -143,10 +173,25 @@ def combate(request, combate_id):
                     aplicar_estado(stats_jugador, {"tipo": "buff", "stat": stat, "valor": valor, "duracion": duracion})
                 elif tipo == "debuff":
                     stat, valor, duracion = resultado[1:]
-                    aplicar_estado(stats_enemigo, {"tipo": "debuff", "stat": stat, "valor": valor, "duracion": duracion})
+                    aplicar_estado(stats_enemigo,
+                                   {"tipo": "debuff", "stat": stat, "valor": valor, "duracion": duracion})
                 elif tipo == "negativo":
                     estado_nombre, valor, duracion = resultado[1:]
-                    aplicar_estado(stats_enemigo, {"tipo": "negativo", "estado": estado_nombre, "valor": valor, "duracion": duracion})
+                    aplicar_estado(stats_enemigo,
+                                   {"tipo": "negativo", "estado": estado_nombre, "valor": valor, "duracion": duracion})
+
+        elif accion == "huir":
+            actualizar_stats_finales(jugador, stats_jugador)
+            return resolver_derrota(request, jugador, enemigo, combate, log)
+        elif accion == "pasar":
+            log.append(f"{jugador.nombre} decide no hacer nada este turno.")
+
+            if descanso:
+                descanso = False
+                salud_recuperada = max(1, int(stats_jugador["salud_max"] * 0.01))
+                stats_jugador["salud"] = min(stats_jugador["salud_max"], stats_jugador["salud"] + salud_recuperada)
+                log.append(f" {jugador.nombre} recupera {salud_recuperada} de salud al descansar.")
+
         else:
             log.append("⚠️ Acción inválida.")
 
@@ -156,6 +201,8 @@ def combate(request, combate_id):
         eleccion = ia_enemiga(enemigo, stats_enemigo, stats_jugador)
         if eleccion == "basico":
             danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
+            log.append(mensaje)
+
             stats_jugador["salud"] = max(1, stats_jugador["salud"] - danio)
             log.append(mensaje)
         else:
@@ -169,6 +216,8 @@ def combate(request, combate_id):
 
     request.session["stats_jugador"] = stats_jugador
     request.session["stats_enemigo"] = stats_enemigo
+    combate.turnos += 1
+    combate.save()
 
     return render(request, "app/combate.html", {
         "combate_creado": combate,
@@ -233,22 +282,21 @@ def resolver_abandono(request):
 
     return JsonResponse({"error": "Parámetro no válido"}, status=400)
 
+
 @login_required
 @require_GET
 def iniciar_combate(request, enemigo_id):
-
     try:
         usuario = request.user
         jugador = get_object_or_404(Jugador, user=usuario)
         enemigo = get_object_or_404(Enemigo, id=enemigo_id)
 
         # Crear combate
-        combate = Combate.objects.create(jugador=jugador,enemigo=enemigo)
+        combate = Combate.objects.create(jugador=jugador, enemigo=enemigo)
         print(combate)
         print(combate.id)
         id_combate = combate.id
         return redirect("combate", combate_id=id_combate)
     except Jugador.DoesNotExist:
-        raise Jugador.DoesNotExist("Este usuario no tiene un jugador registrado. Por favor, registre un jugador primero.")
-
-
+        raise Jugador.DoesNotExist(
+            "Este usuario no tiene un jugador registrado. Por favor, registre un jugador primero.")

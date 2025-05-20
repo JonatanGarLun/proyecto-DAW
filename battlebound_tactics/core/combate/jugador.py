@@ -205,7 +205,7 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
     danio = golpe - defensa
 
     salud_max = stats_temporales["salud_max"]
-    umbral_minimo = max(1, int(salud_max * 0.01))
+    umbral_minimo = max(1, int(salud_max * 0.00125))
 
     if danio <= umbral_minimo:
         danio = umbral_minimo
@@ -278,9 +278,8 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
         if tipo == "daño":
             escala = efecto.get("escala_ataque", 1)
             valor = efecto.get("valor", 0)
-            golpe = int(stats_temporales["ataque"] * escala) + valor
+            golpe = stats_temporales["ataque"] +     int(stats_temporales["ataque"] * escala) + valor
             resultados.append(("daño", golpe))
-            mensajes.append(f"Causas {golpe} puntos de daño.")
 
         elif tipo == "curacion":
             escala = efecto.get("escala_salud", 0)

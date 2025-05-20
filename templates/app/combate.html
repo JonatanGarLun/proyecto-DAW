@@ -11,24 +11,10 @@
             padding: 0;
             height: 100vh;
             overflow: hidden;
-
             background-image: url("{% static 'resources/imgs/fondo_combate.png' %}");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-        }
-
-        .log-combate {
-            background-color: rgba(29, 29, 29, 0.9);
-            color: white;
-            font-family: monospace;
-            padding: 10px;
-            overflow-y: auto;
-            width: 40%;
-            height: 100%;
-            border: 1px solid white;
-            font-size: 13px;
-            white-space: pre-line;
         }
 
         .log-combate-wrapper {
@@ -58,89 +44,90 @@
             font-size: 13px;
             max-height: 200px;
             overflow-y: auto;
-            overflow-x: hidden;
             white-space: pre-wrap;
             word-wrap: break-word;
-            display: none;
+            display: block;
         }
 
         .hud-combate {
             position: relative;
             width: 100%;
             height: 100%;
-            z-index: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            z-index: 1;
         }
 
         .hud-enemigo {
             position: absolute;
-            top: 100px;
-            left: 0;
+            top: 40px;
             width: 100%;
             display: flex;
-            align-items: flex-start;
             justify-content: center;
             gap: 20px;
             z-index: 10;
         }
 
         .barra-vida-enemigo {
-            background: linear-gradient(to right, red, darkred);
-            border: 2px solid #880000;
-            height: 14px;
-            width: 500px;
             position: relative;
+            width: 600px;
+            height: 24px;
+            background-color: #1a1a1a;
+            border: 2px solid #ff0000;
+            overflow: hidden;
         }
 
         .barra-vida-enemigo .relleno {
-            background-color: red;
             height: 100%;
-            width: 75%;
+            width: 100%;
+            background-color: #800000;
             transition: width 0.3s ease-in-out;
         }
 
-        .barra-vida-enemigo::after {
-            content: "";
+        .barra-vida-enemigo .texto {
             position: absolute;
             top: 0;
-            left: 0;
-            height: 100%;
             width: 100%;
-            border: 2px inset black;
-            pointer-events: none;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 24px;
+            text-shadow: 0 0 3px black;
         }
 
         .stats-enemigo {
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 10px 15px;
             display: flex;
-            font-size: 14px;
+            font-size: 13px;
             color: white;
             border: 1px solid white;
-            min-width: 240px;
-            height: 70px;
-            box-sizing: border-box;
+            min-width: 280px;
+            height: 90px;
             gap: 15px;
-            margin-top: -4px;
-        }
-
-        .stats-enemigo .left, .stats-enemigo .right {
-            display: flex;
-            flex-direction: column;
+            box-sizing: border-box;
         }
 
         .stats-enemigo .left {
-            margin-right: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             border-right: 1px solid white;
             padding-right: 10px;
+            min-width: 120px;
         }
 
-        .stats-enemigo .right {
+        .stats-enemigo .right.efectos-enemigo {
+            display: flex;
+            flex-direction: column;
             overflow-y: auto;
-            max-height: 100%;
-            font-size: 13px;
+            gap: 3px;
+            font-size: 12px;
+            padding-right: 80px;
+            max-height: 90px;
+            box-sizing: border-box;
         }
 
         .enemigo-visual {
@@ -148,13 +135,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            height: 500px;
-            width: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1;
+            height: 300px;
+            width: 300px;
             pointer-events: none;
+            z-index: 1;
         }
 
         .enemigo-visual img {
@@ -165,18 +152,11 @@
 
         .divisor-hud-jugador {
             width: 100%;
-            height: 6px;
-            background-color: darkgoldenrod;
+            height: 5px;
+            background-color: gold;
             position: fixed;
             bottom: 219px;
-            left: 0;
             z-index: 99;
-        }
-
-        .contenedor-jugador {
-            display: flex;
-            width: 100%;
-            height: 100%;
         }
 
         .hud-jugador {
@@ -190,38 +170,41 @@
             font-size: 14px;
             z-index: 100;
             box-sizing: border-box;
-
             background-image: url("{% static 'resources/imgs/fondo_hud_jugador.png' %}");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
         }
 
+        .contenedor-jugador {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
 
         .info-jugador {
             display: flex;
             width: 45%;
-            height: 100%;
             padding: 10px;
             box-sizing: border-box;
             gap: 10px;
             border-right: 2px solid white;
         }
 
-        .info-jugador .retrato {
+        .retrato {
             width: 100px;
             height: 100px;
             border: 3px solid white;
             flex-shrink: 0;
         }
 
-        .info-jugador .retrato img {
+        .retrato img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .info-jugador .info-datos {
+        .info-datos {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -241,15 +224,21 @@
             position: relative;
             background-color: black;
             border: 1px solid white;
+            overflow: hidden;
         }
 
-        .barra .relleno {
+        .barra .relleno-salud-jugador {
             height: 100%;
-            background-color: red;
+            width: 100%;
+            background-color: lightgreen;
+            transition: width 0.3s ease-in-out;
         }
 
-        .barra.energia .relleno {
+        .barra.energia .relleno-energia-jugador {
+            height: 100%;
+            width: 100%;
             background-color: #00bfff;
+            transition: width 0.3s ease-in-out;
         }
 
         .barra .texto {
@@ -260,6 +249,27 @@
             font-size: 12px;
             color: white;
             line-height: 18px;
+        }
+
+        .stats-con-estados {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .stats-con-estados .stats-jugador {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stats-con-estados .buffs-jugador {
+            max-height: 50px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.2;
+            min-width: 90px;
+            padding-right: 15px;
         }
 
         .stats-jugador {
@@ -286,6 +296,7 @@
             overflow-y: auto;
             font-size: 12px;
             line-height: 1.2;
+            padding-top: 5px;
         }
 
         .acciones {
@@ -306,56 +317,65 @@
 
         .acciones button {
             flex: 1;
-            padding: 10px;
+            padding: 16px 20px;
+            font-size: 18px;
             background-color: #2a0040;
             color: white;
-            border: none;
-            border-radius: 5px;
+            border: 2px solid white;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         .acciones button:hover {
             background-color: #3d0060;
+            transform: scale(1.05);
         }
 
         .acciones .despertar {
             background-color: gold;
             color: black;
-            display: block;
+            display: none;
         }
 
+        .acciones .despertar:hover {
+            background-color: darkgoldenrod;
+        }
     </style>
 
     <div class="hud-combate">
 
         <div class="hud-enemigo">
-            <!-- Log de combate a la izquierda -->
             <div class="log-combate-wrapper">
                 <div class="log-combate-toggle" onclick="toggleLog()">📝 Registro de combate</div>
-                <div class="log-combate-content" id="logContent">
-                    <p>[Turno {{ combate_creado.turnos }}]</p>
-                    <p></p>
-                    <p>[Turno 3] El dragón utilizó “Aliento abrasador de 300 caracteres que podría romper todo el diseño
-                        si no se controla correctamente porque es una frase extremadamente larga que necesita
-                        dividirse”</p>
+                <div class="log-combate-content" id="logContent" style="display: block;">
+                   <div>{{ log }}</div>
                 </div>
             </div>
 
-            <!-- Barra de vida enemiga -->
             <div class="barra-vida-enemigo">
-                <div class="relleno" style="width: 75%;"></div>
+                <div class="relleno"
+                     style="width: {{ stats_enemigo.salud|porcentaje:stats_enemigo.salud_max }}%;"></div>
+                <div class="texto">
+                    {{ stats_enemigo.salud }} / {{ stats_enemigo.salud_max }}
+                    ({{ stats_enemigo.salud|porcentaje:stats_enemigo.salud_max|floatformat:0 }}%)
+                </div>
             </div>
 
-            <!-- Stats del enemigo -->
             <div class="stats-enemigo">
                 <div class="left">
-                    <div>Ataque: 123</div>
-                    <div>Defensa: 98</div>
+                    <div>🗡️ Ataque: {{ stats_enemigo.ataque }}</div>
+                    <div>🛡️ Defensa: {{ stats_enemigo.defensa }}</div>
+                    <div>💨 Velocidad: {{ stats_enemigo.velocidad }}</div>
                 </div>
-                <div class="right">
-                    <div>🔥 Quemado</div>
-                    <div>🛡️ Defensa ↓</div>
+                <div class="right efectos-enemigo">
+                    {% for estado in stats_enemigo.estados %}
+                        <div>{{ estado }}</div>
+                    {% empty %}
+                        <div>Sin estados</div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -370,12 +390,13 @@
             <div class="contenedor-jugador">
                 <div class="info-jugador">
                     <div class="retrato">
-                        <img src="{% static 'resources/Pixelarts/Astral/Astral_ataque.png' %}" alt="Jugador">
+                        <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_final.png' %}"
+                             alt="Jugador">
                     </div>
                     <div class="info-datos">
                         <div class="barras-jugador">
                             <div class="barra">
-                                <div class="relleno"
+                                <div class="relleno-salud-jugador"
                                      style="width:{{ stats_jugador.salud|porcentaje:stats_jugador.salud_max }}%;"></div>
                                 <div class="texto">
                                     {{ stats_jugador.salud }} / {{ stats_jugador.salud_max }}
@@ -383,7 +404,7 @@
                                 </div>
                             </div>
                             <div class="barra energia">
-                                <div class="relleno"
+                                <div class="relleno-energia-jugador"
                                      style="width:{{ stats_jugador.energia|porcentaje:stats_jugador.energia_max }}%;"></div>
                                 <div class="texto">
                                     {{ stats_jugador.energia }} / {{ stats_jugador.energia_max }}
@@ -391,33 +412,103 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="stats-jugador">
-                            <div class="stat-box">🗡️ ATK: {{ stats_jugador.ataque }}</div>
-                            <div class="stat-box">🛡️ DEF: {{ stats_jugador.defensa }}</div>
-                            <div class="stat-box">💨 SPD: {{ stats_jugador.velocidad }}</div>
+                        <div class="stats-con-estados">
+                            <div class="stats-jugador">
+                                <div class="stat-box">🗡️ ATK: {{ stats_jugador.ataque }}</div>
+                                <div class="stat-box">🛡️ DEF: {{ stats_jugador.defensa }}</div>
+                                <div class="stat-box">💨 SPD: {{ stats_jugador.velocidad }}</div>
+                            </div>
+                            <div class="buffs-jugador">
+                                {% for estado in stats_jugador.estados %}
+                                    <div>{{ estado }}</div>
+                                {% empty %}
+                                    <div>Sin estados</div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="acciones">
                     <div class="fila-acciones">
-                        <button>🗡️ Atacar</button>
-                        <button>✨ Habilidades</button>
-                        <button>🏃 Huir</button>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="atacar">
+                            <button type="submit">🗡️ Atacar</button>
+                        </form>
+                        <form method="post">
+                            <button type="button" onclick="abrirModalHabilidades()">✨ Habilidades</button>
+                        </form>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="huir">
+                            <button type="submit">🏃 Huir</button>
+                        </form>
                     </div>
                     <div class="fila-acciones">
-                        <button>⏭️ Pasar turno</button>
-                        <button class="despertar">🌟 Despertar</button>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="pasar">
+                            <button type="submit">⏭️ Pasar turno</button>
+                        </form>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="despertar">
+                            <button type="submit" class="despertar">🌟 Despertar</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Modal de Habilidades -->
+        <div id="modalHabilidades"
+             style="display: none; position: fixed; z-index: 200; background-color: rgba(0,0,0,0.85); top: 0; left: 0; width: 100%; height: 100%;">
+            <div style="background: #1e1e1e; color: white; border: 2px solid white; border-radius: 10px; padding: 20px; max-width: 400px; margin: 80px auto; text-align: center;">
+                <h3>Selecciona una habilidad</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for i in "123" %}
+                        {% with habilidad=jugador|get_habilidad:i %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="accion" value="habilidad_{{ i }}">
+                                {% if habilidad %}
+                                    <button type="submit">
+                                        {{ habilidad.nombre }} : {{ habilidad.coste_energia }}
+                                        : {{ habilidad.coste_salud }}
+                                    </button>
+                                {% else %}
+                                    <button type="button" disabled>Sin habilidad</button>
+                                {% endif %}
+                            </form>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                <br>
+                <button onclick="cerrarModalHabilidades()"
+                        style="margin-top: 10px; padding: 6px 12px; background: crimson; border: none; color: white; font-weight: bold;">
+                    Cancelar
+                </button>
             </div>
         </div>
     </div>
 
     <script>
         function toggleLog() {
-            const log = document.getElementById('logContent');
-            log.style.display = (log.style.display === 'block') ? 'none' : 'block';
+            let log = document.getElementById('logContent');
+            if (log.style.display === 'block') {
+                log.style.display = 'none'
+            } else {
+                log.style.display = 'block';
+            }
+        }
+    </script>
+    <script>
+        function abrirModalHabilidades() {
+            document.getElementById('modalHabilidades').style.display = 'block';
+        }
+
+        function cerrarModalHabilidades() {
+            document.getElementById('modalHabilidades').style.display = 'none';
         }
     </script>
 {% endblock %}
