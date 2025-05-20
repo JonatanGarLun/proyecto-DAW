@@ -1,3 +1,5 @@
+import math
+
 from django import template
 
 register = template.Library()
@@ -13,6 +15,6 @@ def to(value, arg):
 @register.filter
 def porcentaje(valor, maximo):
     try:
-        return (valor / maximo) * 100
+        return math.ceil((valor / maximo) * 100)
     except (ZeroDivisionError, TypeError):
         return 0
