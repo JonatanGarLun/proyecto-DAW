@@ -48,7 +48,6 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
 
     return render(request, "app/resultado.html", {
         "log": log,
-        "ganador": jugador,
         "combate_creado": combate,
     })
 
@@ -70,6 +69,5 @@ def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
 
     return render(request, "app/resultado.html", {
         "log": log,
-        "ganador": enemigo,
         "combate_creado": combate,
     })
