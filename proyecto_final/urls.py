@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
 
 urlpatterns = [
@@ -24,3 +25,8 @@ urlpatterns = [
     path('', include('battlebound_tactics.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+def custom_permission_denied_view(request, exception):
+    return render(request, "errores/403_forbidden.html", status=403)
+
+handler403 = custom_permission_denied_view

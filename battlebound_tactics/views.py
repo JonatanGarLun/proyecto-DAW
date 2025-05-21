@@ -1,27 +1,17 @@
 from math import ceil
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import JsonResponse
-from django.urls import reverse_lazy, reverse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST, require_GET
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView, FormView
-from battlebound_tactics.core.combate.enemigos import calcular_golpe_recibido_enemigo
-from battlebound_tactics.core.combate.jugador import actualizar_stats_finales
+from battlebound_tactics.core.combate.enemigos import ejecutar_turno_enemigo
+from battlebound_tactics.core.combate.jugador import ejecutar_turno_jugador
 from .forms import RegistroForm
 from .models import Jugador, Combate, Enemigo
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-
-from battlebound_tactics.core.combate.jugador import (
-    accion_basica,
-    uso_habilidad
-)
-from battlebound_tactics.core.combate.enemigos import (
-    ia_enemiga,
-    usar_habilidad_enemigo,
-    accion_basica_enemigo
-)
 from battlebound_tactics.core.combate.utils_resolvedor import (
     inicializar_combate,
     registrar_efecto_turno,
@@ -108,15 +98,19 @@ def iniciar_combate(request, enemigo_id):
 def combate(request, combate_id):
     combate = get_object_or_404(Combate, id=combate_id)
     jugador = combate.jugador
+
+    if request.user != jugador.user:
+        raise PermissionDenied("No tienes permiso para acceder a este combate.")
+
     enemigo = combate.enemigo
     log = []
-    turno_actual = combate.turnos + 1
 
     if combate.terminado:
         return redirect("resultado_combate", combate_id=combate.id)
 
     # Inicializar estadísticas temporales
     stats_jugador, stats_enemigo = inicializar_combate(request, combate)
+    turno_actual = combate.turnos + 1
     log.append(f"[Turno {turno_actual}]")
 
     # Procesar estados al inicio del turno (enemigo primero por equilibrio)
@@ -131,7 +125,16 @@ def combate(request, combate_id):
     # Acción del jugador
     if request.method == "POST":
         accion = request.POST.get("accion")
-
+        if not accion:
+            log.append("Los dioses no han permitido esa acción...")
+            return render(request, "app/combate.html", {
+                "combate_creado": combate,
+                "jugador": jugador,
+                "enemigo": enemigo,
+                "stats_jugador": stats_jugador,
+                "stats_enemigo": stats_enemigo,
+                "log": log,
+            })
         # Determinar orden según velocidad
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
@@ -165,75 +168,55 @@ def combate(request, combate_id):
         "log": log,
     })
 
-
-@require_POST
-@csrf_exempt
-def abandonar_combate(request, combate_id):
-    combate = get_object_or_404(Combate, id=combate_id)
-    jugador = combate.jugador
-    if request.user != jugador.user:
-        return JsonResponse({"error": "Acceso denegado"}, status=403)
-    jugador.combate_abandonado = True
-    jugador.combate_abandonado_id = combate.id
-    jugador.save()
-    return JsonResponse({"status": "abandono registrado"})
-
-
-@login_required
-def verificar_abandono(request):
-    jugador = Jugador.objects.get(user=request.user)
-    if jugador.combate_abandonado:
-        return JsonResponse({"pendiente": True, "combate_id": jugador.combate_abandonado_id})
-    return JsonResponse({"pendiente": False})
-
-
-@require_POST
-@csrf_exempt
-@login_required
-def resolver_abandono(request):
-    jugador = Jugador.objects.get(user=request.user)
-    decision = request.POST.get("decision")
-
-    combate_id = jugador.combate_abandonado_id
-
-    if decision == "continuar":
-        jugador.combate_abandonado = False
-        jugador.combate_abandonado_id = None
-        jugador.save()
-        return JsonResponse({"continuar": True, "redirect_url": reverse("combate", args=[combate_id])})
-
-    elif decision == "rendirse":
-        combate = get_object_or_404(Combate, id=combate_id)
-        combate.resultado = "derrota"
-        combate.terminado = True
-        combate.save()
-
-        jugador.combate_abandonado = False
-        jugador.combate_abandonado_id = None
-        jugador.save()
-
-        from battlebound_tactics.core.globales.session import limpiar_sesion_combate
-        limpiar_sesion_combate(request, combate.id)
-
-        return JsonResponse({"continuar": False, "redirect_url": reverse("resultado_combate", args=[combate_id])})
-
-    return JsonResponse({"error": "Parámetro no válido"}, status=400)
-
-
-@login_required
-@require_GET
-def iniciar_combate(request, enemigo_id):
-    try:
-        usuario = request.user
-        jugador = get_object_or_404(Jugador, user=usuario)
-        enemigo = get_object_or_404(Enemigo, id=enemigo_id)
-
-        # Crear combate
-        combate = Combate.objects.create(jugador=jugador, enemigo=enemigo)
-        print(combate)
-        print(combate.id)
-        id_combate = combate.id
-        return redirect("combate", combate_id=id_combate)
-    except Jugador.DoesNotExist:
-        raise Jugador.DoesNotExist(
-            "Este usuario no tiene un jugador registrado. Por favor, registre un jugador primero.")
+# @require_POST
+# @csrf_exempt
+# def abandonar_combate(request, combate_id):
+#     combate = get_object_or_404(Combate, id=combate_id)
+#     jugador = combate.jugador
+#     if request.user != jugador.user:
+#         return JsonResponse({"error": "Acceso denegado"}, status=403)
+#     jugador.combate_abandonado = True
+#     jugador.combate_abandonado_id = combate.id
+#     jugador.save()
+#     return JsonResponse({"status": "abandono registrado"})
+#
+#
+# @login_required
+# def verificar_abandono(request):
+#     jugador = Jugador.objects.get(user=request.user)
+#     if jugador.combate_abandonado:
+#         return JsonResponse({"pendiente": True, "combate_id": jugador.combate_abandonado_id})
+#     return JsonResponse({"pendiente": False})
+#
+#
+# @require_POST
+# @csrf_exempt
+# @login_required
+# def resolver_abandono(request):
+#     jugador = Jugador.objects.get(user=request.user)
+#     decision = request.POST.get("decision")
+#
+#     combate_id = jugador.combate_abandonado_id
+#
+#     if decision == "continuar":
+#         jugador.combate_abandonado = False
+#         jugador.combate_abandonado_id = None
+#         jugador.save()
+#         return JsonResponse({"continuar": True, "redirect_url": reverse("combate", args=[combate_id])})
+#
+#     elif decision == "rendirse":
+#         combate = get_object_or_404(Combate, id=combate_id)
+#         combate.resultado = "derrota"
+#         combate.terminado = True
+#         combate.save()
+#
+#         jugador.combate_abandonado = False
+#         jugador.combate_abandonado_id = None
+#         jugador.save()
+#
+#         from battlebound_tactics.core.globales.session import limpiar_sesion_combate
+#         limpiar_sesion_combate(request, combate.id)
+#
+#         return JsonResponse({"continuar": False, "redirect_url": reverse("resultado_combate", args=[combate_id])})
+#
+#     return JsonResponse({"error": "Parámetro no válido"}, status=400)

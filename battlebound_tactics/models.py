@@ -72,38 +72,39 @@ class Jugador(models.Model):
 # ------------------
 # MOCHILA Y OBJETOS
 # ------------------
-class Objeto(models.Model):
-    TIPO_OBJETO = [
-        ("consumible", "Consumible"),
-        ("material", "Material"),
-        ("historia", "Historia"),
-        ("coleccionable", "Coleccionable"),
-        ("botin", "Botin"),
 
-    ]
-    nombre = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=20, choices=TIPO_OBJETO)
-    precio = models.IntegerField(default=20)
-    descripcion = models.TextField()
-    efecto = models.JSONField(default=dict, blank=True, null=True)
-    foto = models.ImageField(upload_to="resources/objetos/", null=True, blank=True)
-
-    def __str__(self):
-        return self.nombre
-
-
-class Mochila(models.Model):
-    jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE, related_name="mochila")
-    objetos = models.ManyToManyField(Objeto, through="ObjetoEnMochila")
-
-    def __str__(self):
-        return f"Mochila de {self.jugador.nombre}"
-
-
-class ObjetoEnMochila(models.Model):
-    mochila = models.ForeignKey(Mochila, on_delete=models.CASCADE)
-    objeto = models.ForeignKey(Objeto, on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=1)
+# class Objeto(models.Model):
+#     TIPO_OBJETO = [
+#         ("consumible", "Consumible"),
+#         ("material", "Material"),
+#         ("historia", "Historia"),
+#         ("coleccionable", "Coleccionable"),
+#         ("botin", "Botin"),
+#
+#     ]
+#     nombre = models.CharField(max_length=100)
+#     tipo = models.CharField(max_length=20, choices=TIPO_OBJETO)
+#     precio = models.IntegerField(default=20)
+#     descripcion = models.TextField()
+#     efecto = models.JSONField(default=dict, blank=True, null=True)
+#     foto = models.ImageField(upload_to="resources/objetos/", null=True, blank=True)
+#
+#     def __str__(self):
+#         return self.nombre
+#
+#
+# class Mochila(models.Model):
+#     jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE, related_name="mochila")
+#     objetos = models.ManyToManyField(Objeto, through="ObjetoEnMochila")
+#
+#     def __str__(self):
+#         return f"Mochila de {self.jugador.nombre}"
+#
+#
+# class ObjetoEnMochila(models.Model):
+#     mochila = models.ForeignKey(Mochila, on_delete=models.CASCADE)
+#     objeto = models.ForeignKey(Objeto, on_delete=models.CASCADE)
+#     cantidad = models.IntegerField(default=1)
 
 
 # ------------------

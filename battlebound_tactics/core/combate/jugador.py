@@ -445,7 +445,7 @@ def ganar_experiencia(jugador, exp_ganada):
 # TURNO DEL JUGADOR
 # =====================
 
-def ejecutar_turno(jugador, stats_jugador, stats_enemigo, enemigo, accion, log):
+def ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log):
     from battlebound_tactics.core.combate.enemigos import calcular_golpe_recibido_enemigo # IMPORT PROBLEMÁTICO
     from battlebound_tactics.core.combate.utils_resolvedor import resolver_derrota, resolver_victoria # IMPORT PROBLEMÁTICO
 
