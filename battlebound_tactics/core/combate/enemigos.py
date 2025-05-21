@@ -1,20 +1,14 @@
 from random import choices
 from battlebound_tactics.core.combate.utils_combate import leer_efecto
 from battlebound_tactics.core.globales.probabilidades import critico, adicional
-from battlebound_tactics.core.combate.efectos import aplicar_efecto_contrario
-from globales.probabilidades import esquivar
+from battlebound_tactics.core.combate.efectos import aplicar_efecto_contrario, aplicar_estado
+from battlebound_tactics.core.globales.probabilidades import esquivar
+from battlebound_tactics.models import Combate, ActivaEnemigo
 
 
 # ============================
 # FUNCIONES AUXILIARES INTERNAS
 # ============================
-
-def obtener_habilidades_disponibles(enemigo):
-    return [
-        h for h in enemigo.habilidades_asignadas.all()
-        if h.preparada()
-    ]
-
 
 def evaluar_buff_o_debuff(tipo, stat_objetivo, stats_enemigo, stats_jugador):
     ataque_e = stats_enemigo.get("ataque", 0)
@@ -115,6 +109,41 @@ def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
 
 
 # ============================
+# COOLDOWNS
+# ============================
+
+def reducir_cooldowns(combate: "Combate") -> None:
+    """
+    Reduce en 1 todos los cooldowns activos del enemigo en este combate.
+    """
+    cd = combate.cooldowns_enemigo or {}
+    nuevos_cd = {nombre: max(0, val - 1) for nombre, val in cd.items()}
+    combate.cooldowns_enemigo = nuevos_cd
+    combate.save()
+
+
+def cooldown_disponible(habilidad: "ActivaEnemigo", combate: "Combate") -> bool:
+    """
+    Verifica si la habilidad está disponible (cooldown en 0).
+    """
+    nombre = habilidad.nombre
+    cooldowns = combate.cooldowns_enemigo or {}
+    return cooldowns.get(nombre, 0) == 0
+
+
+def aplicar_cooldown(habilidad: "ActivaEnemigo", combate: "Combate") -> None:
+    """
+    Aplica el cooldown de una habilidad enemiga en el estado del combate.
+    """
+    cooldown_valor = habilidad.efecto.get("cooldown", 1)
+    nombre = habilidad.nombre
+    cooldowns = combate.cooldowns_enemigo or {}
+    cooldowns[nombre] = cooldown_valor
+    combate.cooldowns_enemigo = cooldowns
+    combate.save()
+
+
+# ============================
 # USO DE HABILIDADES
 # ============================
 
@@ -165,8 +194,7 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
 # IA DEL ENEMIGO
 # ============================
 
-def ia_enemiga(enemigo, stats_enemigo, stats_jugador):
-    habilidades = obtener_habilidades_disponibles(enemigo)
+def ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles):
     opciones = []
     pesos = []
 
@@ -176,7 +204,7 @@ def ia_enemiga(enemigo, stats_enemigo, stats_jugador):
     vida_max_jugador = stats_jugador.get("salud_max", 1)
     estados_jugador = stats_jugador.get("estados", [])
 
-    for habilidad in habilidades:
+    for habilidad in habilidades_disponibles:
         tipo = str(leer_efecto(habilidad, "tipo", "")).lower()
         if tipo not in ["daño", "curacion", "negativo", "buff", "debuff"]:
             continue
@@ -243,3 +271,57 @@ def ejecutar_accion_enemiga(enemigo, stats_enemigo, stats_jugador, log):
 
     log.append(mensaje)
     return danio
+
+
+def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate):
+    log.append(f"TURNO {enemigo.nombre}")
+
+    # Reducir cooldowns al inicio del turno
+    reducir_cooldowns(combate)
+
+    # Obtener habilidades disponibles
+    habilidades = [enemigo.habilidad_1, enemigo.habilidad_2, enemigo.habilidad_3]
+    habilidades_disponibles = [h for h in habilidades if h and cooldown_disponible(h, combate)]
+
+    # Elegir acción: habilidad o ataque básico
+    eleccion = ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles)
+
+    if eleccion == "basico" or not habilidades_disponibles:
+        # Ataque básico
+        danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
+        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+        log.append(mensaje)
+
+        # Ataque adicional
+        danio, mensaje = ataque_adicional_enemigo(stats_enemigo, enemigo, jugador.nivel)
+        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+        log.append(mensaje)
+
+    else:
+        # Usar habilidad
+        resultados, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log)
+        aplicar_cooldown(eleccion, combate)
+
+        if not resultados:
+            resultados = []
+
+        if isinstance(resultados, int):
+            resultados = [("daño", resultados)]
+
+        for tipo, dato in resultados:
+            if tipo == "daño":
+                stats_jugador["salud"] = max(0, stats_jugador["salud"] - dato)
+            elif tipo == "curacion":
+                stats_enemigo["salud"] = min(stats_enemigo["salud_max"], stats_enemigo["salud"] + dato)
+            elif tipo in ["buff", "debuff", "negativo"]:
+                objetivo = stats_enemigo if tipo == "buff" else stats_jugador
+                aplicar_estado(objetivo, dato)
+
+        if mensaje:
+            log.append(mensaje)
+
+    if stats_jugador["salud"] <= 0:
+        from combate.utils_resolvedor import resolver_derrota
+        return resolver_derrota(request, jugador, enemigo, combate, log)
+
+    return None

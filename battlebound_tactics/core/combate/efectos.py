@@ -1,59 +1,99 @@
 from ..globales.probabilidades import tirada
+from copy import deepcopy
 
 def aplicar_estado(stats_temporales, estado_nuevo):
+    """
+    Añade una copia única del estado al jugador/enemigo sin afectar otros combates.
+    """
     stats_temporales.setdefault("estados", [])
+
     if estado_nuevo.get("duracion", 0) <= 0:
         return
 
-    tipo = estado_nuevo["tipo"]
-    if tipo in ["buff", "debuff"] and estado_nuevo.get("porcentaje"):
-        estado_nuevo["porcentaje"] = float(estado_nuevo["porcentaje"])
+    estado_copia = deepcopy(estado_nuevo)
+    estado_copia["activado"] = False  # Se aplicará en el siguiente turno
 
+    tipo = estado_copia["tipo"]
+
+    # Reemplazo si ya está activo
     for estado in stats_temporales["estados"]:
-        if tipo == "negativo" and estado.get("estado") == estado_nuevo.get("estado"):
-            estado["duracion"] = estado_nuevo["duracion"]
-            estado["valor"] = max(estado["valor"], estado_nuevo["valor"])
+        if tipo == "negativo" and estado.get("estado") == estado_copia.get("estado"):
+            estado["duracion"] = estado_copia["duracion"]
+            estado["valor"] = max(estado["valor"], estado_copia["valor"])
             return
-        elif tipo in ["buff", "debuff"] and estado.get("stat") == estado_nuevo.get("stat"):
-            if estado.get("porcentaje") == estado_nuevo.get("porcentaje"):
-                estado["duracion"] = estado_nuevo["duracion"]
-                estado["valor"] = max(estado["valor"], estado_nuevo["valor"])
-                return
+        elif tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat"):
+            estado["duracion"] = estado_copia["duracion"]
+            estado["valor"] = max(estado["valor"], estado_copia["valor"])
+            return
 
-    stats_temporales["estados"].append(estado_nuevo)
+    stats_temporales["estados"].append(estado_copia)
 
 
-def procesar_estados(stats_temporales, jugador):
+def procesar_estados(stats_temporales, objeto):
+    """
+    Aplica efectos de estado (veneno, buff, debuff, etc.) y reduce su duración.
+    """
     mensajes = []
-    aplicar_buffs, aplicar_debuffs = [], []
+    nuevos_estados = []
 
     for estado in stats_temporales.get("estados", []):
-        tipo = estado["tipo"]
+        tipo = estado.get("tipo")
+        duracion = estado.get("duracion", 0)
+        if duracion <= 0:
+            continue
+
         if tipo == "negativo":
-            danio = estado["valor"]
-            stats_temporales["salud"] = max(1, stats_temporales["salud"] - danio)
-            mensajes.append(f"{jugador.nombre} sufre {danio} puntos de daño por {estado['estado']}.")
+            valor = estado.get("valor", 0)
+            stats_temporales["salud"] = max(0, stats_temporales["salud"] - valor)
+            mensajes.append(f"{objeto.nombre} sufre {valor} de daño por {estado.get('estado', 'efecto negativo')}.")
+
         elif tipo == "buff":
-            aplicar_buffs.append(estado)
+            if not estado.get("activado"):
+                stat = estado["stat"]
+                valor = estado["valor"]
+                incremento = int(stats_temporales[stat] * valor) if estado.get("porcentaje") else valor
+                stats_temporales[stat] += incremento
+                estado["activado"] = True
+                estado["aplicado"] = incremento
+                mensajes.append(f"{objeto.nombre} gana {incremento} en {stat} por un buff.")
+
         elif tipo == "debuff":
-            aplicar_debuffs.append(estado)
+            if not estado.get("activado"):
+                stat = estado["stat"]
+                valor = estado["valor"]
+                reduccion = int(stats_temporales[stat] * valor) if estado.get("porcentaje") else valor
+                stats_temporales[stat] = max(0, stats_temporales[stat] - reduccion)
+                estado["activado"] = True
+                estado["aplicado"] = reduccion
+                mensajes.append(f"{objeto.nombre} pierde {reduccion} en {stat} por un debuff.")
+
         estado["duracion"] -= 1
+        nuevos_estados.append(estado)
 
-    for buff in aplicar_buffs:
-        incremento = int(stats_temporales[buff["stat"]] * buff["valor"]) if buff.get("porcentaje") else buff["valor"]
-        stats_temporales[buff["stat"]] += incremento
-        mensajes.append(f"{jugador.nombre} gana {incremento} extra en {buff['stat']} gracias a un buff.")
-
-    for debuff in aplicar_debuffs:
-        reduccion = int(stats_temporales[debuff["stat"]] * debuff["valor"]) if debuff.get("porcentaje") else debuff["valor"]
-        stats_temporales[debuff["stat"]] = max(0, stats_temporales[debuff["stat"]] - reduccion)
-        mensajes.append(f"{jugador.nombre} pierde {reduccion} en {debuff['stat']} debido a un debuff.")
-
+    stats_temporales["estados"] = nuevos_estados
     return mensajes
 
 
 def limpiar_estados_expirados(stats_temporales):
-    stats_temporales["estados"] = [e for e in stats_temporales.get("estados", []) if e["duracion"] > 0]
+    """
+    Elimina estados expirados y revierte sus efectos si corresponde.
+    """
+    nuevos_estados = []
+
+    for estado in stats_temporales.get("estados", []):
+        if estado["duracion"] <= 0:
+            if estado["tipo"] in ["buff", "debuff"] and estado.get("activado") and "aplicado" in estado:
+                stat = estado.get("stat")
+                valor = estado["aplicado"]
+                if estado["tipo"] == "buff":
+                    stats_temporales[stat] = max(0, stats_temporales[stat] - valor)
+                else:  # debuff
+                    stats_temporales[stat] += valor
+        else:
+            nuevos_estados.append(estado)
+
+    stats_temporales["estados"] = nuevos_estados
+
 
 
 def remover_estado(stats_temporales, tipo, identificador=None):

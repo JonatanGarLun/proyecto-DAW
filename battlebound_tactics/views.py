@@ -1,6 +1,4 @@
-from logging import raiseExceptions
 from math import ceil
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
@@ -8,11 +6,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import TemplateView, FormView
-
-from combate import jugador
-from combate.enemigos import calcular_golpe_recibido_enemigo
-from combate.jugador import actualizar_stats_finales, calcular_golpe_recibido
-from globales.estadisticas import calcular_stats_totales, ajuste_stats
+from battlebound_tactics.core.combate.enemigos import calcular_golpe_recibido_enemigo
+from battlebound_tactics.core.combate.jugador import actualizar_stats_finales
 from .forms import RegistroForm
 from .models import Jugador, Combate, Enemigo
 from django.shortcuts import render, get_object_or_404, redirect
@@ -21,10 +16,6 @@ from django.contrib.auth.decorators import login_required
 from battlebound_tactics.core.combate.jugador import (
     accion_basica,
     uso_habilidad
-)
-from battlebound_tactics.core.combate.efectos import (
-    aplicar_estado,
-    limpiar_estados_expirados
 )
 from battlebound_tactics.core.combate.enemigos import (
     ia_enemiga,
@@ -105,119 +96,65 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
 
 
 @login_required
+@require_GET
+def iniciar_combate(request, enemigo_id):
+    jugador = get_object_or_404(Jugador, user=request.user)
+    enemigo = get_object_or_404(Enemigo, id=enemigo_id)
+    combate = Combate.objects.create(jugador=jugador, enemigo=enemigo)
+    return redirect("combate", combate_id=combate.id)
+
+
+@login_required
 def combate(request, combate_id):
     combate = get_object_or_404(Combate, id=combate_id)
     jugador = combate.jugador
     enemigo = combate.enemigo
     log = []
-    descanso = True
+    turno_actual = combate.turnos + 1
 
     if combate.terminado:
         return redirect("resultado_combate", combate_id=combate.id)
 
-    if jugador.combate_abandonado and jugador.combate_abandonado_id == combate_id:
-        jugador.combate_abandonado = False
-        jugador.combate_abandonado_id = None
-        jugador.save()
-
-    contador = str(combate.turnos)
-
-    print(jugador.salud)
-
-    log.append("[Turno " + contador + "]")
+    # Inicializar estadísticas temporales
     stats_jugador, stats_enemigo = inicializar_combate(request, combate)
+    log.append(f"[Turno {turno_actual}]")
 
-    print(jugador.salud)
-
-    registrar_efecto_turno(stats_jugador, combate.jugador, log)
-    registrar_efecto_turno(stats_enemigo, combate.enemigo, log)
-
-    if stats_jugador["salud"] <= 0:
-        return resolver_derrota(request, jugador, enemigo, combate, log,
-                                f"💀 {jugador.nombre} ha sucumbido sido derrotado...")
-
+    # Procesar estados al inicio del turno (enemigo primero por equilibrio)
+    registrar_efecto_turno(stats_enemigo, enemigo, log)
     if stats_enemigo["salud"] <= 0:
         return resolver_victoria(request, jugador, enemigo, combate, log)
 
+    registrar_efecto_turno(stats_jugador, jugador, log)
+    if stats_jugador["salud"] <= 0:
+        return resolver_derrota(request, jugador, enemigo, combate, log)
+
+    # Acción del jugador
     if request.method == "POST":
         accion = request.POST.get("accion")
 
-        if accion == "atacar":
-            descanso = True
-            danio, mensaje = accion_basica(stats_jugador, jugador)
-            stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
-            log.append(mensaje)
+        # Determinar orden según velocidad
+        jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
-            energia_recuperada = max(1, int(stats_jugador["energia_max"] * 0.01))
-            stats_jugador["energia"] = min(stats_jugador["energia_max"], stats_jugador["energia"] + energia_recuperada)
-            log.append(f"{jugador.nombre} recupera {energia_recuperada} de energía.")
-
-        elif accion in ["habilidad_1", "habilidad_2", "habilidad_3"]:
-            descanso = True
-            resultados, mensaje = uso_habilidad(jugador, accion, stats_jugador)
-            log.append(mensaje)
-            for resultado in resultados:
-                tipo = resultado[0]
-                if tipo == "daño":
-                    danio = resultado[1]
-                    print(danio)
-                    danio, mensaje = calcular_golpe_recibido_enemigo(danio, enemigo, stats_enemigo)
-                    print(danio)
-                    log.append(mensaje)
-                    stats_enemigo["salud"] = max(1, stats_enemigo["salud"] - danio)
-                elif tipo == "curacion":
-                    curacion = resultado[1]
-                    stats_jugador["salud"] = min(stats_jugador["salud_max"], stats_jugador["salud"] + curacion)
-                elif tipo == "buff":
-                    stat, valor, duracion = resultado[1:]
-                    aplicar_estado(stats_jugador, {"tipo": "buff", "stat": stat, "valor": valor, "duracion": duracion})
-                elif tipo == "debuff":
-                    stat, valor, duracion = resultado[1:]
-                    aplicar_estado(stats_enemigo,
-                                   {"tipo": "debuff", "stat": stat, "valor": valor, "duracion": duracion})
-                elif tipo == "negativo":
-                    estado_nombre, valor, duracion = resultado[1:]
-                    aplicar_estado(stats_enemigo,
-                                   {"tipo": "negativo", "estado": estado_nombre, "valor": valor, "duracion": duracion})
-
-        elif accion == "huir":
-            actualizar_stats_finales(jugador, stats_jugador)
-            return resolver_derrota(request, jugador, enemigo, combate, log)
-        elif accion == "pasar":
-            log.append(f"{jugador.nombre} decide no hacer nada este turno.")
-
-            if descanso:
-                descanso = False
-                salud_recuperada = max(1, int(stats_jugador["salud_max"] * 0.01))
-                stats_jugador["salud"] = min(stats_jugador["salud_max"], stats_jugador["salud"] + salud_recuperada)
-                log.append(f" {jugador.nombre} recupera {salud_recuperada} de salud al descansar.")
-
+        if jugador_primero:
+            resultado = ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log)
+            if resultado:  # victoria
+                return resultado
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
+            if resultado:  # derrota
+                return resultado
         else:
-            log.append("⚠️ Acción inválida.")
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
+            if resultado:  # derrota
+                return resultado
+            resultado = ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log)
+            if resultado:  # victoria
+                return resultado
 
-        if stats_enemigo["salud"] <= 0:
-            return resolver_victoria(request, jugador, enemigo, combate, log)
-
-        eleccion = ia_enemiga(enemigo, stats_enemigo, stats_jugador)
-        if eleccion == "basico":
-            danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
-            log.append(mensaje)
-
-            stats_jugador["salud"] = max(1, stats_jugador["salud"] - danio)
-            log.append(mensaje)
-        else:
-            resultado, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log)
-            if isinstance(resultado, int):
-                stats_jugador["salud"] = max(1, stats_jugador["salud"] - resultado)
-            log.append(mensaje)
-
-        if stats_jugador["salud"] <= 0:
-            return resolver_derrota(request, jugador, enemigo, combate, log)
-
-    request.session["stats_jugador"] = stats_jugador
-    request.session["stats_enemigo"] = stats_enemigo
-    combate.turnos += 1
-    combate.save()
+        # Guardar estadísticas y avanzar turno
+        request.session["stats_jugador"] = stats_jugador
+        request.session["stats_enemigo"] = stats_enemigo
+        combate.turnos += 1
+        combate.save()
 
     return render(request, "app/combate.html", {
         "combate_creado": combate,

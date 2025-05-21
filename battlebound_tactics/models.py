@@ -174,35 +174,6 @@ class ActivaEnemigo(models.Model):
         return f"{self.nombre}"
 
 
-class HabilidadAsignadaEnemigo(models.Model):
-    enemigo = models.ForeignKey("Enemigo", on_delete=models.CASCADE, related_name="habilidades_asignadas")
-    plantilla = models.ForeignKey("ActivaEnemigo", on_delete=models.CASCADE)
-    cooldown_actual = models.IntegerField(default=0)
-
-    def preparada(self):
-        """Devuelve True si la habilidad está lista para usarse."""
-        return self.cooldown_actual == 0
-
-    def activar(self, cooldown=None):
-        """Activa la habilidad, asignando cooldown desde el efecto o un parámetro explícito."""
-        if cooldown is not None:
-            self.cooldown_actual = cooldown
-        else:
-            self.cooldown_actual = self.plantilla.efecto.get("cooldown", 1)
-
-    def enfriar(self):
-        """Reduce el cooldown actual en 1 si es necesario."""
-        if self.cooldown_actual > 0:
-            self.cooldown_actual -= 1
-
-    def usar(self, cooldown=None):
-        self.activar(cooldown)
-        self.save()
-
-    def __str__(self):
-        return f"{self.plantilla.nombre} (CD: {self.cooldown_actual}) para {self.enemigo.nombre}"
-
-
 # ------------------
 # HIDDEN POTENTIAL
 # ------------------
@@ -287,6 +258,7 @@ class Combate(models.Model):
     turnos = models.IntegerField(default=0)
     jugador = models.ForeignKey(Jugador, related_name='Jugador', on_delete=models.CASCADE)
     enemigo = models.ForeignKey(Enemigo, related_name='Enemigo', on_delete=models.CASCADE)
+    cooldowns_enemigo = models.JSONField(default=dict)
     terminado = models.BooleanField(default=False)
     resultado = models.CharField(
         max_length=10,

@@ -1,5 +1,7 @@
 from battlebound_tactics.core.combate.utils_combate import leer_efecto
 from battlebound_tactics.core.globales.probabilidades import critico, esquivar, adicional
+from battlebound_tactics.core.combate.efectos import aplicar_estado
+
 
 # =====================
 # CÁLCULO DE ESTADÍSTICAS / ANTIGUO - Lo he modificado y lo he pasado a un módulo común para el cálculo de estadísticas
@@ -160,7 +162,7 @@ def accion_basica(stats_temporales, jugador):
     golpe = stats_temporales["ataque"]
 
     if critico(jugador):
-        golpe = int(golpe*2.5)
+        golpe = int(golpe * 2.5)
         mensaje = f"¡GOLPE CRÍTICO! Has asestado un golpe certero y causado {golpe} puntos de daño."
     else:
         mensaje = f"Has realizado un ataque básico y causado {golpe} puntos de daño."
@@ -223,15 +225,8 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
 
 def uso_habilidad(jugador, habilidad, stats_temporales):
     """
-    Usa una habilidad activa, aplicando su coste y efectos. Los costes y los efectos se aplican solo sobre las stats temporales.
-
-    Args:
-        jugador: Objeto Jugador.
-        habilidad (str): Identificador de la habilidad (habilidad_1, habilidad_2, habilidad_3).
-        stats_temporales (dict): Estadísticas actuales del jugador.
-
-    Returns:
-        tuple: Resultados de los efectos y mensaje descriptivo.
+    Usa una habilidad activa, aplicando su coste y efectos.
+    Devuelve los resultados procesados y mensajes.
     """
     especial = None
     if habilidad == "habilidad_1":
@@ -246,31 +241,25 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
 
     coste_energia = especial.coste_energia
     coste_salud = especial.coste_salud
+    mensaje = leer_efecto(especial, "mensaje_personalizado", f"{jugador.nombre} usa {especial.nombre}.")
 
     if stats_temporales["energia"] < coste_energia:
         return [], f"No tienes suficiente energía para usar {especial.nombre}."
 
     coste_salud_real = int(stats_temporales["salud_max"] * coste_salud)
-    salud_necesaria = coste_salud_real + 1
-
-    if stats_temporales["salud"] < salud_necesaria:
-        return [], (
-            f"No tienes suficiente salud para usar {especial.nombre}. "
-            f"Necesitas al menos {salud_necesaria} puntos de salud."
-        )
+    if stats_temporales["salud"] < coste_salud_real + 1:
+        return [], f"No tienes suficiente salud para usar {especial.nombre}."
 
     stats_temporales["energia"] -= coste_energia
-    stats_temporales["energia"] = max(0, stats_temporales["energia"])
-
     stats_temporales["salud"] -= coste_salud_real
+    stats_temporales["energia"] = max(0, stats_temporales["energia"])
     stats_temporales["salud"] = max(1, stats_temporales["salud"])
 
     efecto_data = leer_efecto(especial, "efecto", {})
     efectos = efecto_data.get("efectos", [efecto_data]) if isinstance(efecto_data, dict) else []
-    mensaje_personalizado = leer_efecto(especial, "mensaje_personalizado", "Usas una habilidad.")
 
     resultados = []
-    mensajes = [mensaje_personalizado]
+    mensajes = [mensaje]
 
     for efecto in efectos:
         tipo = efecto.get("tipo")
@@ -278,52 +267,25 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
         if tipo == "daño":
             escala = efecto.get("escala_ataque", 1)
             valor = efecto.get("valor", 0)
-            golpe = stats_temporales["ataque"] +     int(stats_temporales["ataque"] * escala) + valor
+            golpe = stats_temporales["ataque"] + int(stats_temporales["ataque"] * escala) + valor
             resultados.append(("daño", golpe))
 
         elif tipo == "curacion":
             escala = efecto.get("escala_salud", 0)
             valor = efecto.get("valor", 0)
             curacion = int(stats_temporales["salud_max"] * escala) + valor
-            stats_temporales["salud"] = min(
-                stats_temporales["salud"] + curacion,
-                stats_temporales["salud_max"]
-            )
+            stats_temporales["salud"] = min(stats_temporales["salud_max"], stats_temporales["salud"] + curacion)
             resultados.append(("curacion", curacion))
-            mensajes.append(f"Te curas {curacion} puntos de salud.")
+            mensajes.append(f"{jugador.nombre} se cura {curacion} puntos de salud.")
 
-        elif tipo == "buff":
-            stat = efecto.get("stat")
-            valor = efecto.get("valor", 0)
-            duracion = efecto.get("duracion_turnos", 1)
-            resultados.append(("buff", stat, valor, duracion))
-            mensajes.append(
-                f"Aumentas tu {stat} en {valor} durante {duracion} turnos."
-            )
-
-        elif tipo == "debuff":
-            stat = efecto.get("stat")
-            valor = efecto.get("valor", 0)
-            duracion = efecto.get("duracion_turnos", 1)
-            resultados.append(("debuff", stat, valor, duracion))
-            mensajes.append(
-                f"Reducirás el {stat} de tu enemigo en {valor} durante {duracion} turnos."
-            )
-
-        elif tipo == "negativo":
-            estado = efecto.get("estado")
-            valor = efecto.get("valor", 0)
-            duracion = efecto.get("duracion_turnos", 1)
-            resultados.append(("negativo", estado, valor, duracion))
-            mensajes.append(
-                f"Aplicas el estado negativo {estado} ({valor} por turno, {duracion} turnos)."
-            )
+        elif tipo in ["buff", "debuff", "negativo"]:
+            resultados.append((tipo, efecto))
 
         else:
-            mensajes.append("No se permitirán hechizos del mundo oscuro...")
+            mensajes.append("No se permitiran hechizos del mundo oscuro...")
 
-    mensaje_final = " ".join(mensajes)
-    return resultados, mensaje_final
+    return resultados, " ".join(mensajes)
+
 
 # =====================
 # CÁLCULOS POST-COMBATE
@@ -478,3 +440,60 @@ def ganar_experiencia(jugador, exp_ganada):
     jugador.save()
 
     return log
+
+# =====================
+# TURNO DEL JUGADOR
+# =====================
+
+def ejecutar_turno(jugador, stats_jugador, stats_enemigo, enemigo, accion, log):
+    from battlebound_tactics.core.combate.enemigos import calcular_golpe_recibido_enemigo # IMPORT PROBLEMÁTICO
+    from battlebound_tactics.core.combate.utils_resolvedor import resolver_derrota, resolver_victoria # IMPORT PROBLEMÁTICO
+
+    if accion == "atacar":
+        danio, mensaje = accion_basica(stats_jugador, jugador)
+        log.append(mensaje)
+        danio, mensaje = calcular_golpe_recibido_enemigo(danio, enemigo, stats_enemigo)
+        log.append(mensaje)
+        stats_enemigo["salud"] = max(0, stats_enemigo["salud"] - danio)
+
+        danio, mensaje = ataque_adicional(stats_jugador, jugador)
+        log.append(mensaje)
+        if danio > 0:
+            danio, mensaje = calcular_golpe_recibido_enemigo(danio, enemigo, stats_enemigo)
+            log.append(mensaje)
+            stats_enemigo["salud"] = max(0, stats_enemigo["salud"] - danio)
+
+        energia_recuperada = max(1, int(stats_jugador["energia_max"] * 0.01))
+        stats_jugador["energia"] = min(stats_jugador["energia_max"], stats_jugador["energia"] + energia_recuperada)
+        log.append(f"{jugador.nombre} recupera {energia_recuperada} de energía.")
+
+    elif accion in ["habilidad_1", "habilidad_2", "habilidad_3"]:
+        resultados, mensaje = uso_habilidad(jugador, accion, stats_jugador)
+        log.append(mensaje)
+        for tipo, dato in resultados:
+            if tipo == "daño":
+                danio = dato
+                danio, mensaje = calcular_golpe_recibido_enemigo(danio, enemigo, stats_enemigo)
+                log.append(mensaje)
+                stats_enemigo["salud"] = max(0, stats_enemigo["salud"] - danio)
+            elif tipo in ["buff", "debuff", "negativo"]:
+                objetivo = stats_jugador if tipo == "buff" else stats_enemigo
+                aplicar_estado(objetivo, dato)
+
+    elif accion == "huir":
+        actualizar_stats_finales(jugador, stats_jugador)
+        return resolver_derrota(None, jugador, enemigo, None, log, f"{jugador.nombre} ha huido del combate.")
+
+    elif accion == "pasar":
+        log.append(f"{jugador.nombre} decide no hacer nada este turno.")
+        salud_recuperada = max(0, int(stats_jugador["salud_max"] * 0.01))
+        stats_jugador["salud"] = min(stats_jugador["salud_max"], stats_jugador["salud"] + salud_recuperada)
+        log.append(f"{jugador.nombre} recupera {salud_recuperada} de salud al descansar.")
+
+    else:
+        log.append("⚠️ Acción inválida.")
+
+    if stats_enemigo["salud"] <= 0:
+        return resolver_victoria(None, jugador, enemigo, None, log)
+
+    return None
