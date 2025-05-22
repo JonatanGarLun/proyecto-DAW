@@ -255,7 +255,7 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
     stats_temporales["energia"] = max(0, stats_temporales["energia"])
     stats_temporales["salud"] = max(1, stats_temporales["salud"])
 
-    efecto_data = leer_efecto(especial, "efecto", {})
+    efecto_data = especial.efecto
     efectos = efecto_data.get("efectos", [efecto_data]) if isinstance(efecto_data, dict) else []
 
     resultados = []
@@ -263,8 +263,7 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
 
     for efecto in efectos:
         tipo = efecto.get("tipo")
-
-        if tipo == "daño":
+        if tipo == "dano":
             escala = efecto.get("escala_ataque", 1)
             valor = efecto.get("valor", 0)
             golpe = stats_temporales["ataque"] + int(stats_temporales["ataque"] * escala) + valor
@@ -445,7 +444,7 @@ def ganar_experiencia(jugador, exp_ganada):
 # TURNO DEL JUGADOR
 # =====================
 
-def ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log):
+def ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log):
     from battlebound_tactics.core.combate.enemigos import calcular_golpe_recibido_enemigo # IMPORT PROBLEMÁTICO
     from battlebound_tactics.core.combate.utils_resolvedor import resolver_derrota, resolver_victoria # IMPORT PROBLEMÁTICO
 
@@ -482,7 +481,7 @@ def ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accio
 
     elif accion == "huir":
         actualizar_stats_finales(jugador, stats_jugador)
-        return resolver_derrota(None, jugador, enemigo, None, log, f"{jugador.nombre} ha huido del combate.")
+        return resolver_derrota(request, jugador, enemigo, combate, log, f"{jugador.nombre} ha huido del combate.")
 
     elif accion == "pasar":
         log.append(f"{jugador.nombre} decide no hacer nada este turno.")

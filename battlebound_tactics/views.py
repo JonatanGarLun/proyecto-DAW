@@ -139,7 +139,7 @@ def combate(request, combate_id):
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
         if jugador_primero:
-            resultado = ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log)
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
             if resultado:  # victoria
                 return resultado
             resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
@@ -149,7 +149,7 @@ def combate(request, combate_id):
             resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
             if resultado:  # derrota
                 return resultado
-            resultado = ejecutar_turno_jugador(jugador, stats_jugador, stats_enemigo, enemigo, accion, log)
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
             if resultado:  # victoria
                 return resultado
 

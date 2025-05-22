@@ -1,30 +1,48 @@
 from ..globales.probabilidades import tirada
 from copy import deepcopy
 
+
 def aplicar_estado(stats_temporales, estado_nuevo):
-    """
-    Añade una copia única del estado al jugador/enemigo sin afectar otros combates.
-    """
     stats_temporales.setdefault("estados", [])
 
     if estado_nuevo.get("duracion", 0) <= 0:
         return
 
     estado_copia = deepcopy(estado_nuevo)
-    estado_copia["activado"] = False  # Se aplicará en el siguiente turno
-
     tipo = estado_copia["tipo"]
 
-    # Reemplazo si ya está activo
+    # Verificamos si ya existe un estado del mismo tipo y objetivo
     for estado in stats_temporales["estados"]:
-        if tipo == "negativo" and estado.get("estado") == estado_copia.get("estado"):
-            estado["duracion"] = estado_copia["duracion"]
-            estado["valor"] = max(estado["valor"], estado_copia["valor"])
-            return
-        elif tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat"):
-            estado["duracion"] = estado_copia["duracion"]
-            estado["valor"] = max(estado["valor"], estado_copia["valor"])
-            return
+        mismo_estado = (
+                               tipo == "negativo" and estado.get("estado") == estado_copia.get("estado")
+                       ) or (
+                               tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat")
+                       )
+        if mismo_estado:
+            # Si ya estaba aplicado y el nuevo es mejor, lo actualizamos
+            if estado.get("valor", 0) < estado_copia.get("valor", 0):
+                estado["valor"] = estado_copia["valor"]
+                estado["duracion"] = estado_copia["duracion"]
+            else:
+                # Solo renovamos duración si no es mejor
+                estado["duracion"] = max(estado["duracion"], estado_copia["duracion"])
+            return  # No se vuelve a aplicar
+
+    # Aplicar por primera vez
+    if tipo in ["buff", "debuff"]:
+        stat = estado_copia["stat"]
+        valor = estado_copia["valor"]
+        incremento = int(stats_temporales[stat] * valor) if estado_copia.get("porcentaje") else valor
+
+        if tipo == "buff":
+            stats_temporales[stat] += incremento
+        else:
+            stats_temporales[stat] = max(0, stats_temporales[stat] - incremento)
+
+        estado_copia["aplicado"] = incremento
+        estado_copia["activado"] = True
+    else:
+        estado_copia["activado"] = False  # se aplica en `procesar_estados`
 
     stats_temporales["estados"].append(estado_copia)
 
@@ -75,9 +93,6 @@ def procesar_estados(stats_temporales, objeto):
 
 
 def limpiar_estados_expirados(stats_temporales):
-    """
-    Elimina estados expirados y revierte sus efectos si corresponde.
-    """
     nuevos_estados = []
 
     for estado in stats_temporales.get("estados", []):
@@ -87,13 +102,12 @@ def limpiar_estados_expirados(stats_temporales):
                 valor = estado["aplicado"]
                 if estado["tipo"] == "buff":
                     stats_temporales[stat] = max(0, stats_temporales[stat] - valor)
-                else:  # debuff
+                else:
                     stats_temporales[stat] += valor
         else:
             nuevos_estados.append(estado)
 
     stats_temporales["estados"] = nuevos_estados
-
 
 
 def remover_estado(stats_temporales, tipo, identificador=None):
@@ -140,9 +154,10 @@ def listar_estados_activos(stats_temporales):
     for estado in stats_temporales.get("estados", []):
         tipo, duracion = estado["tipo"], estado["duracion"]
         if tipo == "negativo":
-            descripciones.append(f"Estado negativo: {estado['estado']} ({estado['valor']} daño/turno, {duracion} turnos)")
+            descripciones.append(
+                f"Estado negativo: {estado['estado']} ({estado['valor']} daño/turno, {duracion} turnos)")
         elif tipo in ["buff", "debuff"]:
-            valor = f"{int(estado['valor']*100)}%" if estado.get("porcentaje") else str(estado["valor"])
+            valor = f"{int(estado['valor'] * 100)}%" if estado.get("porcentaje") else str(estado["valor"])
             simbolo = "+" if tipo == "buff" else "-"
             descripciones.append(f"{tipo.capitalize()}: {estado['stat']} ({simbolo}{valor}, {duracion} turnos)")
     return descripciones
