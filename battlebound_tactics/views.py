@@ -1,3 +1,4 @@
+import random
 from math import ceil
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -62,8 +63,20 @@ class RegionPageView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['jugador'] = get_object_or_404(Jugador, user=self.request.user)
-        context['enemigos'] = Enemigo.objects.all()
-        context['prueba'] = Enemigo.objects.first()
+
+        enemigos = list(Enemigo.objects.exclude(id=10))  # Excluimos el que ya está asignado fijo
+
+        context['enemigo_brumuhierro'] = Enemigo.objects.get(id=10)
+
+        enemigos_seleccionados = random.sample(enemigos, 6)
+
+        context['enemigo_bastion'] = enemigos_seleccionados[0]
+        context['enemigo_dreknar'] = enemigos_seleccionados[1]
+        context['enemigo_vrakk'] = enemigos_seleccionados[2]
+        context['enemigo_torreon'] = enemigos_seleccionados[3]
+        context['enemigo_campamento'] = enemigos_seleccionados[4]
+        context['enemigo_grieta'] = enemigos_seleccionados[5]
+
         return context
 
 
@@ -126,7 +139,7 @@ def combate(request, combate_id):
     if request.method == "POST":
         accion = request.POST.get("accion")
         if not accion:
-            log.append("Los dioses no han permitido esa acción...")
+            log.append("A los dioses no les ha gustado eso...")
             return render(request, "app/combate.html", {
                 "combate_creado": combate,
                 "jugador": jugador,
@@ -139,7 +152,8 @@ def combate(request, combate_id):
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
         if jugador_primero:
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)
             if resultado:  # victoria
                 return resultado
             resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
@@ -149,7 +163,8 @@ def combate(request, combate_id):
             resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
             if resultado:  # derrota
                 return resultado
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)
             if resultado:  # victoria
                 return resultado
 
@@ -167,6 +182,16 @@ def combate(request, combate_id):
         "stats_enemigo": stats_enemigo,
         "log": log,
     })
+
+
+def resultado_combate(request, jugador, enemigo, combate, log):
+    context = {
+        "jugador": jugador,
+        "enemigo": enemigo,
+        "combate": combate,
+        "log": log,
+    }
+    return render(request, "app/resultado.html", context)
 
 # @require_POST
 # @csrf_exempt

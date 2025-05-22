@@ -314,10 +314,10 @@
     <div id="modal-dreknar" class="modal">
         <div class="modal-content">
             <h2>Foso Dreknar</h2>
-            <img src="{{ prueba.imagen.url }}" alt="Dreknar" class="img-modal-enemigo"/>
-            <p>Enemigo: {{ prueba.nombre }}</p>
-            <p>Dificultad: <strong>{{ prueba.dificultad }}</strong></p>
-            <a href="{% url 'iniciar_combate' prueba.id %}" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_dreknar.imagen.url }}" alt="Dreknar" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_dreknar.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_dreknar.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_dreknar.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-dreknar')">Retroceder</a>
         </div>
     </div>
@@ -326,9 +326,10 @@
     <div id="modal-brumuhierro" class="modal">
         <div class="modal-content">
             <h2>Brumuhierro</h2>
-            <img src="{% static 'resources/enemigos/brumuhierro.jpg' %}" alt="Brumuhierro" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Media</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_brumuhierro.imagen.url }}" alt="Brumuhierro" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_brumuhierro.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_brumuhierro.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_brumuhierro.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-brumuhierro')">Retroceder</a>
         </div>
     </div>
@@ -337,9 +338,10 @@
     <div id="modal-bastion" class="modal">
         <div class="modal-content">
             <h2>Bastión Carmesí</h2>
-            <img src="{% static 'resources/enemigos/bastion.jpg' %}" alt="Bastión" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Alta</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_bastion.imagen.url }}" alt="Bastión" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_bastion.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_bastion.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_bastion.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-bastion')">Retroceder</a>
         </div>
     </div>
@@ -348,20 +350,22 @@
     <div id="modal-surnak" class="modal">
         <div class="modal-content">
             <h2>Grieta Surnak</h2>
-            <img src="{% static 'resources/enemigos/surnak.jpg' %}" alt="Surnak" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Muy alta</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_grieta.imagen.url }}" alt="Surnak" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_grieta.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_grieta.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_grieta.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-surnak')">Retroceder</a>
         </div>
     </div>
 
-    <!-- Modal Campamento de las sombras negras -->
+    <!-- Modal Campamento -->
     <div id="modal-campamento" class="modal">
         <div class="modal-content">
-            <h2>Campamento Rebelde</h2>
-            <img src="{% static 'resources/enemigos/campamento.jpg' %}" alt="Campamento" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Media</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <h2>Campamento de las Sombras Negras</h2>
+            <img src="{{ enemigo_campamento.imagen.url }}" alt="Campamento" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_campamento.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_campamento.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_campamento.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-campamento')">Retroceder</a>
         </div>
     </div>
@@ -370,20 +374,22 @@
     <div id="modal-vrakk" class="modal">
         <div class="modal-content">
             <h2>Nido de Vrakk</h2>
-            <img src="{% static 'resources/enemigos/vrakk.jpg' %}" alt="Vrakk" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Alta</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_vrakk.imagen.url }}" alt="Vrakk" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_vrakk.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_vrakk.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_vrakk.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-vrakk')">Retroceder</a>
         </div>
     </div>
 
-    <!-- Modal Torreón del Este -->
+    <!-- Modal Torreón -->
     <div id="modal-torreon" class="modal">
         <div class="modal-content">
             <h2>Torreón del Este</h2>
-            <img src="{% static 'resources/enemigos/torreon.jpg' %}" alt="Torreón" class="img-modal-enemigo"/>
-            <p>Dificultad: <strong>Media</strong></p>
-            <a href="#" class="button-gema verde">Pelear</a>
+            <img src="{{ enemigo_torreon.imagen.url }}" alt="Torreón" class="img-modal-enemigo"/>
+            <p>Enemigo: {{ enemigo_torreon.nombre }}</p>
+            <p>Dificultad: <strong>{{ enemigo_torreon.dificultad }}</strong></p>
+            <a href="{% url 'iniciar_combate' enemigo_torreon.id %}" class="button-gema verde">Pelear</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-torreon')">Retroceder</a>
         </div>
     </div>
@@ -402,11 +408,10 @@
             modal.classList.add("active", "animar-modal");
             content.classList.add("animar-modal");
 
-            // Limpieza de clases después de la animación
             setTimeout(() => {
                 modal.classList.remove("animar-modal");
                 content.classList.remove("animar-modal");
-            }, 400); // tiempo igual al de la animación
+            }, 400);
         }
 
         function cerrarModal(id) {
@@ -416,7 +421,6 @@
             modal.classList.add("cerrar-animacion");
             content.classList.add("cerrar-animacion");
 
-            // Esperar a que termine la animación para ocultar
             setTimeout(() => {
                 modal.classList.remove("active", "cerrar-animacion");
                 content.classList.remove("cerrar-animacion");
@@ -426,10 +430,10 @@
         function mostrarDialogo() {
             if (dialogoBloqueado) return;
 
-            dialogoBloqueado = true;  // Bloquear
+            dialogoBloqueado = true;
 
             const frases = [
-                "Bienvenido a Thalendor, viajero...",
+                "No queremos a extraños en Thalendor!",
                 "No todas las batallas se libran con espadas.",
                 "Cuidado con lo que acecha entre las sombras.",
                 "El rey Havva Eskript fue derrocado por su terrible reinado.",

@@ -3,6 +3,7 @@ from battlebound_tactics.core.globales.session import limpiar_sesion_combate
 from battlebound_tactics.core.combate.jugador import actualizar_stats_finales
 from battlebound_tactics.core.combate.efectos import procesar_estados, limpiar_estados_expirados
 from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
+from battlebound_tactics.core.combate.jugador import ganar_experiencia, subir_nivel
 
 
 def inicializar_combate(request, combate):
@@ -37,6 +38,8 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
     """
     Procesa la victoria del jugador.
     """
+    from battlebound_tactics.views import resultado_combate  # IMPORT PROBLEMÁTICO
+
     log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
     actualizar_stats_finales(jugador, request.session["stats_jugador"])
 
@@ -44,18 +47,19 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
     combate.resultado = "victoria"
     combate.save()
 
+    ganar_experiencia(jugador, enemigo.experiencia_otorgada)  # También está incluida la subida de nivel
+
     limpiar_sesion_combate(request, combate.id)
 
-    return render(request, "app/resultado.html", {
-        "log": log,
-        "combate_creado": combate,
-    })
+    return resultado_combate(request, jugador, enemigo, combate, log)
 
 
 def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
     """
     Procesa la derrota del jugador.
     """
+    from battlebound_tactics.views import resultado_combate  # IMPORT PROBLEMÁTICO
+
     if not mensaje:
         mensaje = f"💀 {jugador.nombre} ha sido derrotado..."
     log.append(mensaje)
@@ -67,7 +71,4 @@ def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
 
     limpiar_sesion_combate(request, combate.id)
 
-    return render(request, "app/resultado.html", {
-        "log": log,
-        "combate_creado": combate,
-    })
+    return resultado_combate(request, jugador, enemigo, combate, log)

@@ -493,6 +493,7 @@ def ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemi
         log.append("⚠️ Acción inválida.")
 
     if stats_enemigo["salud"] <= 0:
-        return resolver_victoria(None, jugador, enemigo, None, log)
+        return resolver_victoria(request, jugador, enemigo, combate, log)
 
     return None
+
