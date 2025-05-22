@@ -2,3 +2,5 @@
 .idea/
 db.*
 anotaciones.txt
+.env
+.venv/
