@@ -39,7 +39,6 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
     """
     Procesa la victoria del jugador.
     """
-    from battlebound_tactics.views import resultado_combate  # IMPORT PROBLEMÁTICO
 
     log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
     actualizar_stats_finales(jugador, request.session["stats_jugador"])
@@ -61,7 +60,6 @@ def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
     """
     Procesa la derrota del jugador.
     """
-    from battlebound_tactics.views import resultado_combate  # IMPORT PROBLEMÁTICO
 
     if not mensaje:
         mensaje = f"💀 {jugador.nombre} ha sido derrotado..."
