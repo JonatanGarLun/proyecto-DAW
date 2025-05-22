@@ -3,7 +3,6 @@ from math import ceil
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView, FormView
@@ -103,7 +102,8 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
 def iniciar_combate(request, enemigo_id):
     jugador = get_object_or_404(Jugador, user=request.user)
     enemigo = get_object_or_404(Enemigo, id=enemigo_id)
-    combate = Combate.objects.create(jugador=jugador, enemigo=enemigo)
+    nombre = f"Duelo a muerte"
+    combate = Combate.objects.create(nombre= nombre,jugador=jugador, enemigo=enemigo)
     return redirect("combate", combate_id=combate.id)
 
 
@@ -152,8 +152,7 @@ def combate(request, combate_id):
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
         if jugador_primero:
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
-                                               log)
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
             if resultado:  # victoria
                 return resultado
             resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
@@ -184,13 +183,18 @@ def combate(request, combate_id):
     })
 
 
-def resultado_combate(request, jugador, enemigo, combate, log):
+def resultado_combate(request, combate_id):
+
+    combate = get_object_or_404(Combate, id=combate_id)
+    jugador = combate.jugador
+    enemigo = combate.enemigo
+
     context = {
+        "combate": combate,
         "jugador": jugador,
         "enemigo": enemigo,
-        "combate": combate,
-        "log": log,
     }
+
     return render(request, "app/resultado.html", context)
 
 # @require_POST

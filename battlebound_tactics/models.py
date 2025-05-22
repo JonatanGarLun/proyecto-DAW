@@ -268,6 +268,8 @@ class Combate(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return f"{self.nombre} - {self.jugador.nombre} vs {self.enemigo.nombre}"
 # ------------------
 # UBICACIONES
 # ------------------

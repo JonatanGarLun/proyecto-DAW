@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
+
 from battlebound_tactics.core.globales.session import limpiar_sesion_combate
 from battlebound_tactics.core.combate.jugador import actualizar_stats_finales
 from battlebound_tactics.core.combate.efectos import procesar_estados, limpiar_estados_expirados
 from battlebound_tactics.core.globales.estadisticas import obtener_stats_temporales
-from battlebound_tactics.core.combate.jugador import ganar_experiencia, subir_nivel
+from battlebound_tactics.core.combate.jugador import ganar_experiencia
 
 
 def inicializar_combate(request, combate):
@@ -49,9 +50,11 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
 
     ganar_experiencia(jugador, enemigo.experiencia_otorgada)  # También está incluida la subida de nivel
 
-    limpiar_sesion_combate(request, combate.id)
+    combate_id = combate.id
 
-    return resultado_combate(request, jugador, enemigo, combate, log)
+    limpiar_sesion_combate(request, combate_id)
+
+    return redirect('resultado_combate', combate_id=combate_id)
 
 
 def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
@@ -69,6 +72,8 @@ def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
     combate.resultado = "derrota"
     combate.save()
 
-    limpiar_sesion_combate(request, combate.id)
+    combate_id = combate.id
 
-    return resultado_combate(request, jugador, enemigo, combate, log)
+    limpiar_sesion_combate(request, combate_id)
+
+    return redirect('resultado_combate', combate_id=combate_id)
