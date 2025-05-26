@@ -56,7 +56,7 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
     return redirect('resultado_combate', combate_id=combate_id)
 
 
-def resolver_derrota(request, jugador, enemigo, combate, log, mensaje=None):
+def resolver_derrota(request, jugador, combate, log, mensaje=None):
     """
     Procesa la derrota del jugador.
     """

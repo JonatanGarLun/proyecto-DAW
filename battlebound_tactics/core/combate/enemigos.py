@@ -319,6 +319,6 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
 
     if stats_jugador["salud"] <= 0:
         from combate.utils_resolvedor import resolver_derrota
-        return resolver_derrota(request, jugador, enemigo, combate, log)
+        return resolver_derrota(request, jugador, combate, log, )
 
     return None
