@@ -334,21 +334,93 @@ def subir_nivel(jugador, nuevo_nivel):
     """
 
     CURVAS_CLASE = {
-        "GUERRERO": {"salud": 15, "ataque": 5, "defensa": 4, "velocidad": 1, "energia": 3},
-        "ARQUERO": {"salud": 10, "ataque": 6, "defensa": 3, "velocidad": 3, "energia": 5},
-        "MAGO": {"salud": 8, "ataque": 7, "defensa": 2, "velocidad": 2, "energia": 8},
-        "LUCHADOR": {"salud": 13, "ataque": 5, "defensa": 4, "velocidad": 2, "energia": 4},
-        "ESPIRITUALISTA": {"salud": 11, "ataque": 6, "defensa": 3, "velocidad": 2, "energia": 6},
-        "ASTRAL": {"salud": 9, "ataque": 7, "defensa": 3, "velocidad": 3, "energia": 5},
+        "GUERRERO": {
+            "salud": 150,
+            "ataque": 60,
+            "defensa": 80,
+            "velocidad": 12,
+            "energia": 25
+        },
+        "ARQUERO": {
+            "salud": 100,
+            "ataque": 75,
+            "defensa": 35,
+            "velocidad": 40,
+            "energia": 40
+        },
+        "MAGO": {
+            "salud": 80,
+            "ataque": 80,
+            "defensa": 25,
+            "velocidad": 25,
+            "energia": 50
+        },
+        "LUCHADOR": {
+            "salud": 130,
+            "ataque": 65,
+            "defensa": 55,
+            "velocidad": 28,
+            "energia": 20
+        },
+        "ESPIRITUALISTA": {
+            "salud": 100,
+            "ataque": 65,
+            "defensa": 40,
+            "velocidad": 30,
+            "energia": 45
+        },
+        "ASTRAL": {
+            "salud": 95,
+            "ataque": 80,
+            "defensa": 38,
+            "velocidad": 38,
+            "energia": 30
+        }
     }
 
     MULTIPLICADORES_CLASE = {
-        "GUERRERO": {"salud": 0.15, "ataque": 0.10, "defensa": 0.12, "velocidad": 0.05, "energia": 0.08},
-        "ARQUERO": {"salud": 0.08, "ataque": 0.12, "defensa": 0.07, "velocidad": 0.20, "energia": 0.10},
-        "MAGO": {"salud": 0.07, "ataque": 0.18, "defensa": 0.05, "velocidad": 0.10, "energia": 0.15},
-        "LUCHADOR": {"salud": 0.13, "ataque": 0.12, "defensa": 0.10, "velocidad": 0.10, "energia": 0.10},
-        "ESPIRITUALISTA": {"salud": 0.10, "ataque": 0.14, "defensa": 0.08, "velocidad": 0.10, "energia": 0.12},
-        "ASTRAL": {"salud": 0.09, "ataque": 0.15, "defensa": 0.09, "velocidad": 0.12, "energia": 0.10},
+        "GUERRERO": {
+            "salud": 0.65,
+            "ataque": 0.55,
+            "defensa": 0.70,
+            "velocidad": 0.12,
+            "energia": 0.05
+        },
+        "ARQUERO": {
+            "salud": 0.35,
+            "ataque": 0.40,
+            "defensa": 0.28,
+            "velocidad": 0.40,
+            "energia": 0.07
+        },
+        "MAGO": {
+            "salud": 0.35,
+            "ataque": 0.50,
+            "defensa": 0.20,
+            "velocidad": 0.25,
+            "energia": 0.20
+        },
+        "LUCHADOR": {
+            "salud": 0.60,
+            "ataque": 0.64,
+            "defensa": 0.40,
+            "velocidad": 0.20,
+            "energia": 0.06
+        },
+        "ESPIRITUALISTA": {
+            "salud": 0.35,
+            "ataque": 0.65,
+            "defensa": 0.40,
+            "velocidad": 0.20,
+            "energia": 0.10
+        },
+        "ASTRAL": {
+            "salud": 0.28,
+            "ataque": 0.56,
+            "defensa": 0.35,
+            "velocidad": 0.20,
+            "energia": 0.1
+        }
     }
 
     clase = jugador.clase.upper()

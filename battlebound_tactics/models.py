@@ -31,14 +31,14 @@ class Jugador(models.Model):
     experiencia_maxima = models.IntegerField(default=1000)
     alineacion = models.CharField(max_length=10, choices=ALINEACIONES, default='Neutro')
 
-    salud_maxima = models.IntegerField(default=100)
-    salud = models.IntegerField(default=100)
-    energia_espiritual_maxima = models.IntegerField(default=50)
-    energia_espiritual = models.IntegerField(default=50)
+    salud_maxima = models.IntegerField(default=1000)
+    salud = models.IntegerField(default=1000)
+    energia_espiritual_maxima = models.IntegerField(default=40)
+    energia_espiritual = models.IntegerField(default=40)
 
-    defensa = models.IntegerField(default=15)
-    velocidad = models.IntegerField(default=10)
-    ataque = models.IntegerField(default=20)
+    defensa = models.IntegerField(default=300)
+    velocidad = models.IntegerField(default=100)
+    ataque = models.IntegerField(default=300)
 
     arma = models.ForeignKey("Arma", on_delete=models.SET_NULL, null=True, blank=True)
     accesorio = models.ForeignKey("Accesorio", on_delete=models.SET_NULL, null=True, blank=True)

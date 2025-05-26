@@ -147,7 +147,7 @@ def aplicar_cooldown(habilidad: "ActivaEnemigo", combate: "Combate") -> None:
 # USO DE HABILIDADES
 # ============================
 
-def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log):
+def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, jugador, log):
     tipo = str(leer_efecto(habilidad, "tipo", "")).lower()
     cooldown = leer_efecto(habilidad, "cooldown", 1)
 
@@ -158,14 +158,14 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
         escala = float(leer_efecto(habilidad, "escala_ataque", 1.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["ataque"] * escala) + bono
-        mensaje = f"{enemigo.nombre} usa {habilidad.plantilla.nombre} y causa {resultado} puntos de daño."
+        mensaje = f"{enemigo.nombre} usa {habilidad.nombre} y causa {resultado} puntos de daño."
 
     elif tipo == "curacion":
         escala = float(leer_efecto(habilidad, "escala_salud", 0.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["salud_max"] * escala) + bono
         stats_enemigo["salud"] = min(stats_enemigo["salud_max"], stats_enemigo["salud"] + resultado)
-        mensaje = f"{enemigo.nombre} usa {habilidad.plantilla.nombre} y se cura {resultado} puntos de salud."
+        mensaje = f"{enemigo.nombre} usa {habilidad.nombre} y se cura {resultado} puntos de salud."
 
     elif tipo in ["buff", "debuff", "negativo"]:
         efecto = {
@@ -177,15 +177,12 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
             "porcentaje": leer_efecto(habilidad, "porcentaje", False),
             "probabilidad": leer_efecto(habilidad, "probabilidad", 1.0),
         }
-        aplicar_efecto_contrario(efecto, stats_jugador, objetivo=stats_jugador["objeto"], log_combate=log)
-        mensaje = f"{enemigo.nombre} lanza {habilidad.plantilla.nombre} e intenta alterar el curso del combate."
+        aplicar_efecto_contrario(efecto, stats_jugador, objetivo=jugador, log_combate=log)
+        mensaje = f"{enemigo.nombre} lanza {habilidad.nombre} e intenta alterar el curso del combate."
 
     else:
-        mensaje = f"{enemigo.nombre} intenta usar {habilidad.plantilla.nombre}, pero no ocurre nada."
+        mensaje = f"{enemigo.nombre} intenta usar {habilidad.nombre}, pero no ocurre nada."
         resultado = None
-
-    habilidad.activar(cooldown)
-    habilidad.save()
 
     return resultado, mensaje
 
@@ -299,7 +296,7 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
 
     else:
         # Usar habilidad
-        resultados, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log)
+        resultados, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo,jugador, log)
         aplicar_cooldown(eleccion, combate)
 
         if not resultados:
