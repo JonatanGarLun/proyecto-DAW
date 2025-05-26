@@ -150,61 +150,200 @@ def poblar_enemigos(apps, schema_editor):
     ruta_base = os.path.join(settings.MEDIA_ROOT)
 
     enemigos = [
-        {"nombre": "Ares del Abismo",
-         "descripcion": "Una imponente figura de músculos colosales y rostro cubierto por una sombra eterna. Se dice que Ares del Abismo fue creado en una forja maldita, alimentada por el odio de mil guerreros caídos. Su fuerza brutal solo es igualada por su silencio aterrador.",
-         "salud_maxima": 42000, "salud": 42000, "ataque": 420, "defensa": 350, "velocidad": 115,
-         "dificultad": "Difícil", "experiencia_otorgada": 25000, "oro_otorgado": 120, "nivel": 30,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.png"},
-        {"nombre": "Monje del Rencor",
-         "descripcion": "Este viejo monje fue corrompido por la frustración y la traición. Su expresión amarga y su cuerpo encorvado ocultan un poder psíquico oscuro que utiliza para castigar a quienes perturban su soledad.",
-         "salud_maxima": 1000, "salud": 1000, "ataque": 60, "defensa": 40, "velocidad": 85, "dificultad": "Fácil",
-         "experiencia_otorgada": 500, "oro_otorgado": 12, "nivel": 5,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.png"},
-        {"nombre": "Bestia de Cobalto",
-         "descripcion": "Una criatura hecha aparentemente de piedra viva teñida de azul. La Bestia de Cobalto es ágil y feroz, con garras afiladas y ojos que brillan como fuego.",
-         "salud_maxima": 1500, "salud": 1500, "ataque": 90, "defensa": 60, "velocidad": 88, "dificultad": "Fácil",
-         "experiencia_otorgada": 800, "oro_otorgado": 14, "nivel": 6,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.png"},
-        {"nombre": "Bestia Granate",
-         "descripcion": "Nacida en las profundidades volcánicas de la región de Magmaria, la Bestia Granate irradia un calor sofocante y constante. Su piel rojiza y áspera como piedra fundida le otorga una defensa natural contra ataques físicos, mientras sus movimientos sorprendentemente ágiles la convierten en una amenaza para aventureros confiados. Aunque no es la criatura más poderosa, su tenacidad en combate la hace temida entre los exploradores novatos.",
-         "salud_maxima": 1800, "salud": 1800, "ataque": 100, "defensa": 65, "velocidad": 88, "dificultad": "Fácil",
-         "experiencia_otorgada": 900, "oro_otorgado": 16, "nivel": 6,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.png"},
-        {"nombre": "Guardián del Bosque Sombrío",
-         "descripcion": "Vestido con una antigua armadura de tonos tierra, este soldado sin rostro protege los secretos del bosque oscuro.",
-         "salud_maxima": 14000, "salud": 14000, "ataque": 200, "defensa": 190, "velocidad": 75, "dificultad": "Media",
-         "experiencia_otorgada": 10000, "oro_otorgado": 50, "nivel": 18,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png"},
-        {"nombre": "Bestia de Mármol",
-         "descripcion": "Petrificada por una maldición olvidada, esta criatura parece una estatua que respira. Su piel de mármol es casi impenetrable.",
-         "salud_maxima": 1700, "salud": 1700, "ataque": 75, "defensa": 130, "velocidad": 30, "dificultad": "Fácil",
-         "experiencia_otorgada": 700, "oro_otorgado": 13, "nivel": 6,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.png"},
-        {"nombre": "Bestia de Ébano",
-         "descripcion": "Forjada en la oscuridad total, la Bestia de Ébano es un cazador nocturno que se desliza entre sombras.",
-         "salud_maxima": 1900, "salud": 1900, "ataque": 105, "defensa": 80, "velocidad": 105, "dificultad": "Fácil",
-         "experiencia_otorgada": 950, "oro_otorgado": 18, "nivel": 7,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.png"},
-        {"nombre": "Bestia Carmesí",
-         "descripcion": "Llameante como el mismo infierno, esta criatura ardiente parece alimentarse de ira.",
-         "salud_maxima": 2000, "salud": 2000, "ataque": 115, "defensa": 70, "velocidad": 120, "dificultad": "Fácil",
-         "experiencia_otorgada": 1000, "oro_otorgado": 20, "nivel": 7,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.png"},
-        {"nombre": "Duende Chillón",
-         "descripcion": "Una criatura pequeña, escandalosa y sorprendentemente difícil de atrapar.",
-         "salud_maxima": 800, "salud": 800, "ataque": 40, "defensa": 25, "velocidad": 140, "dificultad": "Fácil",
-         "experiencia_otorgada": 400, "oro_otorgado": 10, "nivel": 3,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.png"},
-        {"nombre": "Gran Jefe Duende y sus Réplicas",
-         "descripcion": "El Gran Jefe Duende lidera con una mezcla de locura y fuerza desmedida.",
-         "salud_maxima": 60000, "salud": 60000, "ataque": 500, "defensa": 250, "velocidad": 115,
-         "dificultad": "Muy difícil", "experiencia_otorgada": 30000, "oro_otorgado": 200, "nivel": 35,
-         "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png"},
-        {"nombre": "Centurión del Crepúsculo",
-         "descripcion": "Un guerrero legendario de una era olvidada, resucitado por magia antigua.",
-         "salud_maxima": 35000, "salud": 35000, "ataque": 300, "defensa": 280, "velocidad": 100,
-         "dificultad": "Difícil", "experiencia_otorgada": 20000, "oro_otorgado": 100, "nivel": 28,
-         "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png"}
+        # ===========
+        # DIFÍCILES
+        # ===========
+        {
+            "nombre": "Centurión del Crepúsculo",
+            "descripcion": "...",
+            "salud_maxima": 98000,
+            "salud": 98000,
+            "ataque": 9800,
+            "defensa": 7840,
+            "velocidad": 182,
+            "dificultad": "Difícil",
+            "experiencia_otorgada": 950000,
+            "oro_otorgado": 2000,
+            "nivel": 28,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png"
+        },
+        {
+            "nombre": "Ares del Abismo",
+            "descripcion": "...",
+            "salud_maxima": 105000,
+            "salud": 105000,
+            "ataque": 10500,
+            "defensa": 8400,
+            "velocidad": 187,
+            "dificultad": "Difícil",
+            "experiencia_otorgada": 52500,
+            "oro_otorgado": 120,
+            "nivel": 30,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.png"
+        },
+        # ===========
+        # MEDIOS
+        # ===========
+        {
+            "nombre": "Guardián del Bosque Sombrío", # Equilibrado
+            "descripcion": "...",
+            "salud_maxima": 600000,
+            "salud": 600000,
+            "ataque": 4000,
+            "defensa": 12500,
+            "velocidad": 4600,
+            "dificultad": "Media",
+            "experiencia_otorgada": 18000,
+            "oro_otorgado": 72,
+            "nivel": 18,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png"
+        },
+        {
+            "nombre": "Demonio sangriento",
+            "descripcion": "...",
+            "salud_maxima": 120000,
+            "salud": 36000,
+            "ataque": 2400,
+            "defensa": 6000,
+            "velocidad": 120,
+            "dificultad": "Media",
+            "experiencia_otorgada": 18000,
+            "oro_otorgado": 72,
+            "nivel": 15,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio1.png"
+        },
+        # ===========
+        # FÁCILES
+        # ===========
+        {
+            "nombre": "Monje del Rencor",  # Otro enemigo débil, equilibrado
+            "descripcion": "...",
+            "salud_maxima": 15000,
+            "salud": 15000,
+            "ataque": 300,
+            "defensa": 400,
+            "velocidad": 72,
+            "dificultad": "Fácil",
+            "experiencia_otorgada": 7500,
+            "oro_otorgado": 20,
+            "nivel": 5,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.png"
+        },
+        {
+            "nombre": "Bestia Granate",  # El segundo más fuerte, equilibrado
+            "descripcion": "...",
+            "salud_maxima": 30000,
+            "salud": 30000,
+            "ataque": 500,
+            "defensa": 500,
+            "velocidad": 100,
+            "dificultad": "Fácil",
+            "experiencia_otorgada": 4000,
+            "oro_otorgado": 24,
+            "nivel": 12,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.png"
+        },
+        {
+            "nombre": "Bestia de Cobalto",  # El rápido, equilibrado
+            "descripcion": "...",
+            "salud_maxima": 4000,
+            "salud": 4000,
+            "ataque": 1000,
+            "defensa": 100,
+            "velocidad": 400,
+            "dificultad": "Fácil",
+            "experiencia_otorgada": 3000,
+            "oro_otorgado": 24,
+            "nivel": 6,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.png"
+        },
+        {
+            "nombre": "Bestia de Mármol",  # El tanque, equilibrado
+            "descripcion": "...",
+            "salud_maxima": 60000,
+            "salud": 60000,
+            "ataque": 200,
+            "defensa": 1600,
+            "velocidad": 14,
+            "dificultad": "Fácil",
+            "experiencia_otorgada": 3000,
+            "oro_otorgado": 24,
+            "nivel": 7,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.png"
+        },
+        {
+            "nombre": "Bestia de Ébano",  # El más fuerte de las bestias, equilirbado
+            "descripcion": "...",
+            "salud_maxima": 60000,
+            "salud": 60000,
+            "ataque": 600,
+            "defensa": 600,
+            "velocidad": 120,
+            "dificultad": "Fácil",
+            "experiencia_otorgada": 25000,
+            "oro_otorgado": 28,
+            "nivel": 12,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.png"
+        },
+        {
+            "nombre": "Bestia Carmesí",  # El más débil, equilibrado
+            "descripcion": "...",
+            "salud_maxima": 5000,
+            "salud": 5000,
+            "ataque": 150,
+            "defensa": 300,
+            "velocidad": 99,
+            "dificultad": "Muy fácil",
+            "experiencia_otorgada": 8000,
+            "oro_otorgado": 53,
+            "nivel": 3,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.png"
+        },
+        {
+            "nombre": "Duende Chillón",  # El enemigo más básico
+            "descripcion": "...",
+            "salud_maxima": 750,
+            "salud": 750,
+            "ataque": 100,
+            "defensa": 50,
+            "velocidad": 88,
+            "dificultad": "Extremadamente Fácil",
+            "experiencia_otorgada": 1500,
+            "oro_otorgado": 12,
+            "nivel": 1,
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.png"
+        },
+        # ===========
+        # JEFES
+        # ===========
+        {
+            "nombre": "Gran Jefe Duende y sus Réplicas",
+            "descripcion": "...",
+            "salud_maxima": 1750000,
+            "salud": 1750000,
+            "ataque": 17500,
+            "defensa": 14000,
+            "velocidad": 195,
+            "dificultad": "Jefe // Muy difícil",
+            "experiencia_otorgada": 1750000,
+            "oro_otorgado": 8000,
+            "nivel": 35,
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png"
+        },
+        {
+            "nombre": "Gerbacio", # Equilibrado
+            "descripcion": "...",
+            "salud_maxima": 20000000,
+            "salud": 20000000,
+            "ataque": 12500,
+            "defensa": 40000,
+            "velocidad": 9999999,  # Siempre va primero
+            "dificultad": "Jefe // !?!?!",
+            "experiencia_otorgada": 20000000,
+            "oro_otorgado": 9000,
+            "nivel": 1,
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.png"
+        }
     ]
     for enemigo in enemigos:
         imagen_absoluta = os.path.join(ruta_base, enemigo["imagen_path"])

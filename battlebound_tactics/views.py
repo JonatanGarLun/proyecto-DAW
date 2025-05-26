@@ -42,11 +42,17 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
              "imagen_central": "/static/resources/menus/estadisticas.png"}
         ]
 
+        porcentaje_salud = ceil((jugador.salud / jugador.salud_maxima) * 100)
+        porcentaje_energia = ceil((jugador.energia_espiritual / jugador.energia_espiritual_maxima) * 100)
+        porcentaje_exp = ceil((jugador.experiencia / jugador.experiencia_maxima) * 100)
+        if porcentaje_exp == 100:
+            porcentaje_exp = 99
+
         context.update({
             'jugador': jugador,
-            'porcentaje_salud': ceil((jugador.salud / jugador.salud_maxima) * 100),
-            'porcentaje_energia': ceil((jugador.energia_espiritual / jugador.energia_espiritual_maxima) * 100),
-            'porcentaje_exp': ceil((jugador.experiencia / jugador.experiencia_maxima) * 100),
+            'porcentaje_salud': porcentaje_salud ,
+            'porcentaje_energia': porcentaje_energia,
+            'porcentaje_exp': porcentaje_exp,
             'opciones': opciones
         })
         return context
@@ -62,19 +68,17 @@ class RegionPageView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['jugador'] = get_object_or_404(Jugador, user=self.request.user)
-
-        enemigos = list(Enemigo.objects.exclude(id=10))  # Excluimos el que ya está asignado fijo
-
-        context['enemigo_brumuhierro'] = Enemigo.objects.get(id=10)
-
-        enemigos_seleccionados = random.sample(enemigos, 6)
-
+        jefe_duende = get_object_or_404(Enemigo, nombre="Gran Jefe Duende y sus Réplicas")
+        enemigos = list(Enemigo.objects.exclude(dificultad__contains="Jefe"))  # Excluimos a los jefes
+        enemigos_seleccionados = random.sample(enemigos, 7)
+        # Enemigos elegidos al azar
         context['enemigo_bastion'] = enemigos_seleccionados[0]
         context['enemigo_dreknar'] = enemigos_seleccionados[1]
         context['enemigo_vrakk'] = enemigos_seleccionados[2]
         context['enemigo_torreon'] = enemigos_seleccionados[3]
         context['enemigo_campamento'] = enemigos_seleccionados[4]
         context['enemigo_grieta'] = enemigos_seleccionados[5]
+        context['enemigo_brumuhierro'] = jefe_duende if jefe_duende else enemigos_seleccionados [6]
 
         return context
 
@@ -95,7 +99,6 @@ class LoginUserView(LoginView):
 
 class EstadisticasPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/registro_usuario.html'
-
 
 @login_required
 @require_GET
@@ -126,7 +129,7 @@ def combate(request, combate_id):
     turno_actual = combate.turnos + 1
     log.append(f"[Turno {turno_actual}]")
 
-    # Procesar estados al inicio del turno (enemigo primero por equilibrio)
+    # Procesar estados al inicio del turno (enemigo primero para darle un poco de ventaja al jugador)
     registrar_efecto_turno(stats_enemigo, enemigo, log)
     if stats_enemigo["salud"] <= 0:
         return resolver_victoria(request, jugador, enemigo, combate, log)
@@ -197,6 +200,13 @@ def resultado_combate(request, combate_id):
 
     return render(request, "app/resultado.html", context)
 
+def posada(request):
+    jugador = get_object_or_404(Jugador, user=request.user)
+    print(jugador)
+    jugador.salud = jugador.salud_maxima
+    jugador.energia_espiritual = jugador.energia_espiritual_maxima
+    jugador.save()
+    return redirect("inicio")
 # @require_POST
 # @csrf_exempt
 # def abandonar_combate(request, combate_id):

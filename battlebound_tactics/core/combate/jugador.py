@@ -464,15 +464,15 @@ def subir_nivel(jugador, nuevo_nivel):
 
 def obtener_incremento_exp_por_nivel(nivel):
     if nivel <= 25:
-        return 0.15
+        return 0.05
     elif nivel <= 50:
-        return 0.20
+        return 0.08
     elif nivel <= 80:
-        return 0.25
+        return 0.12
     elif nivel <= 120:
-        return 0.30
+        return 0.15
     else:
-        return 0.33
+        return 0.20
 
 
 def ganar_experiencia(jugador, exp_ganada):
