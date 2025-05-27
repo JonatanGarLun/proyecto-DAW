@@ -553,7 +553,7 @@ def ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemi
 
     elif accion == "huir":
         actualizar_stats_finales(jugador, stats_jugador)
-        return resolver_derrota(request, jugador, combate, log, f"{jugador.nombre} ha huido del combate.")
+        return resolver_derrota(request, jugador, combate, f"{jugador.nombre} ha huido del combate.")
 
     elif accion == "pasar":
         log.append(f"{jugador.nombre} decide no hacer nada este turno.")
@@ -565,7 +565,7 @@ def ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemi
         log.append("⚠️ Acción inválida.")
 
     if stats_enemigo["salud"] <= 0:
-        return resolver_victoria(request, jugador, enemigo, combate, log)
+        return resolver_victoria(request, jugador, enemigo, combate)
 
     return None
 

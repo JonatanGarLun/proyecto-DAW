@@ -147,7 +147,7 @@ def aplicar_cooldown(habilidad: "ActivaEnemigo", combate: "Combate") -> None:
 # USO DE HABILIDADES
 # ============================
 
-def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, jugador, log):
+def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log, jugador):
     tipo = str(leer_efecto(habilidad, "tipo", "")).lower()
     cooldown = leer_efecto(habilidad, "cooldown", 1)
 
@@ -257,17 +257,17 @@ def ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles):
 # EJECUCIÓN COMPLETA DEL TURNO ENEMIGO
 # ============================
 
-def ejecutar_accion_enemiga(enemigo, stats_enemigo, stats_jugador, log):
-    nivel_jugador = stats_jugador.get("nivel", 1)
-    eleccion = ia_enemiga(enemigo, stats_enemigo, stats_jugador)
-
-    if eleccion == "basico":
-        danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador)
-    else:
-        danio, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log)
-
-    log.append(mensaje)
-    return danio
+# def ejecutar_accion_enemiga(enemigo, stats_enemigo, stats_jugador, log, jugador):
+#     nivel_jugador = stats_jugador.get("nivel", 1)
+#     eleccion = ia_enemiga(enemigo, stats_enemigo, stats_jugador)
+#
+#     if eleccion == "basico":
+#         danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador)
+#     else:
+#         danio, mensaje = usar_habilidad_enemigo(eleccion, stats_enemigo, stats_jugador, enemigo, log, jugador)
+#
+#     log.append(mensaje)
+#     return danio
 
 
 def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate):
@@ -319,6 +319,6 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
 
     if stats_jugador["salud"] <= 0:
         from combate.utils_resolvedor import resolver_derrota
-        return resolver_derrota(request, jugador, combate, log, )
+        return resolver_derrota(request, jugador, combate, log)
 
     return None

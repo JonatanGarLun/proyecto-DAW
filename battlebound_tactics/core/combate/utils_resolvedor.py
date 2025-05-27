@@ -35,12 +35,12 @@ def registrar_efecto_turno(stats_obj, objeto, log):
     limpiar_estados_expirados(stats_obj)
 
 
-def resolver_victoria(request, jugador, enemigo, combate, log):
+def resolver_victoria(request, jugador, enemigo, combate):
     """
     Procesa la victoria del jugador.
     """
 
-    log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
+    combate.log.append(f"🎉 ¡Has derrotado a {enemigo.nombre}!")
     actualizar_stats_finales(jugador, request.session["stats_jugador"])
 
     combate.terminado = True
@@ -56,14 +56,14 @@ def resolver_victoria(request, jugador, enemigo, combate, log):
     return redirect('resultado_combate', combate_id=combate_id)
 
 
-def resolver_derrota(request, jugador, combate, log, mensaje=None):
+def resolver_derrota(request, jugador, combate, mensaje=None):
     """
     Procesa la derrota del jugador.
     """
 
     if not mensaje:
         mensaje = f"💀 {jugador.nombre} ha sido derrotado..."
-    log.append(mensaje)
+    combate.log.append(mensaje)
     actualizar_stats_finales(jugador, request.session["stats_jugador"])
 
     combate.terminado = True
