@@ -100,6 +100,9 @@ class LoginUserView(LoginView):
 class EstadisticasPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/registro_usuario.html'
 
+class CastlevyrPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'app/castlevyr.html'
+
 @login_required
 @require_GET
 def iniciar_combate(request, enemigo_id):

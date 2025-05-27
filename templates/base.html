@@ -204,56 +204,6 @@
         audio.onended = () => nextSong();
     }
 </script>
-{% if user.is_authenticated and user|tiene_jugador and user.jugador.combate_abandonado %}
-    <script>
-        window.addEventListener("DOMContentLoaded", () => {
-            fetch("{% url 'verificar_abandono' %}")
-                .then(response => response.json())
-                .then(data => {
-                    if (data.pendiente) {
-                        mostrarModalAbandono(data.combate_id);
-                    }
-                });
-        });
 
-        function mostrarModalAbandono(combate_id) {
-            const modal = document.createElement("div");
-            modal.classList.add("modal-abandono-overlay");
-            modal.innerHTML = `
-            <div class="modal-abandono-content">
-                <h3>⚠️ Combate pendiente detectado</h3>
-                <p>¿Deseas continuar el combate? Si no lo haces, lo perderás automáticamente.</p>
-                <button id="continuar-combate">✔️ Continuar</button>
-                <button id="rendirse-combate">❌ Rendirse</button>
-            </div>
-        `;
-            document.body.appendChild(modal);
-
-            document.getElementById("continuar-combate").onclick = () => {
-                fetch("{% url 'resolver_abandono' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}",
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: new URLSearchParams({decision: "continuar"})
-                }).then(res => res.json())
-                    .then(data => window.location.href = data.redirect_url);
-            };
-
-            document.getElementById("rendirse-combate").onclick = () => {
-                fetch("{% url 'resolver_abandono' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}",
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: new URLSearchParams({decision: "rendirse"})
-                }).then(res => res.json())
-                    .then(data => window.location.href = data.redirect_url);
-            };
-        }
-    </script>
-{% endif %}
 </body>
 </html>
