@@ -4,3 +4,4 @@ db.*
 anotaciones.txt
 .env
 .venv/
+media/
