@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 from .models import Jugador
 
 class RegistroForm(forms.ModelForm):
@@ -31,8 +33,13 @@ class RegistroForm(forms.ModelForm):
         if User.objects.filter(username=cleaned_data.get("username")).exists():
             raise forms.ValidationError("El nombre de usuario ya está en uso.")
 
+        # No utilizamos el email del usuario, pero por si acaso añado la validación
         if User.objects.filter(email=cleaned_data.get("email")).exists():
             raise forms.ValidationError("Ya existe un usuario con este correo.")
+
+        # Este es el email que utilizamos
+        if Jugador.objects.filter(correo=cleaned_data.get("email")).exists():
+            raise forms.ValidationError("Ya existe un jugador con este correo.")
 
         return cleaned_data
 
@@ -46,7 +53,7 @@ class RegistroForm(forms.ModelForm):
             email=cleaned_data["email"]
         )
 
-        # Crear el jugador vinculado
+        # Crear el jugador
         jugador = Jugador.objects.create(
             user=user,
             correo=cleaned_data["email"],
@@ -61,12 +68,12 @@ class LoginForm(AuthenticationForm):
         label="Nombre de usuario",
         max_length=150,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Ingresa tu nombre de héroe',
+            'placeholder': 'Ingresa tu nombre de usuario',
         })
     )
     password = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Escribe tu contraseña secreta',
+            'placeholder': 'Escribe tu contraseña',
         })
     )

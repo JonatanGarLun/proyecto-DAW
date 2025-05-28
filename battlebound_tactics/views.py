@@ -1,6 +1,8 @@
 import copy
 import random
 from math import ceil
+
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
@@ -9,6 +11,7 @@ from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView, FormView
 from battlebound_tactics.core.combate.enemigos import ejecutar_turno_enemigo
 from battlebound_tactics.core.combate.jugador import ejecutar_turno_jugador
+from battlebound_tactics.core.globales.estadisticas import generar_pasiva_aleatoria_jugador
 from .forms import RegistroForm
 from .models import Jugador, Combate, Enemigo
 from django.shortcuts import render, get_object_or_404, redirect
@@ -105,7 +108,9 @@ class RegistroPageView(FormView):
     success_url = reverse_lazy('inicio')
 
     def form_valid(self, form):
-        form.save()
+        jugador = form.save()
+        generar_pasiva_aleatoria_jugador(jugador)
+        login(self.request, jugador.user)
         return super().form_valid(form)
 
 

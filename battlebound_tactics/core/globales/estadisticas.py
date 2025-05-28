@@ -132,7 +132,7 @@ def obtener_stats_temporales(objeto):
         }
 
 
-def generar_pasiva_aleatoria_para_jugador(jugador):
+def generar_pasiva_aleatoria_jugador(jugador):
     """
     Genera una instancia de Pasiva única con valores aleatorios entre 0.0 y 1.0
     y la asigna al jugador al registrarse.
@@ -147,7 +147,7 @@ def generar_pasiva_aleatoria_para_jugador(jugador):
     }
 
     pasiva = Pasiva.objects.create(
-        nombre=f"Pasiva única de {jugador.nombre}",
+        nombre=f"{jugador.nombre} - Pasiva única de registro",
         descripcion="Bonificadores únicos generados al registrarse.",
         efecto=efecto
     )

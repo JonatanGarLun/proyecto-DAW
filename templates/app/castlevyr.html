@@ -341,8 +341,7 @@
         }
 
         window.onload = function () {
-            const imgSrc = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.png' %}";
-            document.getElementById('jugador-img').src = imgSrc;
+            document.getElementById('jugador-img').src = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.png' %}";
             document.getElementById('texto-secuencia').innerText = frasesSecuencia[0];
             document.getElementById('dialogo-secuencia').style.display = 'flex';
             document.getElementById('nombre-dialogo-secuencia').innerText = nombreJugador;
@@ -351,15 +350,15 @@
 
         // Diálogo con Havva Skript
         const dialogos = [
-            {quien: 'abuelo', texto: "Ah, finalmente te has presentado."},
-            {quien: 'jugador', texto: "¿Quién eres tú? ¿Qué haces aquí?"},
-            {quien: 'abuelo', texto: "Este lugar fue mío mucho antes de que nacieras."},
-            {quien: 'jugador', texto: "Estas ruinas tienen secretos. Lo sé."},
-            {quien: 'abuelo', texto: "He protegido esos secretos durante siglos."},
-            {quien: 'jugador', texto: "No dejaré que sigas ocultando la verdad."},
-            {quien: 'abuelo', texto: "¿Estás dispuesto a arriesgar tu vida por ello?"},
-            {quien: 'jugador', texto: "Si eso significa descubrir quién soy, sí."},
-            {quien: 'abuelo', texto: "Entonces prepárate... ¡porque no me contendré!"}
+            {quien: 'abuelo', texto: "Ah, por fin te has dignado a aparecer por a aparecer por aquí..."},
+            {quien: 'jugador', texto: "¿Quién rayos eres tú? ¿¡Qué haces aquí!?"},
+            {quien: 'abuelo', texto: "Hmph, quizás te suene el nombre Havva Skript. Soy el antiguo gobernador de estas tierras."},
+            {quien: 'jugador', texto: "¡Imposible! Habías sido desterrado al mundo Oscuro, no puedes estar aquí"},
+            {quien: 'abuelo', texto: "¿De verdad creías que iba caer tan fácilmente? No... ¡Y he vuelto para vengarme!"},
+            {quien: 'jugador', texto: "No mientras yo siga en pie, acabaré contigo."},
+            {quien: 'abuelo', texto: "Que incordio, supongo que me vendrá bien algo de calentamiento antes de retomar lo que me pertenece"},
+            {quien: 'jugador', texto: "Hablas demasiado para ser un abuelo, acabaré contigo en un instante."},
+            {quien: 'abuelo', texto: "¡JA! Por favor, no me hagas reir... Bueno, dejemonos de cháchara, última oportunidad jovén ¿Estás preparado?"}
         ];
 
         let pasoHavva = 0;
