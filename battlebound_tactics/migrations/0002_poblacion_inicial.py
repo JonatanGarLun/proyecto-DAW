@@ -331,7 +331,7 @@ def poblar_enemigos(apps, schema_editor):
             "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png"
         },
         {
-            "nombre": "Gerbacio", # Equilibrado
+            "nombre": "Havva Skript", # Equilibrado
             "descripcion": "...",
             "salud_maxima": 20000000,
             "salud": 20000000,

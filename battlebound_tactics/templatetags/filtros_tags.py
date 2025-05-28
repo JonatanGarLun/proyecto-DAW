@@ -26,3 +26,10 @@ def porcentaje(valor, maximo):
 def get_habilidad(jugador, index_str):
     index = int(index_str)
     return getattr(jugador, f"habilidad_{index}", None)
+
+@register.filter
+def decimal_a_porcentaje(valor):
+    try:
+        return valor * 100
+    except TypeError:
+        return valor

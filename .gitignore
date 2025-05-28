@@ -4,4 +4,4 @@ db.*
 anotaciones.txt
 .env
 .venv/
-media/
+media/fotos_enemigos/*

@@ -1,3 +1,4 @@
+import copy
 import random
 from math import ceil
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -28,18 +29,17 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         jugador = get_object_or_404(Jugador, user=self.request.user)
 
         opciones = [
-            {"nombre": "Combate", "imagen": "/static/resources/menus/combate.png", "url": "/combate/",
-             "imagen_central": "/static/resources/menus/combate.png"},
+
             {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.png", "url": "/mapa/",
              "imagen_central": "/static/resources/menus/mapas.png"},
-            {"nombre": "Inventario", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/",
-             "imagen_central": "/static/resources/menus/inventario.png"},
-            {"nombre": "Tienda", "imagen": "/static/resources/menus/tienda.png", "url": "/tienda/",
-             "imagen_central": "/static/resources/menus/tienda.png"},
             {"nombre": "Posada", "imagen": "/static/resources/menus/posada.png", "url": "/posada/",
              "imagen_central": "/static/resources/menus/posada.png"},
-            {"nombre": "Estadísticas", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
-             "imagen_central": "/static/resources/menus/estadisticas.png"}
+            {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/",
+             "imagen_central": "/static/resources/menus/inventario.png"},
+            {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
+             "imagen_central": "/static/resources/menus/estadisticas.png"},
+            {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/combate/",
+             "imagen_central": "/static/resources/menus/combate.png"}
         ]
 
         porcentaje_salud = ceil((jugador.salud / jugador.salud_maxima) * 100)
@@ -103,6 +103,16 @@ class EstadisticasPageView(LoginRequiredMixin, TemplateView):
 class CastlevyrPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/castlevyr.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        jugador = get_object_or_404(Jugador, user=self.request.user)
+        enemigo = get_object_or_404(Enemigo, nombre="Havva Skript")
+
+        context["jugador"] = jugador
+        context["enemigo"] = enemigo
+
+        return context
+
 @login_required
 @require_GET
 def iniciar_combate(request, enemigo_id):
@@ -129,17 +139,23 @@ def combate(request, combate_id):
 
     # Inicializar estadísticas temporales
     stats_jugador, stats_enemigo = inicializar_combate(request, combate)
+
+    # Para mostrar la animación de recibir un golpe
+    stats_enemigo_pre_turno = copy.deepcopy(stats_enemigo)
+    enemigo_herido = False
+    clase_animacion_golpe = ""
+
     turno_actual = combate.turnos + 1
     log.append(f"[Turno {turno_actual}]")
 
     # Procesar estados al inicio del turno (enemigo primero para darle un poco de ventaja al jugador)
     registrar_efecto_turno(stats_enemigo, enemigo, log)
     if stats_enemigo["salud"] <= 0:
-        return resolver_victoria(request, jugador, enemigo, combate, log)
+        return resolver_victoria(request, jugador, enemigo, combate)
 
     registrar_efecto_turno(stats_jugador, jugador, log)
     if stats_jugador["salud"] <= 0:
-        return resolver_derrota(request, jugador, enemigo, combate, log)
+        return resolver_derrota(request, jugador, combate)
 
     # Acción del jugador
     if request.method == "POST":
@@ -173,6 +189,10 @@ def combate(request, combate_id):
             if resultado:  # victoria
                 return resultado
 
+        if stats_enemigo_pre_turno["salud"] != stats_enemigo["salud"]:
+            enemigo_herido = True
+            clase_animacion_golpe = random.choice(["animacion-golpe-1", "animacion-golpe-2", "animacion-golpe-3", "animacion-golpe-4"])
+
         # Guardar estadísticas y avanzar turno
         request.session["stats_jugador"] = stats_jugador
         request.session["stats_enemigo"] = stats_enemigo
@@ -185,7 +205,9 @@ def combate(request, combate_id):
         "enemigo": enemigo,
         "stats_jugador": stats_jugador,
         "stats_enemigo": stats_enemigo,
-        "log": log,
+        "enemigo_herido": enemigo_herido,
+        "clase_animacion_golpe": clase_animacion_golpe,
+        "log": log
     })
 
 

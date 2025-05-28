@@ -343,6 +343,119 @@
         .acciones .despertar:hover {
             background-color: darkgoldenrod;
         }
+
+        .animacion-golpe-1 img {
+            animation: golpe1 0.6s ease;
+        }
+
+        @keyframes golpe1 {
+            0% {
+                transform: translate(0, 0) rotate(0);
+            }
+            10% {
+                transform: translate(-8px, 2px) rotate(-2deg);
+            }
+            20% {
+                transform: translate(6px, -2px) rotate(2deg);
+            }
+            30% {
+                transform: translate(-4px, 1px) rotate(-1deg);
+            }
+            40% {
+                transform: translate(2px, -1px) rotate(1deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0);
+            }
+        }
+
+        .animacion-golpe-2 img {
+            animation: golpe2 0.5s ease;
+        }
+
+        @keyframes golpe2 {
+            0% {
+                filter: brightness(1);
+                transform: scale(1);
+            }
+            20% {
+                filter: brightness(2);
+                transform: scale(1.15);
+            }
+            60% {
+                filter: brightness(0.8);
+                transform: scale(0.95);
+            }
+            100% {
+                filter: brightness(1);
+                transform: scale(1);
+            }
+        }
+
+        .animacion-golpe-3 img {
+            animation: golpe3 0.4s linear;
+        }
+
+        @keyframes golpe3 {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10% {
+                transform: translateX(-4px);
+            }
+            20% {
+                transform: translateX(4px);
+            }
+            30% {
+                transform: translateX(-4px);
+            }
+            40% {
+                transform: translateX(4px);
+            }
+            50% {
+                transform: translateX(-2px);
+            }
+            60% {
+                transform: translateX(2px);
+            }
+            70% {
+                transform: translateX(-1px);
+            }
+            80% {
+                transform: translateX(1px);
+            }
+            90% {
+                transform: translateX(0);
+            }
+        }
+
+        .animacion-golpe-4 img {
+            animation: golpe4 0.6s ease;
+        }
+
+        @keyframes golpe4 {
+            0% {
+                filter: hue-rotate(0deg);
+                transform: scale(1);
+            }
+            25% {
+                filter: hue-rotate(-45deg);
+                transform: scale(1.1);
+            }
+            50% {
+                filter: hue-rotate(45deg);
+                transform: scale(0.9);
+            }
+            75% {
+                filter: hue-rotate(-20deg);
+                transform: scale(1.05);
+            }
+            100% {
+                filter: hue-rotate(0deg);
+                transform: scale(1);
+            }
+        }
+
     </style>
 
     <div class="hud-combate">
@@ -351,7 +464,7 @@
             <div class="log-combate-wrapper">
                 <div class="log-combate-toggle" onclick="toggleLog()">📝 Registro de combate</div>
                 <div class="log-combate-content" id="logContent" style="display: block;">
-                   <div>{{ log }}</div>
+                    <div>{{ log }}</div>
                 </div>
             </div>
 
@@ -371,8 +484,13 @@
                     <div>💨 Velocidad: {{ stats_enemigo.velocidad }}</div>
                 </div>
                 <div class="right efectos-enemigo">
+                    <h3>Estados enemigos</h3>
                     {% for estado in stats_enemigo.estados %}
-                        <div>{{ estado }}</div>
+                        <div>{{ estado.tipo.capitalize }}:
+                            {% if estado.tipo == "negativo" %}{{ estado.estado.capitalize }}{% else %}
+                                {{ estado.stat.capitalize }} // Valor:
+                                {% if estado.porcentaje %}{{ estado.valor|decimal_a_porcentaje|floatformat:0 }}%
+                                {% else %}{{ estado.valor }}{% endif %}{% endif %} // Duración: {{ estado.duracion }}</div>
                     {% empty %}
                         <div>Sin estados</div>
                     {% endfor %}
@@ -380,7 +498,7 @@
             </div>
         </div>
 
-        <div class="enemigo-visual">
+        <div class="enemigo-visual {% if enemigo_herido %}{{ clase_animacion_golpe }}{% endif %}">
             <img src="{{ enemigo.imagen.url }}" alt="Enemigo">
         </div>
 
@@ -420,7 +538,11 @@
                             </div>
                             <div class="buffs-jugador">
                                 {% for estado in stats_jugador.estados %}
-                                    <div>{{ estado }}</div>
+                                    <div>{{ estado.tipo.capitalize }}:
+                                        {% if estado.tipo == "negativo" %}{{ estado.estado.capitalize }}{% else %}
+                                            {{ estado.stat.capitalize }} // Valor: {% if estado.porcentaje %}
+                                            {{ estado.valor|decimal_a_porcentaje|floatformat:0 }}%{% else %}
+                                            {{ estado.valor }}{% endif %}{% endif %} // Duración: {{ estado.duracion }}</div>
                                 {% empty %}
                                     <div>Sin estados</div>
                                 {% endfor %}
