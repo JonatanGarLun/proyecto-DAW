@@ -21,6 +21,10 @@ from battlebound_tactics.core.combate.utils_resolvedor import (
 )
 
 
+# =================
+# INICIO
+# ==================
+
 class InicioPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/inicio.html'
 
@@ -50,7 +54,7 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 
         context.update({
             'jugador': jugador,
-            'porcentaje_salud': porcentaje_salud ,
+            'porcentaje_salud': porcentaje_salud,
             'porcentaje_energia': porcentaje_energia,
             'porcentaje_exp': porcentaje_exp,
             'opciones': opciones
@@ -58,9 +62,17 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
         return context
 
 
+# =================
+# MAPA DEL MUNDO
+# ==================
+
 class MapaContinentePageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/mapa_continente.html'
 
+
+# =================
+# REGIÓN TRANQUILA
+# ==================
 
 class RegionPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/mapa_region.html'
@@ -78,10 +90,14 @@ class RegionPageView(LoginRequiredMixin, TemplateView):
         context['enemigo_torreon'] = enemigos_seleccionados[3]
         context['enemigo_campamento'] = enemigos_seleccionados[4]
         context['enemigo_grieta'] = enemigos_seleccionados[5]
-        context['enemigo_brumuhierro'] = jefe_duende if jefe_duende else enemigos_seleccionados [6]
+        context['enemigo_brumuhierro'] = jefe_duende if jefe_duende else enemigos_seleccionados[6]
 
         return context
 
+
+# =================
+# REGISTRO
+# ==================
 
 class RegistroPageView(FormView):
     template_name = 'app/registro_usuario.html'
@@ -93,12 +109,25 @@ class RegistroPageView(FormView):
         return super().form_valid(form)
 
 
+# =================
+# LOGIN
+# ==================
+
 class LoginUserView(LoginView):
     template_name = 'registration/login.html'
 
 
+# =================
+# RANKING
+# ==================
+
 class EstadisticasPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/registro_usuario.html'
+
+
+# =================
+# CASTILLO (FINAL)
+# ==================
 
 class CastlevyrPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/castlevyr.html'
@@ -113,13 +142,18 @@ class CastlevyrPageView(LoginRequiredMixin, TemplateView):
 
         return context
 
+
+# =================
+# LÓGICA DE COMBATE
+# ==================
+
 @login_required
 @require_GET
 def iniciar_combate(request, enemigo_id):
     jugador = get_object_or_404(Jugador, user=request.user)
     enemigo = get_object_or_404(Enemigo, id=enemigo_id)
     nombre = f"Duelo a muerte"
-    combate = Combate.objects.create(nombre= nombre,jugador=jugador, enemigo=enemigo)
+    combate = Combate.objects.create(nombre=nombre, jugador=jugador, enemigo=enemigo)
     return redirect("combate", combate_id=combate.id)
 
 
@@ -157,7 +191,7 @@ def combate(request, combate_id):
     if stats_jugador["salud"] <= 0:
         return resolver_derrota(request, jugador, combate)
 
-    # Acción del jugador
+    # Registramos la acción del jugador
     if request.method == "POST":
         accion = request.POST.get("accion")
         if not accion:
@@ -170,30 +204,31 @@ def combate(request, combate_id):
                 "stats_enemigo": stats_enemigo,
                 "log": log,
             })
-        # Determinar orden según velocidad
+        # Determinamos quién va primero según la velocidad velocidad
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
         if jugador_primero:
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)
-            if resultado:  # victoria
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)  # Nuestro turno
+            if resultado:  # Victoria
                 return resultado
-            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
-            if resultado:  # derrota
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate) # Turno enemigo
+            if resultado:  # Derrota
                 return resultado
         else:
-            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)
-            if resultado:  # derrota
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate) # Turno enemigo
+            if resultado:  # Derrota
                 return resultado
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
-                                               log)
-            if resultado:  # victoria
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)  # Nuestro turno
+            if resultado:  # Victoria
                 return resultado
 
+        # Comprobación de si el enemigo ha recibido algún daño (de cualquier tipo, incluido curaciones) para mostrar una animación
         if stats_enemigo_pre_turno["salud"] != stats_enemigo["salud"]:
             enemigo_herido = True
-            clase_animacion_golpe = random.choice(["animacion-golpe-1", "animacion-golpe-2", "animacion-golpe-3", "animacion-golpe-4"])
+            clase_animacion_golpe = random.choice(
+                ["animacion-golpe-1", "animacion-golpe-2", "animacion-golpe-3", "animacion-golpe-4"])
 
-        # Guardar estadísticas y avanzar turno
+        # Guardamos las estadísticas de nuevo y avanzamos turno
         request.session["stats_jugador"] = stats_jugador
         request.session["stats_enemigo"] = stats_enemigo
         combate.turnos += 1
@@ -212,7 +247,7 @@ def combate(request, combate_id):
 
 
 def resultado_combate(request, combate_id):
-
+    
     combate = get_object_or_404(Combate, id=combate_id)
     jugador = combate.jugador
     enemigo = combate.enemigo
@@ -225,6 +260,11 @@ def resultado_combate(request, combate_id):
 
     return render(request, "app/resultado.html", context)
 
+
+# =================
+# POSADA
+# ==================
+
 def posada(request):
     jugador = get_object_or_404(Jugador, user=request.user)
     print(jugador)
@@ -232,6 +272,11 @@ def posada(request):
     jugador.energia_espiritual = jugador.energia_espiritual_maxima
     jugador.save()
     return redirect("inicio")
+
+# ========================================================
+# Código de abandono de combate, desactivado temporalente
+# =========================================================
+
 # @require_POST
 # @csrf_exempt
 # def abandonar_combate(request, combate_id):
