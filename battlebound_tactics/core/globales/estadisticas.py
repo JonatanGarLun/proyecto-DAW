@@ -1,3 +1,8 @@
+import random
+
+from battlebound_tactics.models import Pasiva
+
+
 def inicializar_stats(objeto):
     """
     Inicializa las estadísticas base. Compatible con Jugador y Enemigo.
@@ -20,18 +25,28 @@ def inicializar_stats(objeto):
 
 def aplicar_pasiva(jugador, stats):
     """
-    Aplica bonificadores de pasiva. Solo para jugadores.
+    Aplica bonificadores de pasiva como porcentaje sobre las estadísticas base.
     """
     pasiva = getattr(jugador, "habilidad_pasiva", None)
     if not pasiva:
         return
 
     efecto = pasiva.efecto
-    stats["salud_max"] += efecto.get("bonus_vida", 0)
-    stats["energia_max"] += efecto.get("bonus_energia", 0)
-    stats["ataque"] += efecto.get("bonus_ataque", 0)
-    stats["defensa"] += efecto.get("bonus_defensa", 0)
-    stats["velocidad"] += efecto.get("bonus_velocidad", 0)
+
+    # Calculamos los aumentos como porcentaje de la stat base del jugador
+    bonus_vida = int(jugador.salud_maxima * efecto.get("bonus_vida", 0))
+    bonus_energia = int(getattr(jugador, "energia_espiritual_maxima", 0) * efecto.get("bonus_energia", 0))
+    bonus_ataque = int(jugador.ataque * efecto.get("bonus_ataque", 0))
+    bonus_defensa = int(jugador.defensa * efecto.get("bonus_defensa", 0))
+    bonus_velocidad = int(jugador.velocidad * efecto.get("bonus_velocidad", 0))
+
+    # Se añaden a las stats modificables
+    stats["salud_max"] += bonus_vida
+    if "energia_max" in stats:
+        stats["energia_max"] += bonus_energia
+    stats["ataque"] += bonus_ataque
+    stats["defensa"] += bonus_defensa
+    stats["velocidad"] += bonus_velocidad
 
 
 def aplicar_equipo(jugador, stats):
@@ -115,3 +130,27 @@ def obtener_stats_temporales(objeto):
             "defensa": stats["defensa"],
             "velocidad": stats["velocidad"]
         }
+
+
+def generar_pasiva_aleatoria_para_jugador(jugador):
+    """
+    Genera una instancia de Pasiva única con valores aleatorios entre 0.0 y 1.0
+    y la asigna al jugador al registrarse.
+    """
+
+    efecto = {
+        "bonus_vida": round(random.uniform(0.0, 1.0), 2),
+        "bonus_energia": round(random.uniform(0.0, 1.0), 2),
+        "bonus_ataque": round(random.uniform(0.0, 1.0), 2),
+        "bonus_defensa": round(random.uniform(0.0, 1.0), 2),
+        "bonus_velocidad": round(random.uniform(0.0, 1.0), 2)
+    }
+
+    pasiva = Pasiva.objects.create(
+        nombre=f"Pasiva única de {jugador.nombre}",
+        descripcion="Bonificadores únicos generados al registrarse.",
+        efecto=efecto
+    )
+
+    jugador.habilidad_pasiva = pasiva
+    jugador.save()
