@@ -340,25 +340,37 @@
             }
         }
 
-        window.onload = function () {
+        window.addEventListener('load', function () {
             document.getElementById('jugador-img').src = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.png' %}";
             document.getElementById('texto-secuencia').innerText = frasesSecuencia[0];
             document.getElementById('dialogo-secuencia').style.display = 'flex';
             document.getElementById('nombre-dialogo-secuencia').innerText = nombreJugador;
-            bloquearInteraccion()
-        };
+            bloquearInteraccion();
+        });
 
         // Diálogo con Havva Skript
         const dialogos = [
-            {quien: 'abuelo', texto: "Ah, por fin te has dignado a aparecer por a aparecer por aquí..."},
+            {quien: 'abuelo', texto: "Ah, por fin te has dignado a aparecer por aquí..."},
             {quien: 'jugador', texto: "¿Quién rayos eres tú? ¿¡Qué haces aquí!?"},
-            {quien: 'abuelo', texto: "Hmph, quizás te suene el nombre Havva Skript. Soy el antiguo gobernador de estas tierras."},
+            {
+                quien: 'abuelo',
+                texto: "Hmph, quizás te suene el nombre Havva Skript. Soy el antiguo gobernador de estas tierras."
+            },
             {quien: 'jugador', texto: "¡Imposible! Habías sido desterrado al mundo Oscuro, no puedes estar aquí"},
-            {quien: 'abuelo', texto: "¿De verdad creías que iba caer tan fácilmente? No... ¡Y he vuelto para vengarme!"},
+            {
+                quien: 'abuelo',
+                texto: "¿De verdad creías que iba caer tan fácilmente? No... ¡Y he vuelto para vengarme!"
+            },
             {quien: 'jugador', texto: "No mientras yo siga en pie, acabaré contigo."},
-            {quien: 'abuelo', texto: "Que incordio, supongo que me vendrá bien algo de calentamiento antes de retomar lo que me pertenece"},
+            {
+                quien: 'abuelo',
+                texto: "Los guerreros que han osado desafiarme ya han fracasado... y tú no serás la excepción "
+            },
             {quien: 'jugador', texto: "Hablas demasiado para ser un abuelo, acabaré contigo en un instante."},
-            {quien: 'abuelo', texto: "¡JA! Por favor, no me hagas reir... Bueno, dejemonos de cháchara, última oportunidad jovén ¿Estás preparado?"}
+            {
+                quien: 'abuelo',
+                texto: "¡JA! Por favor, no me hagas reir... En fin, dejemonos de cháchara, última oportunidad joven ¿Estás preparado?"
+            }
         ];
 
         let pasoHavva = 0;

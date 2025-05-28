@@ -3,11 +3,9 @@
 {% load seguridad_tags %}
 <html lang="es">
 <head>
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>{% block title %}Battlebound Tactics{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
@@ -140,7 +138,9 @@
         <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo">
     </div>
     <div class="nav-buttons">
-        <button onclick="toggleMusic()">🎵</button>
+        <button id="prevBtn" onclick="prevSong()">⏮️</button>
+        <button id="playPauseBtn" onclick="toggleMusic()">⏯️</button>
+        <button id="nextBtn" onclick="nextSong()">⏭️</button>
         <div class="dropdown">
             <button>Enlaces 🔽</button>
             <div class="dropdown-content">
@@ -172,8 +172,18 @@
 <script>
     let isPlaying = false;
     let currentSongIndex = 0;
-    let audio = songs.length > 0 ? new Audio(songs[0].url) : null;
+    let audio = null;
 
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function updateButtonStates() {
+        if (!songs.length) return;
+        prevBtn.disabled = currentSongIndex <= 0;
+        nextBtn.disabled = currentSongIndex >= songs.length - 1;
+        playPauseBtn.textContent = isPlaying ? '⏸️' : '▶️';
+    }
 
     function toggleMusic() {
         if (!audio) return;
@@ -183,26 +193,71 @@
             audio.play();
         }
         isPlaying = !isPlaying;
+        updateButtonStates();
     }
 
     function nextSong() {
-        if (!songs.length) return;
-        audio.pause();
-        currentSongIndex = (currentSongIndex + 1) % songs.length;
-        playSong(currentSongIndex);
+        if (currentSongIndex < songs.length - 1) {
+            currentSongIndex++;
+            changeSong(currentSongIndex);
+        }
     }
 
-    function playSong(index) {
+    function prevSong() {
+        if (currentSongIndex > 0) {
+            currentSongIndex--;
+            changeSong(currentSongIndex);
+        }
+    }
+
+    function changeSong(index) {
         if (!songs[index]) return;
+        if (audio) {
+            audio.pause();
+        }
         audio = new Audio(songs[index].url);
+        audio.currentTime = 0;
         audio.play();
         isPlaying = true;
         audio.onended = () => nextSong();
+        updateButtonStates();
     }
 
-    if (audio) {
-        audio.onended = () => nextSong();
-    }
+    window.addEventListener('load', () => {
+        const savedIndex = parseInt(localStorage.getItem('music_currentSongIndex'));
+        const savedTime = parseFloat(localStorage.getItem('music_currentTime'));
+        const wasPlaying = localStorage.getItem('music_isPlaying') === 'true';
+
+        if (!isNaN(savedIndex) && songs[savedIndex]) {
+            currentSongIndex = savedIndex;
+            audio = new Audio(songs[currentSongIndex].url);
+            audio.currentTime = !isNaN(savedTime) ? savedTime : 0;
+            audio.onended = () => nextSong();
+            if (wasPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updateButtonStates();
+                }).catch(() => {
+                    isPlaying = false;
+                    updateButtonStates();
+                });
+            } else {
+                updateButtonStates();
+            }
+        } else if (songs.length > 0) {
+            audio = new Audio(songs[0].url);
+            audio.onended = () => nextSong();
+            updateButtonStates();
+        }
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (audio) {
+            localStorage.setItem('music_currentSongIndex', currentSongIndex);
+            localStorage.setItem('music_currentTime', audio.currentTime);
+            localStorage.setItem('music_isPlaying', isPlaying);
+        }
+    });
 </script>
 
 </body>
