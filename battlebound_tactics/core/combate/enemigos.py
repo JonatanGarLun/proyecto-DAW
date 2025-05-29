@@ -4,6 +4,7 @@ from battlebound_tactics.core.globales.probabilidades import critico, adicional
 from battlebound_tactics.core.combate.efectos import aplicar_efecto_contrario, aplicar_estado
 from battlebound_tactics.core.globales.probabilidades import esquivar
 from battlebound_tactics.models import Combate, ActivaEnemigo
+from battlebound_tactics.core.combate.jugador import calcular_golpe_recibido
 
 
 # ============================
@@ -53,10 +54,10 @@ def accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador):
 
     if critico(enemigo):
         golpe = int(round(golpe * 2))
-        mensaje = f"⚔️ ¡{enemigo.nombre} desata un golpe crítico con una fuerza castatrófica!"
+        mensaje = f"⚔️ ¡{enemigo.nombre} desata un golpe crítico con una fuerza castatrófica causando {golpe} puntos de daño!"
     else:
         golpe = int(round(golpe))
-        mensaje = f"{enemigo.nombre} lanza un ataque directo, sin florituras."
+        mensaje = f"⚔️ {enemigo.nombre} lanza un ataque directo, sin florituras, causando {golpe} puntos de daño."
 
     return golpe, mensaje
 
@@ -285,12 +286,12 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
     if eleccion == "basico" or not habilidades_disponibles:
         # Ataque básico
         danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
-        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+        calcular_golpe_recibido(danio, jugador, stats_jugador)
         log.append(mensaje)
 
         # Ataque adicional
         danio, mensaje = ataque_adicional_enemigo(stats_enemigo, enemigo, jugador.nivel)
-        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+        calcular_golpe_recibido(danio, jugador, stats_jugador)
         log.append(mensaje)
 
     else:

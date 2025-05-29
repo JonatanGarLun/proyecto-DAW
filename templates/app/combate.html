@@ -596,7 +596,7 @@
                                 {% if habilidad %}
                                     <button type="submit">
                                         {{ habilidad.nombre }} : <span style="color: skyblue;">{{ habilidad.coste_energia }} de energía</span>
-                                        : <span style="color: darkred;">{{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0}}</span>
+                                        : <span style="color: darkred;">{{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0}}% de salud</span>
                                     </button>
                                 {% else %}
                                     <button type="button" disabled>Sin habilidad</button>

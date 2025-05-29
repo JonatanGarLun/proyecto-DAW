@@ -211,10 +211,10 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
 
     if danio <= umbral_minimo:
         danio = umbral_minimo
-        mensaje = f"{jugador.nombre} bloqueó casi todo el daño, pero aún recibe {danio} puntos de daño"
+        mensaje = f"{jugador.nombre} bloqueó casi todo el daño, pero aún asi recibe {danio} puntos de daño"
 
     else:
-        mensaje = f"{jugador.nombre} recibe el golpe del enemigo, se ha llevado una buena y recibe {danio} puntos de daño"
+        mensaje = f"{jugador.nombre} recibe el golpe del enemigo, se ha llevado una buena"
 
     return danio, mensaje
 

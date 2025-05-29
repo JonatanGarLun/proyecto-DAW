@@ -122,9 +122,9 @@ def poblar_habilidades_enemigo(apps, schema_editor):
         {"nombre": "Zarpazo Infernal", "descripcion": "Un golpe brutal que desgarra la carne.",
          "efecto": {"tipo": "daño", "escala_ataque": 3.5, "valor": 120}},
         {"nombre": "Aliento Corrosivo", "descripcion": "Daño continuo mediante veneno.",
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 6, "duracion": 3, "probabilidad": 0.85}},
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 600, "duracion": 3, "probabilidad": 0.85}},
         {"nombre": "Chispa Eléctrica", "descripcion": "Electrocuta al objetivo durante varios turnos.",
-         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 5, "duracion": 3, "probabilidad": 0.7}},
+         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 500, "duracion": 3, "probabilidad": 0.7}},
         {"nombre": "Furia Demoníaca", "descripcion": "Aumenta su ataque por un tiempo limitado.",
          "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.35, "duracion": 3, "porcentaje": True}},
         {"nombre": "Escamas de Hierro", "descripcion": "Aumenta la defensa del enemigo.",
@@ -132,13 +132,13 @@ def poblar_habilidades_enemigo(apps, schema_editor):
         {"nombre": "Maleficio Lento", "descripcion": "Reduce la velocidad del jugador.",
          "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True}},
         {"nombre": "Llama Maldita", "descripcion": "Inflige quemadura dolorosa con alta probabilidad.",
-         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 6, "duracion": 3, "probabilidad": 0.9}},
+         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 600, "duracion": 3, "probabilidad": 0.9}},
         {"nombre": "Garra Sangrienta", "descripcion": "Ataque físico potenciado con daño elevado.",
          "efecto": {"tipo": "daño", "escala_ataque": 4.0, "valor": 80}},
         {"nombre": "Regeneración Oscura", "descripcion": "Cura parte de su salud máxima.",
-         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 150}},
+         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 1500}},
         {"nombre": "Mordida Venenosa", "descripcion": "Ataque con posibilidad de envenenar.",
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 5, "duracion": 3, "probabilidad": 0.75}},
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 500, "duracion": 3, "probabilidad": 0.75}},
     ]
     for h in habilidades:
         ActivaEnemigo.objects.create(nombre=h["nombre"], descripcion=h["descripcion"], efecto=h["efecto"])
@@ -146,8 +146,14 @@ def poblar_habilidades_enemigo(apps, schema_editor):
 
 def poblar_enemigos(apps, schema_editor):
     Enemigo = apps.get_model('battlebound_tactics', 'Enemigo')
+    ActivaEnemigo = apps.get_model('battlebound_tactics', 'ActivaEnemigo')
 
     ruta_base = os.path.join(settings.MEDIA_ROOT)
+
+    # Diccionario con todas las habiidades que pueden tener los enemigos
+    habilidades_dict = {
+        h.nombre: h for h in ActivaEnemigo.objects.all()
+    }
 
     enemigos = [
         # ===========
@@ -165,7 +171,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 950000,
             "oro_otorgado": 2000,
             "nivel": 28,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png",
+            "habilidades": ["Zarpazo Infernal", "Furia Demoníaca", "Escamas de Hierro"]
         },
         {
             "nombre": "Ares del Abismo",
@@ -179,13 +186,14 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 52500,
             "oro_otorgado": 120,
             "nivel": 30,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.png",
+            "habilidades": ["Furia Demoníaca", "Garra Sangrienta"]
         },
         # ===========
         # MEDIOS
         # ===========
         {
-            "nombre": "Guardián del Bosque Sombrío", # Equilibrado
+            "nombre": "Guardián del Bosque Sombrío",  # Equilibrado
             "descripcion": "...",
             "salud_maxima": 600000,
             "salud": 600000,
@@ -196,7 +204,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 18000,
             "oro_otorgado": 72,
             "nivel": 18,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png",
+            "habilidades": ["Aliento Corrosivo", "Maleficio Lento"]
         },
         {
             "nombre": "Demonio sangriento",
@@ -210,7 +219,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 18000,
             "oro_otorgado": 72,
             "nivel": 15,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio1.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio1.png",
+            "habilidades": ["Chispa Eléctrica"]
         },
         # ===========
         # FÁCILES
@@ -227,7 +237,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 7500,
             "oro_otorgado": 20,
             "nivel": 5,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.png",
+            "habilidades": []
         },
         {
             "nombre": "Bestia Granate",  # El segundo más fuerte, equilibrado
@@ -241,7 +252,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 4000,
             "oro_otorgado": 24,
             "nivel": 12,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.png",
+            "habilidades": []
         },
         {
             "nombre": "Bestia de Cobalto",  # El rápido, equilibrado
@@ -255,7 +267,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 3000,
             "oro_otorgado": 24,
             "nivel": 6,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.png",
+            "habilidades": []
         },
         {
             "nombre": "Bestia de Mármol",  # El tanque, equilibrado
@@ -269,7 +282,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 3000,
             "oro_otorgado": 24,
             "nivel": 7,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.png",
+            "habilidades": []
         },
         {
             "nombre": "Bestia de Ébano",  # El más fuerte de las bestias, equilirbado
@@ -283,7 +297,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 25000,
             "oro_otorgado": 28,
             "nivel": 12,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.png",
+            "habilidades": ["Mordida venenosa"]
         },
         {
             "nombre": "Bestia Carmesí",  # El más débil, equilibrado
@@ -297,7 +312,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 8000,
             "oro_otorgado": 53,
             "nivel": 3,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.png",
+            "habilidades": []
         },
         {
             "nombre": "Duende Chillón",  # El enemigo más básico
@@ -311,7 +327,8 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 1500,
             "oro_otorgado": 12,
             "nivel": 1,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.png"
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.png",
+            "habilidades": []
         },
         # ===========
         # JEFES
@@ -323,32 +340,37 @@ def poblar_enemigos(apps, schema_editor):
             "salud": 1750000,
             "ataque": 17500,
             "defensa": 14000,
-            "velocidad": 195,
+            "velocidad": 40000,
             "dificultad": "Jefe // Muy difícil",
             "experiencia_otorgada": 1750000,
             "oro_otorgado": 8000,
             "nivel": 35,
-            "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png"
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png",
+            "habilidades": ["Zarpazo Infernal", "Llama Maldita", "Regeneración Oscura"]
         },
         {
-            "nombre": "Havva Skript", # Equilibrado
+            "nombre": "Havva Skript",  # Equilibrado
             "descripcion": "...",
             "salud_maxima": 20000000,
             "salud": 20000000,
-            "ataque": 12500,
+            "ataque": 175000,
             "defensa": 40000,
             "velocidad": 9999999,  # Siempre va primero
             "dificultad": "Jefe // !?!?!",
             "experiencia_otorgada": 20000000,
-            "oro_otorgado": 9000,
+            "oro_otorgado": 15000,
             "nivel": 1,
-            "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.png"
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.png",
+            "habilidades": ["Furia Demoniaca", "Escamas de Hierro", "Regeneración Oscura"]
         }
     ]
     for enemigo in enemigos:
         imagen_absoluta = os.path.join(ruta_base, enemigo["imagen_path"])
         with open(imagen_absoluta, 'rb') as f:
             imagen_enemigo = File(f)
+
+            habilidades = [habilidades_dict.get(nombre) for nombre in enemigo.get("habilidades", [])]
+
             enemigo_obj = Enemigo(
                 nombre=enemigo["nombre"],
                 descripcion=enemigo["descripcion"],
@@ -361,6 +383,9 @@ def poblar_enemigos(apps, schema_editor):
                 experiencia_otorgada=enemigo["experiencia_otorgada"],
                 oro_otorgado=enemigo["oro_otorgado"],
                 nivel=enemigo["nivel"],
+                habilidad_1=habilidades[0] if len(habilidades) > 0 else None,
+                habilidad_2=habilidades[1] if len(habilidades) > 1 else None,
+                habilidad_3=habilidades[2] if len(habilidades) > 2 else None,
             )
             enemigo_obj.imagen.save(os.path.basename(imagen_absoluta), imagen_enemigo, save=True)
 

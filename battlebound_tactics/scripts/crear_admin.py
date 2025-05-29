@@ -30,7 +30,7 @@ if created:
     user.save()
     print(f"Superusuario con nombre '{username}' creado.")
 else:
-    print(f"Superusuario con nombre'{username}' ya existe.")
+    print(f"Superusuario con nombre '{username}' ya existe.")
 
 # Crear el jugador si no existe
 if not hasattr(user, 'jugador'):
@@ -39,12 +39,17 @@ if not hasattr(user, 'jugador'):
         correo=email,
         nombre="Héroe legendario",
         clase="Astral",
+        nivel= 100,
+        ataque= 300000,
+        defensa= 170000,
+        velocidad= 166804,
+        experiencia_maxima= 14000000
     )
     print(f"Jugador creado para '{username}'.")
 
     # Asignar una pasiva aleatoria
     generar_pasiva_aleatoria_jugador(jugador)
     print(f"Pasiva aleatoria asignada a '{jugador.nombre}'.")
-    print(f"Su personaje ha sido creado con éxito")
+    print(f"Su personaje completo ha sido creado con éxito.")
 else:
     print(f"El usuario '{username}' ya tiene un jugador asignado.")
