@@ -53,25 +53,24 @@ def accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador):
 
     if critico(enemigo):
         golpe = int(round(golpe * 2))
-        mensaje = f"{enemigo.nombre} lanza un golpe crítico, parece fuerte!"
+        mensaje = f"⚔️ ¡{enemigo.nombre} desata un golpe crítico con una fuerza castatrófica!"
     else:
         golpe = int(round(golpe))
-        mensaje = f"{enemigo.nombre} lanza un ataque normal"
+        mensaje = f"{enemigo.nombre} lanza un ataque directo, sin florituras."
 
     return golpe, mensaje
 
 
 def ataque_adicional_enemigo(stats_enemigo, enemigo, nivel_jugador):
+
     if adicional(enemigo):
         golpe, mensaje_base = accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador)
-        mensaje = (
-            f"💥 {enemigo.nombre} aprovecha una brecha en la defensa y lanza un ataque adicional devastador. "
-            f"{mensaje_base}"
-        )
+        mensaje = f"💥 {enemigo.nombre} detecta una abertura y ataca sin piedad con un golpe extra. {mensaje_base}"
         return golpe, mensaje
+    else:
+        mensaje = f"⚠️ {enemigo.nombre} trató de sorprender con un segundo golpe, ¡pero fue anticipado y bloqueado!"
+        return 0, mensaje
 
-    mensaje = f"{enemigo.nombre} intenta una ofensiva rápida... pero el oponente lo anticipa y bloquea el intento."
-    return 0, mensaje
 
 
 def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
@@ -100,10 +99,10 @@ def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
 
     if danio <= umbral_minimo:
         danio = umbral_minimo
-        mensaje = f"{enemigo.nombre} bloqueó casi todo el daño, pero aún así recibe {danio} puntos de daño"
+        mensaje = f"🛡️ {enemigo.nombre} detuvo casi todo el impacto, pero aún sufre {danio} de daño residual."
 
     else:
-        mensaje = f"{enemigo.nombre} recibe el golpe del enemigo, se ha llevado una buena y recibe {danio} puntos de daño"
+        mensaje = f"{enemigo.nombre} recibe el golpe del enemigo de lleno, ¡se ha llevado una buena!"
 
     return danio, mensaje
 
@@ -158,14 +157,14 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
         escala = float(leer_efecto(habilidad, "escala_ataque", 1.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["ataque"] * escala) + bono
-        mensaje = f"{enemigo.nombre} usa {habilidad.nombre} y causa {resultado} puntos de daño."
+        mensaje = f"🔥 {enemigo.nombre} desata {habilidad.nombre} causando {resultado} de daño directo."
 
     elif tipo == "curacion":
         escala = float(leer_efecto(habilidad, "escala_salud", 0.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["salud_max"] * escala) + bono
         stats_enemigo["salud"] = min(stats_enemigo["salud_max"], stats_enemigo["salud"] + resultado)
-        mensaje = f"{enemigo.nombre} usa {habilidad.nombre} y se cura {resultado} puntos de salud."
+        mensaje = f"✨ {enemigo.nombre} invoca {habilidad.nombre} y recupera {resultado} de vitalidad."
 
     elif tipo in ["buff", "debuff", "negativo"]:
         efecto = {
@@ -178,10 +177,10 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
             "probabilidad": leer_efecto(habilidad, "probabilidad", 1.0),
         }
         aplicar_efecto_contrario(efecto, stats_jugador, objetivo=jugador, log_combate=log)
-        mensaje = f"{enemigo.nombre} lanza {habilidad.nombre} e intenta alterar el curso del combate."
+        mensaje = f"🌀 {enemigo.nombre} canaliza {habilidad.nombre} buscando cambiar el destino del combate."
 
     else:
-        mensaje = f"{enemigo.nombre} intenta usar {habilidad.nombre}, pero no ocurre nada."
+        mensaje = f"❌ {enemigo.nombre} intenta activar su habilidad, pero algo falla... no sucede nada."
         resultado = None
 
     return resultado, mensaje

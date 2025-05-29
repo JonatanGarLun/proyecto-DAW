@@ -176,13 +176,13 @@ def ataque_adicional(stats, jugador):
     """
     if adicional(jugador):
         golpe, mensaje_base = accion_basica(stats, jugador)
-        mensaje = (
-            f"⚡ ¡{jugador.nombre} no se rinde y se lanza con un ataque extra! {mensaje_base}"
-        )
-        return golpe, mensaje
+        mensaje = f"⚡ ¡{jugador.nombre} aprovecha el momento y ejecuta un golpe adicional veloz como un rayo!"
 
-    mensaje = f"🛡️ {jugador.nombre} buscó una segunda oportunidad... pero el enemigo logró frenarlo justo a tiempo."
-    return 0, mensaje
+        return golpe, mensaje
+    else:
+        mensaje = f"🛡️ {jugador.nombre} intentó continuar con la ofensiva, pero el enemigo lo detuvo con firmeza."
+        return 0, mensaje
+
 
 
 def calcular_golpe_recibido(golpe, jugador, stats_temporales):
@@ -244,11 +244,11 @@ def uso_habilidad(jugador, habilidad, stats_temporales):
     mensaje = leer_efecto(especial, "mensaje_personalizado", f"{jugador.nombre} usa {especial.nombre}.")
 
     if stats_temporales["energia"] < coste_energia:
-        return [], f"No tienes suficiente energía para usar {especial.nombre}."
+        return [], f"❗ No tienes energía suficiente para lanzar {especial.nombre}."
 
     coste_salud_real = int(stats_temporales["salud_max"] * coste_salud)
     if stats_temporales["salud"] < coste_salud_real + 1:
-        return [], f"No tienes suficiente salud para usar {especial.nombre}."
+        return [], f"❗ Tu salud es demasiado baja para usar {especial.nombre} sin arriesgarlo todo."
 
     stats_temporales["energia"] -= coste_energia
     stats_temporales["salud"] -= coste_salud_real

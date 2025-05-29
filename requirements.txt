@@ -1,7 +1,8 @@
 Django>=5.0
 django-extensions
-djangorestframework
+djangorestframework~=3.16.0
 pillow
 ipdb
 httpie
 django-stubs
+python-dotenv~=1.1.0

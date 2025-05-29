@@ -165,7 +165,13 @@
 
 {% block song_data %}
     <script>
-        let songs = [];
+        let songs = [
+            {url: "{% static 'resources/songs/general/general_1.mp3' %}"},
+            {url: "{% static 'resources/songs/general/general_2.mp3' %}"},
+            {url: "{% static 'resources/songs/general/general_3.mp3' %}"},
+            {url: "{% static 'resources/songs/general/general_4.mp3' %}"},
+            {url: "{% static 'resources/songs/general/general_5.mp3' %}"}
+        ];
     </script>
 {% endblock %}
 
@@ -173,6 +179,7 @@
     let isPlaying = false;
     let currentSongIndex = 0;
     let audio = null;
+    let changeCooldown = false;
 
     const playPauseBtn = document.getElementById("playPauseBtn");
     const prevBtn = document.getElementById("prevBtn");
@@ -180,8 +187,8 @@
 
     function updateButtonStates() {
         if (!songs.length) return;
-        prevBtn.disabled = currentSongIndex <= 0;
-        nextBtn.disabled = currentSongIndex >= songs.length - 1;
+        prevBtn.disabled = currentSongIndex <= 0 || changeCooldown;
+        nextBtn.disabled = currentSongIndex >= songs.length - 1 || changeCooldown;
         playPauseBtn.textContent = isPlaying ? '⏸️' : '▶️';
     }
 
@@ -196,66 +203,59 @@
         updateButtonStates();
     }
 
+    function setCooldown(ms) {
+        changeCooldown = true;
+        updateButtonStates();
+        setTimeout(() => {
+            changeCooldown = false;
+            updateButtonStates();
+        }, ms);
+    }
+
     function nextSong() {
-        if (currentSongIndex < songs.length - 1) {
-            currentSongIndex++;
-            changeSong(currentSongIndex);
-        }
+        if (changeCooldown || currentSongIndex >= songs.length - 1) return;
+        currentSongIndex++;
+        changeSong(currentSongIndex);
+        setCooldown(1500);
     }
 
     function prevSong() {
-        if (currentSongIndex > 0) {
-            currentSongIndex--;
-            changeSong(currentSongIndex);
-        }
+        if (changeCooldown || currentSongIndex <= 0) return;
+        currentSongIndex--;
+        changeSong(currentSongIndex);
+        setCooldown(1500);
     }
 
     function changeSong(index) {
         if (!songs[index]) return;
-        if (audio) {
-            audio.pause();
-        }
+        if (audio) audio.pause();
         audio = new Audio(songs[index].url);
-        audio.currentTime = 0;
-        audio.play();
         isPlaying = true;
+        audio.addEventListener('loadedmetadata', () => {
+            audio.currentTime = 0;
+            audio.play();
+            updateButtonStates();
+        });
         audio.onended = () => nextSong();
-        updateButtonStates();
     }
 
     window.addEventListener('load', () => {
-        const savedIndex = parseInt(localStorage.getItem('music_currentSongIndex'));
-        const savedTime = parseFloat(localStorage.getItem('music_currentTime'));
-        const wasPlaying = localStorage.getItem('music_isPlaying') === 'true';
+        if (songs.length === 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
 
-        if (!isNaN(savedIndex) && songs[savedIndex]) {
-            currentSongIndex = savedIndex;
+        if (songs.length === 0) {
+            prevBtn.style.display = 'none';
+            playPauseBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+
+        if (songs.length > 0) {
+            currentSongIndex = Math.floor(Math.random() * songs.length);
             audio = new Audio(songs[currentSongIndex].url);
-            audio.currentTime = !isNaN(savedTime) ? savedTime : 0;
-            audio.onended = () => nextSong();
-            if (wasPlaying) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    updateButtonStates();
-                }).catch(() => {
-                    isPlaying = false;
-                    updateButtonStates();
-                });
-            } else {
-                updateButtonStates();
-            }
-        } else if (songs.length > 0) {
-            audio = new Audio(songs[0].url);
             audio.onended = () => nextSong();
             updateButtonStates();
-        }
-    });
-
-    window.addEventListener('beforeunload', () => {
-        if (audio) {
-            localStorage.setItem('music_currentSongIndex', currentSongIndex);
-            localStorage.setItem('music_currentTime', audio.currentTime);
-            localStorage.setItem('music_isPlaying', isPlaying);
         }
     });
 </script>
