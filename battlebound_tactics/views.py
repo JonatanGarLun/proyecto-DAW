@@ -39,8 +39,8 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 
             {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.png", "url": "/mapa/",
              "imagen_central": "/static/resources/menus/mapas.png"},
-            {"nombre": "Posada", "imagen": "/static/resources/menus/posada.png", "url": "/posada/",
-             "imagen_central": "/static/resources/menus/posada.png"},
+            {"nombre": "Fuente Sagrada", "imagen": "/static/resources/menus/fuente.png", "url": "/fuente/",
+             "imagen_central": "/static/resources/menus/fuente.png"},
             {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/",
              "imagen_central": "/static/resources/menus/inventario.png"},
             {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
@@ -270,9 +270,8 @@ def resultado_combate(request, combate_id):
 # POSADA
 # ==================
 
-def posada(request):
+def fuente(request):
     jugador = get_object_or_404(Jugador, user=request.user)
-    print(jugador)
     jugador.salud = jugador.salud_maxima
     jugador.energia_espiritual = jugador.energia_espiritual_maxima
     jugador.save()
