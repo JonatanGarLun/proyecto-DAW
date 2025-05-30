@@ -1,10 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ranking - Battlebound Tactics{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url("{% static 'resources/imgs/ranking.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .ranking-container {
+            padding: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .ranking-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: gold;
+            border-bottom: 5px solid crimson;
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            background: linear-gradient(to right, #4a002e, #8a0045);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .ranking-filtros {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .ranking-filtros button {
+            padding: 0.5rem 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #333366;
+            color: white;
+            border: 2px solid gold;
+        }
+
+        .ranking-filtros button:hover,
+        .ranking-filtros button.active {
+            background-color: gold;
+            color: black;
+        }
+
+        .jugador-card {
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 3px solid gold;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .jugador-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            border: 2px solid white;
+        }
+
+        .jugador-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .jugador-info h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: gold;
+        }
+
+        .jugador-info p {
+            margin: 0.3rem 0;
+        }
+    </style>
+
+    <div class="ranking-container">
+        <div class="ranking-title">🏆 Ranking</div>
+
+        <div class="ranking-filtros">
+            <button onclick="cargarRanking('nivel')" class="active">Nivel</button>
+            <button onclick="cargarRanking('victorias')">Victorias</button>
+            <button onclick="cargarRanking('derrotas')">Derrotas</button>
+            <button onclick="cargarRanking('oro')">Oro</button>
+        </div>
+
+        <div id="ranking-lista"></div>
+    </div>
+
+    <script>
+        let ordenActual = "nivel";
+
+        async function cargarRanking(orden = "nivel") {
+            ordenActual = orden;
+            document.querySelectorAll(".ranking-filtros button").forEach(btn => btn.classList.remove("active"));
+            const btnAct = [...document.querySelectorAll(".ranking-filtros button")].find(b => b.textContent.toLowerCase().includes(orden));
+            if (btnAct) btnAct.classList.add("active");
+
+            const response = await fetch(`/api/jugadores/?ordering=-${orden}`);
+            const data = await response.json();
+
+            const contenedor = document.getElementById("ranking-lista");
+            contenedor.innerHTML = "";
+
+            const top5 = data.results ? data.results.slice(0, 5) : data.slice(0, 5);
+
+            top5.forEach((jugador, index) => {
+                const clase = jugador.estadisticas.clase.toLowerCase();
+                const imagenRuta = `{% static 'resources/Pixelarts/' %}` + clase + '/' + clase + `_base.png`;
+
+                let valor = "";
+                if (orden === "nivel") valor = `Nivel: ${jugador.estadisticas.nivel}`;
+if (orden === "victorias") valor = `Victorias: ${jugador.victorias} (Win Rate: ${jugador.porcentaje_victorias})`;
+                if (orden === "derrotas") valor = `Derrotas: ${jugador.derrotas}`;
+                if (orden === "oro") valor = `Oro: ${jugador.oro}`;
+
+                contenedor.innerHTML += `
+                <div class="jugador-card">
+                    <img src="${imagenRuta}" alt="${clase}">
+                    <div class="jugador-info">
+                        <h3>🥇 ${index + 1}. ${jugador.nombre_personaje} [${jugador.usuario}]</h3>
+                        <p>${valor}</p>
+                    </div>
+                </div>
+            `;
+            });
+        }
+
+        window.onload = () => cargarRanking();
+    </script>
+{% endblock %}

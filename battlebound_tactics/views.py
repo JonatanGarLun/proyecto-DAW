@@ -45,7 +45,7 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
              "imagen_central": "/static/resources/menus/inventario.png"},
             {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
              "imagen_central": "/static/resources/menus/estadisticas.png"},
-            {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/combate/",
+            {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/ranking/",
              "imagen_central": "/static/resources/menus/combate.png"}
         ]
 
@@ -126,8 +126,14 @@ class LoginUserView(LoginView):
 # RANKING
 # ==================
 
-class EstadisticasPageView(LoginRequiredMixin, TemplateView):
-    template_name = 'app/registro_usuario.html'
+class RankingPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'app/ranking.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['jugador'] = get_object_or_404(Jugador, user=self.request.user)
+
+        return context
 
 
 # =================

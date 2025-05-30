@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('battlebound_tactics.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('api/', include('api.urls')),
+
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 def custom_permission_denied_view(request, exception):
