@@ -246,7 +246,7 @@ def combate(request, combate_id):
         combate.save()
 
     return render(request, "app/combate.html", {
-        "combate_creado": combate,
+        "combate": combate,
         "jugador": jugador,
         "enemigo": enemigo,
         "stats_jugador": stats_jugador,

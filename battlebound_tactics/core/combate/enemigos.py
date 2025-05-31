@@ -90,7 +90,7 @@ def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
     defensa = stats_temporales["defensa"]
 
     if esquivar(enemigo):
-        mensaje = f"Gracias a la velocidad y a la estrategia de {enemigo.nombre}, ha logrado evitar el ataque."
+        mensaje = f"{enemigo.nombre} ha anticipado tus movimientos y ha logrado evitar el ataque."
         return 0, mensaje
 
     danio = golpe - defensa
@@ -103,7 +103,7 @@ def calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales):
         mensaje = f"🛡️ {enemigo.nombre} detuvo casi todo el impacto, pero aún sufre {danio} de daño residual."
 
     else:
-        mensaje = f"{enemigo.nombre} recibe el golpe del enemigo de lleno, ¡se ha llevado una buena!"
+        mensaje = f"{enemigo.nombre} recibe el golpe del enemigo ({danio}) de lleno, ¡se ha llevado una buena!"
 
     return danio, mensaje
 
@@ -147,7 +147,7 @@ def aplicar_cooldown(habilidad: "ActivaEnemigo", combate: "Combate") -> None:
 # USO DE HABILIDADES
 # ============================
 
-def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log, jugador):
+def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, jugador, log):
     tipo = str(leer_efecto(habilidad, "tipo", "")).lower()
     cooldown = leer_efecto(habilidad, "cooldown", 1)
 
@@ -158,14 +158,18 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
         escala = float(leer_efecto(habilidad, "escala_ataque", 1.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["ataque"] * escala) + bono
-        mensaje = f"🔥 {enemigo.nombre} desata {habilidad.nombre} causando {resultado} de daño directo."
+        mensaje = f"🔥 {enemigo.nombre} desata una habilidad especial causando {resultado} de daño directo."
+        return [("daño", resultado)], mensaje
+
 
     elif tipo == "curacion":
         escala = float(leer_efecto(habilidad, "escala_salud", 0.0))
         bono = int(leer_efecto(habilidad, "valor", 0))
         resultado = int(stats_enemigo["salud_max"] * escala) + bono
         stats_enemigo["salud"] = min(stats_enemigo["salud_max"], stats_enemigo["salud"] + resultado)
-        mensaje = f"✨ {enemigo.nombre} invoca {habilidad.nombre} y recupera {resultado} de vitalidad."
+        mensaje = f"✨ {enemigo.nombre} invoca una habilidad especial y recupera {resultado} de vitalidad."
+        return [("curacion", resultado)], mensaje
+
 
     elif tipo in ["buff", "debuff", "negativo"]:
         efecto = {
@@ -177,8 +181,14 @@ def usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, log
             "porcentaje": leer_efecto(habilidad, "porcentaje", False),
             "probabilidad": leer_efecto(habilidad, "probabilidad", 1.0),
         }
-        aplicar_efecto_contrario(efecto, stats_jugador, objetivo=jugador, log_combate=log)
-        mensaje = f"🌀 {enemigo.nombre} canaliza {habilidad.nombre} buscando cambiar el destino del combate."
+        if tipo == "buff":
+            aplicar_efecto_contrario(efecto, stats_enemigo, objetivo=enemigo, log_combate=log)
+        else:
+            aplicar_efecto_contrario(efecto, stats_jugador, objetivo=jugador, log_combate=log)
+
+        mensaje = f"🌀 {enemigo.nombre} canaliza una habilidad especial aplicando un estado."
+        return [("estado", efecto)], mensaje
+
 
     else:
         mensaje = f"❌ {enemigo.nombre} intenta activar su habilidad, pero algo falla... no sucede nada."
@@ -221,10 +231,6 @@ def ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles):
                 peso = 3
 
         elif tipo == "curacion":
-            escala = float(leer_efecto(habilidad, "escala_salud", 0.0))
-            bono = int(leer_efecto(habilidad, "valor", 0))
-            cura_estim = int(stats_enemigo["salud_max"] * escala) + bono
-
             if vida_enemigo <= vida_max_enemigo * 0.4:
                 peso = 6
             elif vida_enemigo < vida_max_enemigo:
@@ -286,13 +292,17 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
     if eleccion == "basico" or not habilidades_disponibles:
         # Ataque básico
         danio, mensaje = accion_basica_enemigo(stats_enemigo, enemigo, jugador.nivel)
-        calcular_golpe_recibido(danio, jugador, stats_jugador)
+        danio, mensaje = calcular_golpe_recibido(danio, jugador, stats_jugador)
         log.append(mensaje)
+        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+
 
         # Ataque adicional
         danio, mensaje = ataque_adicional_enemigo(stats_enemigo, enemigo, jugador.nivel)
-        calcular_golpe_recibido(danio, jugador, stats_jugador)
+        danio, mensaje = calcular_golpe_recibido(danio, jugador, stats_jugador)
         log.append(mensaje)
+        stats_jugador["salud"] = max(0, stats_jugador["salud"] - danio)
+
 
     else:
         # Usar habilidad
@@ -301,9 +311,6 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
 
         if not resultados:
             resultados = []
-
-        if isinstance(resultados, int):
-            resultados = [("daño", resultados)]
 
         for tipo, dato in resultados:
             if tipo == "daño":

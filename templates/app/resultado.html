@@ -1,2 +1,181 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block content %}
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            
+        }
+
+        .resultado-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 750px;
+            height: auto;
+            padding: 1rem 2rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 20px gold;
+            color: white;
+            text-align: center;
+            max-width: 900px;
+            width: 80%;
+            margin: 3rem auto;
+        }
+
+        .resultado-header {
+            flex: 0 0 10%;
+        }
+
+        .resultado-header img {
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .resultado-body {
+            flex: 1 1 70%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .resultado-footer {
+            flex: 0 0 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .versus-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .jugador-col,
+        .enemigo-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .versus-col {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .versus-section img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .versus-text {
+            font-size: 3rem;
+            font-weight: bold;
+            color: crimson;
+            text-shadow: 2px 2px 8px black;
+        }
+
+        .resultado-etiqueta {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid gold;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .resultado-botones {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .resultado-botones a {
+            background-color: #2a0040;
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid gold;
+        }
+
+        .resultado-botones a:hover {
+            background-color: gold;
+            color: black;
+        }
+    </style>
+
+    {% if combate.resultado == "victoria" %}
+        <style>
+            html, body {
+                background-image: url("{% static 'resources/imgs/victoria.png' %}");
+            }
+        </style>
+    {% else %}
+        <style>
+            html, body {
+                background-image: url("{% static 'resources/imgs/derrota.png' %}");
+            }
+        </style>
+    {% endif %}
+
+
+    <div class="resultado-panel">
+        <div class="resultado-header">
+            {% if combate.resultado == "victoria" %}
+                <img src="{% static 'resources/imgs/titulo_victoria.png' %}" alt="Victoria">
+            {% else %}
+                <img src="{% static 'resources/imgs/titulo_derrota.png' %}" alt="Derrota">
+            {% endif %}
+        </div>
+
+        <div class="resultado-body">
+            <hr>
+            <div class="versus-section">
+                <div class="jugador-col">
+                    <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_ataque.png' %}"
+                         alt="Jugador">
+                    <div class="resultado-etiqueta">
+                        {% if combate.resultado == "victoria" %} Ganador {% else %} Derrotado {% endif %}
+                    </div>
+                </div>
+                <div class="versus-col">
+                    <div class="versus-text">VS</div>
+                </div>
+                <div class="enemigo-col">
+                    <img src="{{ enemigo.imagen.url }}" alt="Enemigo">
+                    <div class="resultado-etiqueta">
+                        {% if combate.resultado == "victoria" %} Derrotado {% else %} Ganador {% endif %}
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <div class="resultado-footer">
+            <div class="resultado-botones">
+                <a href="{% url 'inicio' %}">🏠 Menú Principal</a>
+                <a href="{% url 'continente' %}">🗺️ Volver al Mapa</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

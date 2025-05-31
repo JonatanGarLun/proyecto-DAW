@@ -120,28 +120,28 @@ def poblar_habilidades_enemigo(apps, schema_editor):
     ActivaEnemigo = apps.get_model('battlebound_tactics', 'ActivaEnemigo')
     habilidades = [
         {"nombre": "Zarpazo Infernal", "descripcion": "Un golpe brutal que desgarra la carne.",
-         "efecto": {"tipo": "daño", "escala_ataque": 3.5, "valor": 120}},
+         "efecto": {"tipo": "daño", "escala_ataque": 3.5, "valor": 120, "cooldown": 3}},
         {"nombre": "Aliento Corrosivo", "descripcion": "Daño continuo mediante veneno.",
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 600, "duracion": 3, "probabilidad": 0.85}},
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 600, "duracion": 3, "probabilidad": 0.85, "cooldown": 5}},
         {"nombre": "Chispa Eléctrica", "descripcion": "Electrocuta al objetivo durante varios turnos.",
-         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 500, "duracion": 3, "probabilidad": 0.7}},
+         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 500, "duracion": 3, "probabilidad": 0.7, "cooldown": 5}},
         {"nombre": "Furia Demoníaca", "descripcion": "Aumenta su ataque por un tiempo limitado.",
-         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.35, "duracion": 3, "porcentaje": True}},
+         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.35, "duracion": 3, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Escamas de Hierro", "descripcion": "Aumenta la defensa del enemigo.",
-         "efecto": {"tipo": "buff", "stat": "defensa", "valor": 0.4, "duracion": 3, "porcentaje": True}},
+         "efecto": {"tipo": "buff", "stat": "defensa", "valor": 0.4, "duracion": 3, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Maleficio Lento", "descripcion": "Reduce la velocidad del jugador.",
-         "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True}},
+         "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Llama Maldita", "descripcion": "Inflige quemadura dolorosa con alta probabilidad.",
-         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 600, "duracion": 3, "probabilidad": 0.9}},
+         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 600, "duracion": 3, "probabilidad": 0.9, "cooldown": 5}},
         {"nombre": "Garra Sangrienta", "descripcion": "Ataque físico potenciado con daño elevado.",
-         "efecto": {"tipo": "daño", "escala_ataque": 4.0, "valor": 80}},
+         "efecto": {"tipo": "daño", "escala_ataque": 4.0, "valor": 80, "cooldown": 2}},
         {"nombre": "Regeneración Oscura", "descripcion": "Cura parte de su salud máxima.",
-         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 1500}},
+         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 1500, "cooldown": 20}},
         {"nombre": "Mordida Venenosa", "descripcion": "Ataque con posibilidad de envenenar.",
          "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 500, "duracion": 3, "probabilidad": 0.75}},
     ]
-    for h in habilidades:
-        ActivaEnemigo.objects.create(nombre=h["nombre"], descripcion=h["descripcion"], efecto=h["efecto"])
+    for habilidad in habilidades:
+        ActivaEnemigo.objects.create(nombre=habilidad["nombre"], descripcion=habilidad["descripcion"], efecto=habilidad["efecto"])
 
 
 def poblar_enemigos(apps, schema_editor):
@@ -162,13 +162,13 @@ def poblar_enemigos(apps, schema_editor):
         {
             "nombre": "Centurión del Crepúsculo",
             "descripcion": "...",
-            "salud_maxima": 98000,
-            "salud": 98000,
-            "ataque": 9800,
-            "defensa": 7840,
+            "salud_maxima": 900000,
+            "salud": 900000,
+            "ataque": 19800,
+            "defensa": 20000,
             "velocidad": 182,
             "dificultad": "Difícil",
-            "experiencia_otorgada": 950000,
+            "experiencia_otorgada": 95000,
             "oro_otorgado": 2000,
             "nivel": 28,
             "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png",
@@ -177,8 +177,8 @@ def poblar_enemigos(apps, schema_editor):
         {
             "nombre": "Ares del Abismo",
             "descripcion": "...",
-            "salud_maxima": 105000,
-            "salud": 105000,
+            "salud_maxima": 600000,
+            "salud": 600000,
             "ataque": 10500,
             "defensa": 8400,
             "velocidad": 187,
@@ -195,13 +195,13 @@ def poblar_enemigos(apps, schema_editor):
         {
             "nombre": "Guardián del Bosque Sombrío",  # Equilibrado
             "descripcion": "...",
-            "salud_maxima": 600000,
-            "salud": 600000,
+            "salud_maxima": 300000,
+            "salud": 300000,
             "ataque": 4000,
             "defensa": 12500,
             "velocidad": 4600,
             "dificultad": "Media",
-            "experiencia_otorgada": 18000,
+            "experiencia_otorgada": 33000,
             "oro_otorgado": 72,
             "nivel": 18,
             "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png",
@@ -210,8 +210,8 @@ def poblar_enemigos(apps, schema_editor):
         {
             "nombre": "Demonio sangriento",
             "descripcion": "...",
-            "salud_maxima": 120000,
-            "salud": 36000,
+            "salud_maxima": 220000,
+            "salud": 220000,
             "ataque": 2400,
             "defensa": 6000,
             "velocidad": 120,
@@ -353,7 +353,7 @@ def poblar_enemigos(apps, schema_editor):
             "descripcion": "...",
             "salud_maxima": 20000000,
             "salud": 20000000,
-            "ataque": 175000,
+            "ataque": 20000,
             "defensa": 40000,
             "velocidad": 9999999,  # Siempre va primero
             "dificultad": "Jefe // !?!?!",

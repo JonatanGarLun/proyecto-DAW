@@ -13,11 +13,8 @@ def aplicar_estado(stats_temporales, estado_nuevo):
 
     # Verificamos si ya existe un estado del mismo tipo y objetivo
     for estado in stats_temporales["estados"]:
-        mismo_estado = (
-                               tipo == "negativo" and estado.get("estado") == estado_copia.get("estado")
-                       ) or (
-                               tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat")
-                       )
+        mismo_estado = ((
+            tipo == "negativo" and estado.get("estado") == estado_copia.get("estado")) or ( tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat")))
         if mismo_estado:
             # Si ya estaba aplicado y el nuevo es mejor, lo actualizamos
             if estado.get("valor", 0) < estado_copia.get("valor", 0):

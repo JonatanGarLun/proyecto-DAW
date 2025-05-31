@@ -201,7 +201,7 @@ def calcular_golpe_recibido(golpe, jugador, stats_temporales):
     defensa = stats_temporales["defensa"]
 
     if esquivar(jugador):
-        mensaje = f"Gracias a la velocidad y a la estrategia de {jugador.nombre}, ha logrado evitar el ataque."
+        mensaje = f"Consigues leer los movimientos del rival, ¡has esquivado su ataque!."
         return 0, mensaje
 
     danio = golpe - defensa
