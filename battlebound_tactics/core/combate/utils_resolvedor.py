@@ -52,6 +52,8 @@ def resolver_victoria(request, jugador, enemigo, combate):
 
     limpiar_sesion_combate(request, combate_id)
 
+    jugador.victorias += 1
+
     return redirect('resultado_combate', combate_id=combate_id)
 
 
@@ -69,5 +71,7 @@ def resolver_derrota(request, jugador, combate):
     combate_id = combate.id
 
     limpiar_sesion_combate(request, combate_id)
+
+    jugador.derrotas += 1
 
     return redirect('resultado_combate', combate_id=combate_id)

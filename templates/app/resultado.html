@@ -10,58 +10,72 @@
             background-repeat: no-repeat;
             background-position: center;
             background-attachment: fixed;
-            
+
         }
 
         .resultado-panel {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 750px;
-            height: auto;
-            padding: 1rem 2rem;
+            width: 80%;
+            max-width: 900px;
+            margin: 3rem auto;
             background-color: rgba(0, 0, 0, 0.8);
             border-radius: 15px;
             box-shadow: 0 0 20px gold;
             color: white;
             text-align: center;
-            max-width: 900px;
-            width: 80%;
-            margin: 3rem auto;
+            min-height: 400px;
+            height: auto;
+            padding: 1rem 2rem;
         }
 
         .resultado-header {
-            flex: 0 0 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 130px;
+            overflow: hidden;
+            padding: 0;
+            margin-bottom: 1rem;
         }
 
         .resultado-header img {
-            height: 80px;
+            height: 120px;
             object-fit: contain;
         }
 
+        .header-separator {
+            width: 100%;
+            border: none;
+            border-top: 2px solid gold;
+            margin-top: 0.3rem;
+        }
+
         .resultado-body {
-            flex: 1 1 70%;
+            flex: 1 1 auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .resultado-footer {
-            flex: 0 0 10%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .body-separator {
+            width: 100%;
+            border: none;
+            border-top: 2px solid gold;
+            margin: 1rem 0;
         }
 
         .versus-section {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            gap: 2rem;
         }
 
-        .jugador-col,
-        .enemigo-col {
+        .jugador-col, .enemigo-col {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -90,20 +104,24 @@
             text-shadow: 2px 2px 8px black;
         }
 
-        .resultado-etiqueta {
+        .resultado-etiqueta img {
             font-size: 1rem;
             margin-top: 0.5rem;
-        }
-
-        hr {
+            width: 100px;
+            height: 100px;
             border: none;
-            border-top: 2px solid gold;
-            margin: 2rem 0 1.5rem;
+            object-fit: cover;
         }
 
-        .resultado-botones {
+        .resultado-footer {
             display: flex;
             justify-content: center;
+            align-items: center;
+            height: 60px;
+        }
+
+        .resultado-footer .resultado-botones {
+            display: flex;
             gap: 2rem;
         }
 
@@ -115,6 +133,9 @@
             text-decoration: none;
             font-weight: bold;
             border: 2px solid gold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .resultado-botones a:hover {
@@ -139,42 +160,55 @@
 
 
     <div class="resultado-panel">
+
         <div class="resultado-header">
+
             {% if combate.resultado == "victoria" %}
-                <img src="{% static 'resources/imgs/titulo_victoria.png' %}" alt="Victoria">
+                <img src="{% static 'resources/imgs/texto_victoria_nobg.png' %}" alt="Victoria">
             {% else %}
-                <img src="{% static 'resources/imgs/titulo_derrota.png' %}" alt="Derrota">
+                <img src="{% static 'resources/imgs/texto_derrota_nobg.png' %}" alt="Derrota">
             {% endif %}
+            <hr class="header-separator">
         </div>
 
         <div class="resultado-body">
-            <hr>
             <div class="versus-section">
                 <div class="jugador-col">
+                    <h3>{{ jugador.nombre }}</h3>
                     <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_ataque.png' %}"
                          alt="Jugador">
                     <div class="resultado-etiqueta">
-                        {% if combate.resultado == "victoria" %} Ganador {% else %} Derrotado {% endif %}
+                        {% if combate.resultado == "victoria" %}
+                            <img src="{% static 'resources/imgs/texto_ganador_nobg.png' %}" alt="Ganador"> {% else %}
+                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.png' %}" alt="Perdedor"> {% endif %}
                     </div>
                 </div>
+
                 <div class="versus-col">
                     <div class="versus-text">VS</div>
                 </div>
+
                 <div class="enemigo-col">
+                    <h3>{{ enemigo.nombre }}</h3>
                     <img src="{{ enemigo.imagen.url }}" alt="Enemigo">
                     <div class="resultado-etiqueta">
-                        {% if combate.resultado == "victoria" %} Derrotado {% else %} Ganador {% endif %}
+                        {% if combate.resultado == "victoria" %}
+                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.png' %}" alt="Perdedor"> {% else %}
+                            <img src="{% static 'resources/imgs/texto_ganador_nobg.png' %}" alt="Ganador"> {% endif %}
                     </div>
                 </div>
             </div>
-            <hr>
+
+            <hr class="body-separator">
         </div>
 
         <div class="resultado-footer">
+
             <div class="resultado-botones">
                 <a href="{% url 'inicio' %}">🏠 Menú Principal</a>
                 <a href="{% url 'continente' %}">🗺️ Volver al Mapa</a>
             </div>
+
         </div>
     </div>
 {% endblock %}

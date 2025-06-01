@@ -457,7 +457,6 @@
             document.getElementById("npc-imagen").src = imagen;
             document.getElementById("dialogo-thalendor").style.display = "flex";
 
-            // Desbloquear después de 3 segundos
             setTimeout(() => {
                 dialogoBloqueado = false;
             }, 3000);
@@ -473,7 +472,6 @@
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;
 
-            // FADE-IN al cargar
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
             setTimeout(() => {
@@ -483,7 +481,6 @@
                 }, 400);
             }, 50);
 
-            // FADE-OUT al hacer clic en botones de acción (puedes personalizar estos selectores)
             document.querySelectorAll('.button-gema.verde').forEach(boton => {
                 boton.addEventListener('click', (e) => {
                     const href = boton.getAttribute("href");
@@ -500,7 +497,6 @@
             });
         });
 
-        // FADE-IN si el usuario vuelve desde historial
         window.addEventListener("pageshow", () => {
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;

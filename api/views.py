@@ -44,16 +44,6 @@ class JugadorViewSet(viewsets.ModelViewSet):
                         "defensa": jugador.defensa,
                         "velocidad": jugador.velocidad,
                     },
-                    "equipo": {
-                        "arma": jugador.arma if jugador.arma else "Ninguna",
-                        "accesorios": jugador.accesorio if jugador.accesorio else "Ninguno"
-                    },
-                    "habilidades": {
-                        "habilidad_pasiva": jugador.habilidad_pasiva.efecto if jugador.habilidad_pasiva else "No tiene una pasiva asignada",
-                        "habilidad_1": jugador.habilidad_1 if jugador.habilidad_1 else "Ninguna",
-                        "habilidad_2": jugador.habilidad_2 if jugador.habilidad_2 else "Ninguna",
-                        "habilidad_3": jugador.habilidad_3 if jugador.habilidad_3 else "Ninguna",
-                    },
                     "victorias": jugador.victorias,
                     "derrotas": jugador.derrotas,
                     "porcentaje_victorias": porcentaje_victorias,
@@ -76,16 +66,6 @@ class JugadorViewSet(viewsets.ModelViewSet):
                     "ataque": jugador.ataque,
                     "defensa": jugador.defensa,
                     "velocidad": jugador.velocidad,
-                },
-                "equipo": {
-                    "arma": jugador.arma if jugador.arma else "Desarmado",
-                    "accesorios": jugador.accesorio if jugador.accesorio else "Sin equipo"
-                },
-                "habilidades": {
-                    "habilidad_pasiva": jugador.habilidad_pasiva.efecto if jugador.habilidad_pasiva else "No tiene una pasiva asignada",
-                    "habilidad_1": jugador.habilidad_1 if jugador.habilidad_1 else "Ninguna",
-                    "habilidad_2": jugador.habilidad_2 if jugador.habilidad_2 else "Ninguna",
-                    "habilidad_3": jugador.habilidad_3 if jugador.habilidad_3 else "Ninguna",
                 },
                 "victorias": jugador.victorias,
                 "derrotas": jugador.derrotas,
