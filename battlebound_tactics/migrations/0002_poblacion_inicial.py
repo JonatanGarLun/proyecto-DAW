@@ -21,26 +21,36 @@ def poblar_armas(apps, schema_editor):
 
 def poblar_accesorios(apps, schema_editor):
     Accesorio = apps.get_model('battlebound_tactics', 'Accesorio')
-    Accesorio.objects.create(nombre='Amuleto de Vitalidad', salud=800, energia_espiritual=0, defensa=50, velocidad=0,
+
+    Accesorio.objects.create(nombre='Amuleto de Vitalidad', salud=200, energia_espiritual=0, defensa=50, velocidad=0,
                              ataque=0, nivel_necesario=1)
-    Accesorio.objects.create(nombre='Anillo de Energía', salud=0, energia_espiritual=600, defensa=0, velocidad=10,
-                             ataque=0, nivel_necesario=1)
-    Accesorio.objects.create(nombre='Botas de Viento', salud=150, energia_espiritual=150, defensa=0, velocidad=40,
+    Accesorio.objects.create(nombre='Anillo de Energía', salud=0, energia_espiritual=100, defensa=0, velocidad=30,
+                             ataque=10, nivel_necesario=1)
+    Accesorio.objects.create(nombre='Botas de Viento', salud=250, energia_espiritual=50, defensa=0, velocidad=40,
                              ataque=0, nivel_necesario=2)
     Accesorio.objects.create(nombre='Collar de Fuerza', salud=400, energia_espiritual=0, defensa=0, velocidad=0,
-                             ataque=100, nivel_necesario=3)
-    Accesorio.objects.create(nombre='Pendientes Sagrados', salud=300, energia_espiritual=400, defensa=30, velocidad=5,
-                             ataque=0, nivel_necesario=2)
-    Accesorio.objects.create(nombre='Capa de Sombras', salud=150, energia_espiritual=150, defensa=50, velocidad=30,
-                             ataque=0, nivel_necesario=4)
-    Accesorio.objects.create(nombre='Talisman de Hierro', salud=600, energia_espiritual=100, defensa=80, velocidad=0,
-                             ataque=0, nivel_necesario=5)
-    Accesorio.objects.create(nombre='Broche de Luz', salud=100, energia_espiritual=500, defensa=25, velocidad=10,
-                             ataque=30, nivel_necesario=3)
-    Accesorio.objects.create(nombre='Sortija de Venganza', salud=0, energia_espiritual=0, defensa=0, velocidad=10,
-                             ataque=140, nivel_necesario=5)
-    Accesorio.objects.create(nombre='Gargantilla Élfica', salud=500, energia_espiritual=300, defensa=40, velocidad=15,
-                             ataque=20, nivel_necesario=4)
+                             ataque=120, nivel_necesario=3)
+    Accesorio.objects.create(nombre='Pendientes Sagrados', salud=300, energia_espiritual=200, defensa=30, velocidad=5,
+                             ataque=50, nivel_necesario=5)
+    Accesorio.objects.create(nombre='Capa de Sombras', salud=450, energia_espiritual=150, defensa=50, velocidad=30,
+                             ataque=0, nivel_necesario=8)
+    Accesorio.objects.create(nombre='Talisman de Hierro', salud=600, energia_espiritual=200, defensa=80, velocidad=0,
+                             ataque=0, nivel_necesario=12)
+    Accesorio.objects.create(nombre='Broche de Luz', salud=800, energia_espiritual=325, defensa=125, velocidad=10,
+                             ataque=130, nivel_necesario=20)
+    Accesorio.objects.create(nombre='Sortija de Venganza', salud=0, energia_espiritual=0, defensa=-40, velocidad=60,
+                             ataque=140, nivel_necesario=25)
+    Accesorio.objects.create(nombre='Gargantilla Élfica', salud=500, energia_espiritual=400, defensa=40, velocidad=15,
+                             ataque=20, nivel_necesario=30)
+    # SACRIFICIOS
+    Accesorio.objects.create(nombre='Sacrificio de ataque', salud=-5000, energia_espiritual=-100, defensa=-5000, velocidad=-1500,
+                             ataque=9500, nivel_necesario=50)
+
+    Accesorio.objects.create(nombre='Sacrificio de defensa', salud=15000, energia_espiritual=-200, defensa=10000, velocidad=-400,
+                             ataque=-20000, nivel_necesario=50)
+
+    Accesorio.objects.create(nombre='Sacrificio de energía', salud=-10000, energia_espiritual=3000, defensa=-10000, velocidad=0,
+                             ataque=3920, nivel_necesario=50)
 
 
 def poblar_habilidades_jugador(apps, schema_editor):

@@ -13,7 +13,7 @@ from battlebound_tactics.core.combate.enemigos import ejecutar_turno_enemigo
 from battlebound_tactics.core.combate.jugador import ejecutar_turno_jugador
 from battlebound_tactics.core.globales.estadisticas import generar_pasiva_aleatoria_jugador
 from .forms import RegistroForm
-from .models import Jugador, Combate, Enemigo
+from .models import Jugador, Combate, Enemigo, Arma, Accesorio
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from battlebound_tactics.core.combate.utils_resolvedor import (
@@ -41,9 +41,9 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
              "imagen_central": "/static/resources/menus/mapas.png"},
             {"nombre": "Fuente Sagrada", "imagen": "/static/resources/menus/fuente.png", "url": "/fuente/",
              "imagen_central": "/static/resources/menus/fuente.png"},
-            {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/inventario/",
+            {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/equipo/",
              "imagen_central": "/static/resources/menus/inventario.png"},
-            {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/estadísticas/",
+            {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/habilidades/",
              "imagen_central": "/static/resources/menus/estadisticas.png"},
             {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/ranking/",
              "imagen_central": "/static/resources/menus/combate.png"}
@@ -153,6 +153,38 @@ class CastlevyrPageView(LoginRequiredMixin, TemplateView):
 
         return context
 
+
+@login_required
+def equipamiento(request):
+    jugador = request.user.jugador  # Ajusta según tu modelo
+    seleccion = request.POST.get("seleccion", None)
+
+    if request.method == "POST":
+        if 'equipar_arma_id' in request.POST:
+            arma_id = request.POST['equipar_arma_id']
+            arma = get_object_or_404(Arma, id=arma_id)
+            if jugador.nivel >= arma.nivel_necesario:
+                jugador.arma = arma
+                jugador.save()
+            return redirect('equipamiento')  # Evitar re-envío del form
+
+        elif 'equipar_accesorio_id' in request.POST:
+            accesorio_id = request.POST['equipar_accesorio_id']
+            accesorio = get_object_or_404(Accesorio, id=accesorio_id)
+            if jugador.nivel >= accesorio.nivel_necesario:
+                jugador.accesorio = accesorio
+                jugador.save()
+            return redirect('equipamiento')
+
+    armas = Arma.objects.all()
+    accesorios = Accesorio.objects.all()
+
+    return render(request, 'app/equipo.html', {
+        'jugador': jugador,
+        'armas': armas,
+        'accesorios': accesorios,
+        'seleccion': seleccion
+    })
 
 # =================
 # LÓGICA DE COMBATE
