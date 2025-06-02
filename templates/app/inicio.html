@@ -12,21 +12,18 @@
     <div class="hud-wrapper">
         <div class="hud-frame">
             <div class="hud-top-left">
-                <!-- Imagen de la clase del jugador -->
+
                 <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_base.png' %}"
                      class="foto-clase" alt="Foto del personaje del jugador">
 
-                <!-- Estadísticas del jugador -->
                 <div class="player-info">
                     <p><span class="label">Nombre:</span> <span class="value">{{ jugador.nombre }}</span></p>
                     <p><span class="label">Nivel:</span> <span class="value">{{ jugador.nivel }}</span></p>
                     <p><span class="label">Clase:</span> <span class="value">{{ jugador.clase.capitalize }}</span></p>
                 </div>
 
-                <!-- Línea de separación -->
                 <div class="separator-line"></div>
 
-                <!-- Barras de estadística -->
                 <div class="status-bars">
                     <div class="barra-container">
                         <span class="status-label">Salud:</span>
@@ -60,12 +57,11 @@
 
 {% block content %}
     <div class="game-container">
-        <!-- Fondo dinámico -->
+
         <div id="fondo-dinamico"></div>
         <div id="fade-overlay"></div>
 
 
-        <!-- Menú inferior con carrusel -->
         <div class="hud-bottom">
             <div class="flecha flecha-izquierda" id="flecha-izquierda">
                 <span class="flecha-icon">⭐</span>

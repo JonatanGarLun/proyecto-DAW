@@ -300,6 +300,14 @@
 
     <div id="overlay-bloqueo" style="display: none;"></div>
 
+    {% block song_data %}
+        <script>
+            let songs = [
+                {url: "{% static 'resources/songs/tension/tension_1.mp3' %}"},
+            ]
+        </script>
+    {% endblock %}
+
     <script>
         const nombreJugador = "{{ jugador.nombre }}";
         const claseJugador = "{{ jugador.clase|lower }}";
@@ -361,7 +369,7 @@
                 quien: 'abuelo',
                 texto: "¿De verdad creías que iba caer tan fácilmente? No... ¡Y he vuelto para vengarme!"
             },
-            {quien: 'jugador', texto: "No mientras yo siga en pie, acabaré contigo."},
+            {quien: 'jugador', texto: "Mientras yo siga en pie, haré todo lo posible para detenerte."},
             {
                 quien: 'abuelo',
                 texto: "Los guerreros que han osado desafiarme ya han fracasado... y tú no serás la excepción "
@@ -369,7 +377,7 @@
             {quien: 'jugador', texto: "Hablas demasiado para ser un abuelo, acabaré contigo en un instante."},
             {
                 quien: 'abuelo',
-                texto: "¡JA! Por favor, no me hagas reir... En fin, dejemonos de cháchara, última oportunidad joven ¿Estás preparado?"
+                texto: "¡JA! Por favor, no me hagas reir... En fin, dejémonos de cháchara, última oportunidad, joven ¿Estás preparado?"
             }
         ];
 

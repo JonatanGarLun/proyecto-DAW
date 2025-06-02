@@ -490,7 +490,8 @@
                             {% if estado.tipo == "negativo" %}{{ estado.estado.capitalize }}{% else %}
                                 {{ estado.stat.capitalize }} // Valor:
                                 {% if estado.porcentaje %}{{ estado.valor|decimal_a_porcentaje|floatformat:0 }}%
-                                {% else %}{{ estado.valor }}{% endif %}{% endif %} // Duración: {{ estado.duracion }}</div>
+                                {% else %}{{ estado.valor }}{% endif %}{% endif %} //
+                            Duración: {{ estado.duracion }}</div>
                     {% empty %}
                         <div>Sin estados</div>
                     {% endfor %}
@@ -542,7 +543,8 @@
                                         {% if estado.tipo == "negativo" %}{{ estado.estado.capitalize }}{% else %}
                                             {{ estado.stat.capitalize }} // Valor: {% if estado.porcentaje %}
                                             {{ estado.valor|decimal_a_porcentaje|floatformat:0 }}%{% else %}
-                                            {{ estado.valor }}{% endif %}{% endif %} // Duración: {{ estado.duracion }}</div>
+                                            {{ estado.valor }}{% endif %}{% endif %} //
+                                        Duración: {{ estado.duracion }}</div>
                                 {% empty %}
                                     <div>Sin estados</div>
                                 {% endfor %}
@@ -582,7 +584,7 @@
                 </div>
             </div>
         </div>
-        <!-- Modal de Habilidades -->
+
         <div id="modalHabilidades"
              style="display: none; position: fixed; z-index: 200; background-color: rgba(0,0,0,0.85); top: 0; left: 0; width: 100%; height: 100%;">
             <div style="background: #1e1e1e; color: white; border: 2px solid white; border-radius: 10px; padding: 20px; max-width: 400px; margin: 80px auto; text-align: center;">
@@ -595,8 +597,10 @@
                                 <input type="hidden" name="accion" value="habilidad_{{ i }}">
                                 {% if habilidad %}
                                     <button type="submit">
-                                        {{ habilidad.nombre }} : <span style="color: skyblue;">{{ habilidad.coste_energia }} de energía</span>
-                                        : <span style="color: darkred;">{{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0}}% de salud</span>
+                                        {{ habilidad.nombre }} : <span
+                                            style="color: skyblue;">{{ habilidad.coste_energia }} de energía</span>
+                                        : <span
+                                            style="color: darkred;">{{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0 }}% de salud</span>
                                     </button>
                                 {% else %}
                                     <button type="button" disabled>Sin habilidad</button>
@@ -635,14 +639,29 @@
     </script>
 {% endblock %}
 {% block song_data %}
-	    <script>
-        let songs = [
-            {url: "{% static 'resources/songs/combate/combate_1.mp3' %}"},
-            {url: "{% static 'resources/songs/combate/combate_2.mp3' %}"},
-            {url: "{% static 'resources/songs/combate/combate_3.mp3' %}"},
-            {url: "{% static 'resources/songs/combate/combate_4.mp3' %}"},
-            {url: "{% static 'resources/songs/combate/combate_5.mp3' %}"},
-            {url: "{% static 'resources/songs/combate/combate_6.mp3' %}"}
-        ];
-    </script>
+    {% if "Jefe" in enemigo.dificultad %}
+        <script>
+            let songs = [
+                {url: "{% static 'resources/songs/jefe/jefe_1.mp3' %}"},
+                {url: "{% static 'resources/songs/jefe/jefe_2.mp3' %}"},
+                {url: "{% static 'resources/songs/jefe/jefe_3.mp3' %}"},
+                {url: "{% static 'resources/songs/jefe/jefe_4.mp3' %}"},
+                {url: "{% static 'resources/songs/jefe/jefe_5.mp3' %}"},
+                {url: "{% static 'resources/songs/jefe/jefe_6.mp3' %}"}
+            ];
+        </script>
+    {% else %}
+        <script>
+            let songs = [
+                {url: "{% static 'resources/songs/combate/combate_1.mp3' %}"},
+                {url: "{% static 'resources/songs/combate/combate_2.mp3' %}"},
+                {url: "{% static 'resources/songs/combate/combate_3.mp3' %}"},
+                {url: "{% static 'resources/songs/combate/combate_4.mp3' %}"},
+                {url: "{% static 'resources/songs/combate/combate_5.mp3' %}"},
+                {url: "{% static 'resources/songs/combate/combate_6.mp3' %}"}
+            ];
+        </script>
+    {% endif %}
+
+
 {% endblock %}

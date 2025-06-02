@@ -48,61 +48,83 @@ def poblar_habilidades_jugador(apps, schema_editor):
 
     habilidades = [
         {"nombre": "Explosión Arcana", "descripcion": "Provoca una explosión mágica de gran alcance.",
-         "coste_energia": 10, "coste_salud": 0.05, "nivel_necesario": 1,
+         "coste_energia": 10, "coste_salud": 0.05, "nivel_necesario": 2,
          "efecto": {"tipo": "dano", "escala_ataque": 3.75, "valor": 100}},
+
         {"nombre": "Golpe de Luz", "descripcion": "Un ataque con energía sagrada que causa gran daño.",
-         "coste_energia": 12, "coste_salud": 0.0, "nivel_necesario": 2,
-         "efecto": {"tipo": "dano", "escala_ataque": 3.5, "valor": 150}},
-        {"nombre": "Sanación Espiritual", "descripcion": "Recupera una gran cantidad de salud.", "coste_energia": 15,
-         "coste_salud": 0.0, "nivel_necesario": 2, "efecto": {"tipo": "curacion", "escala_salud": 0.75, "valor": 200}},
-        {"nombre": "Rugido de Guerra", "descripcion": "Aumenta el ataque temporalmente.", "coste_energia": 8,
-         "coste_salud": 0.0, "nivel_necesario": 3,
-         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 100, "duracion": 3, "porcentaje": False}},
-        {"nombre": "Muro de Hierro", "descripcion": "Refuerza la defensa durante varios turnos.", "coste_energia": 10,
-         "coste_salud": 0.0, "nivel_necesario": 4,
+         "coste_energia": 20, "coste_salud": 0.0, "nivel_necesario": 4,
+         "efecto": {"tipo": "dano", "escala_ataque": 4.5, "valor": 150}},
+
+        {"nombre": "Sanación Espiritual menor", "descripcion": "Recupera una pequeña cantidad de salud.", "coste_energia": 100,
+         "coste_salud": 0.0, "nivel_necesario": 7, "efecto": {"tipo": "curacion", "escala_salud": 0.15, "valor": 200}},
+
+        {"nombre": "Rugido de Guerra", "descripcion": "Aumenta el ataque temporalmente.", "coste_energia": 100,
+         "coste_salud": 0.0, "nivel_necesario": 10,
+         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.2, "duracion": 3, "porcentaje": True}},
+
+        {"nombre": "Muro de Hierro", "descripcion": "Refuerza la defensa ligeramente durante varios turnos.", "coste_energia": 100,
+         "coste_salud": 0.0, "nivel_necesario": 10,
          "efecto": {"tipo": "buff", "stat": "defensa", "valor": 0.2, "duracion": 3, "porcentaje": True}},
-        {"nombre": "Debilitar", "descripcion": "Reduce la defensa del enemigo.", "coste_energia": 7, "coste_salud": 0.0,
-         "nivel_necesario": 4,
-         "efecto": {"tipo": "debuff", "stat": "defensa", "valor": 0.2, "duracion": 3, "porcentaje": True}},
-        {"nombre": "Quemadura Interna", "descripcion": "Aplica una quemadura que causa daño progresivo.",
-         "coste_energia": 10, "coste_salud": 0.0, "nivel_necesario": 5,
-         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 6, "duracion": 3, "probabilidad": 0.85}},
-        {"nombre": "Carga Violenta", "descripcion": "Daño elevado con coste físico.", "coste_energia": 5,
-         "coste_salud": 0.1, "nivel_necesario": 6, "efecto": {"tipo": "dano", "escala_ataque": 4.5, "valor": 50}},
-        {"nombre": "Flecha Envenenada", "descripcion": "Inflige daño y aplica veneno.", "coste_energia": 10,
-         "coste_salud": 0.0, "nivel_necesario": 6,
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 5, "duracion": 3, "probabilidad": 0.9}},
-        {"nombre": "Inspiración", "descripcion": "Aumenta el ataque del jugador.", "coste_energia": 12,
-         "coste_salud": 0.0, "nivel_necesario": 7,
-         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.25, "duracion": 3, "porcentaje": True}},
-        {"nombre": "Fuerza de Voluntad", "descripcion": "Aumenta ligeramente la defensa por algunos turnos.",
-         "coste_energia": 8, "coste_salud": 0.0, "nivel_necesario": 8,
-         "efecto": {"tipo": "buff", "stat": "defensa", "valor": 50, "duracion": 4, "porcentaje": False}},
+
+        {"nombre": "Debilitar", "descripcion": "Reduce la defensa del enemigo.", "coste_energia": 160, "coste_salud": 0.0,
+         "nivel_necesario": 14,
+         "efecto": {"tipo": "debuff", "stat": "defensa", "valor": 0.3, "duracion": 3, "porcentaje": True}},
+
+        {"nombre": "Quemadura Intensa", "descripcion": "Aplica una quemadura que causa daño cada turno.",
+         "coste_energia": 180, "coste_salud": 0.0, "nivel_necesario": 16,
+         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 0.03, "duracion": 2, "probabilidad": 0.85}},
+
+        {"nombre": "Carga Violenta", "descripcion": "Ataque de daño elevado que también daña al jugador.", "coste_energia": 200,
+         "coste_salud": 0.1, "nivel_necesario": 20, "efecto": {"tipo": "dano", "escala_ataque": 6.75, "valor": 200}},
+
+        {"nombre": "Púa Venenosa", "descripcion": "Aplica el estado veneno al enemigo.", "coste_energia": 250,
+         "coste_salud": 0.0, "nivel_necesario": 25,
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 0.06, "duracion": 3, "probabilidad": 0.9}},
+
+        {"nombre": "Inspiración", "descripcion": "Aumenta en gran medida el ataque del jugador.", "coste_energia": 400,
+         "coste_salud": 0.1, "nivel_necesario": 35,
+         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.5, "duracion": 3, "porcentaje": True}},
+
+        {"nombre": "Fuerza de Voluntad", "descripcion": "Aumenta en gran medida la defensa del jugador.",
+         "coste_energia": 400, "coste_salud": 0.5, "nivel_necesario": 35,
+         "efecto": {"tipo": "buff", "stat": "defensa", "valor": 0.5, "duracion": 4, "porcentaje": True}},
+
         {"nombre": "Velocidad Fantasmal", "descripcion": "Incrementa la velocidad durante dos turnos.",
-         "coste_energia": 10, "coste_salud": 0.0, "nivel_necesario": 9,
+         "coste_energia": 400, "coste_salud": 0.0, "nivel_necesario": 35,
          "efecto": {"tipo": "buff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True}},
-        {"nombre": "Golpe Crítico", "descripcion": "Ataque con alta probabilidad de daño aumentado.",
-         "coste_energia": 9, "coste_salud": 0.0, "nivel_necesario": 10,
-         "efecto": {"tipo": "dano", "escala_ataque": 4.0, "valor": 100}},
-        {"nombre": "Ráfaga de Golpes", "descripcion": "Golpes múltiples de bajo daño.", "coste_energia": 10,
-         "coste_salud": 0.0, "nivel_necesario": 6, "efecto": {"tipo": "dano", "escala_ataque": 1.5, "valor": 80}},
-        {"nombre": "Impacto Eléctrico", "descripcion": "Aplica un estado de electrocutado.", "coste_energia": 12,
-         "coste_salud": 0.0, "nivel_necesario": 7,
-         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 4, "duracion": 3, "probabilidad": 0.75}},
-        {"nombre": "Furia Descontrolada", "descripcion": "Aumenta ataque, reduce defensa.", "coste_energia": 12,
-         "coste_salud": 0.1, "nivel_necesario": 7,
-         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.4, "duracion": 3, "porcentaje": True}},
-        {"nombre": "Invocación Etérea", "descripcion": "Golpea con energía astral.", "coste_energia": 15,
-         "coste_salud": 0.0, "nivel_necesario": 8, "efecto": {"tipo": "dano", "escala_ataque": 3.25, "valor": 200}},
-        {"nombre": "Golpe Descendente", "descripcion": "Ataque que ignora parte de la defensa enemiga.",
-         "coste_energia": 12, "coste_salud": 0.0, "nivel_necesario": 6,
-         "efecto": {"tipo": "dano", "escala_ataque": 3.75, "valor": 150}},
-        {"nombre": "Giro Cortante", "descripcion": "Ataque giratorio que daña a todos los enemigos.",
-         "coste_energia": 13, "coste_salud": 0.05, "nivel_necesario": 9,
-         "efecto": {"tipo": "dano", "escala_ataque": 3.0, "valor": 180}},
-        {"nombre": "Mirada de Miedo", "descripcion": "Reduce velocidad del enemigo por un corto tiempo.",
-         "coste_energia": 9, "coste_salud": 0.0, "nivel_necesario": 4,
-         "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True}},
+
+        {"nombre": "Golpe Crítico", "descripcion": "Ataque cuerpo a cuerpo con altísimo daño y elevado coste.",
+         "coste_energia": 1500, "coste_salud": 0.0, "nivel_necesario": 45,
+         "efecto": {"tipo": "dano", "escala_ataque": 9.0, "valor": 300}},
+
+        {"nombre": "Ráfaga de Golpes", "descripcion": "Golpes consecutivos que causan daño moderado.", "coste_energia": 700,
+         "coste_salud": 0.02, "nivel_necesario": 45, "efecto": {"tipo": "dano", "escala_ataque": 6.5, "valor": 250}},
+
+        {"nombre": "Impacto Eléctrico", "descripcion": "Aplica el estado de electrocutado al enemigo.", "coste_energia": 1200,
+         "coste_salud": 0.0, "nivel_necesario": 50,
+         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 0.12, "duracion": 2, "probabilidad": 0.75}},
+
+        {"nombre": "Furia Descontrolada", "descripcion": "Aumenta masívamente el ataque a cambio de un coste vital tremendo.", "coste_energia": 1500,
+         "coste_salud": 0.25, "nivel_necesario": 55,
+         "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.75, "duracion": 3, "porcentaje": True}},
+
+        {"nombre": "Invocación Etérea", "descripcion": "Golpea con energía astral que daña levemente al jugador.", "coste_energia": 1800,
+         "coste_salud": 0.05, "nivel_necesario": 55, "efecto": {"tipo": "dano", "escala_ataque": 9.5, "valor": 400}},
+
+        {"nombre": "Golpe Descendente", "descripcion": "Salta alto y ataca al enemigo con un golpe descendente directo al cuerpo.",
+         "coste_energia": 1600, "coste_salud": 0.0, "nivel_necesario": 58,
+         "efecto": {"tipo": "dano", "escala_ataque": 9.25, "valor": 450}},
+
+        {"nombre": "Mirada de Miedo", "descripcion": "Reduce en gran medida velocidad del enemigo por un corto tiempo.",
+         "coste_energia": 400, "coste_salud": 0.0, "nivel_necesario": 62,
+         "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.55, "duracion": 2, "porcentaje": True}},
+
+        {"nombre": "Sanación Espiritual máxima", "descripcion": "Recupera una gran cantidad de salud.",
+         "coste_energia": 3000, "coste_salud": 0.0, "nivel_necesario": 65, "efecto": {"tipo": "curacion", "escala_salud": 0.75, "valor": 2000}},
+
+        {"nombre": "Guionazo", "descripcion": "¿Para que jugar limpio cuándo puedes ganar con el poder del guión?",
+         "coste_energia": 5000, "coste_salud": 0.33, "nivel_necesario": 99,
+         "efecto": {"tipo": "dano", "escala_ataque": 120, "valor": 20000000}} # SOLO PARA LA EXPOSICIÓN, NO ES PERMANENTE
     ]
 
     for h in habilidades:
@@ -122,23 +144,23 @@ def poblar_habilidades_enemigo(apps, schema_editor):
         {"nombre": "Zarpazo Infernal", "descripcion": "Un golpe brutal que desgarra la carne.",
          "efecto": {"tipo": "daño", "escala_ataque": 3.5, "valor": 120, "cooldown": 3}},
         {"nombre": "Aliento Corrosivo", "descripcion": "Daño continuo mediante veneno.",
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 600, "duracion": 3, "probabilidad": 0.85, "cooldown": 5}},
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 0.06, "duracion": 3, "probabilidad": 0.85, "cooldown": 5}},
         {"nombre": "Chispa Eléctrica", "descripcion": "Electrocuta al objetivo durante varios turnos.",
-         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 500, "duracion": 3, "probabilidad": 0.7, "cooldown": 5}},
-        {"nombre": "Furia Demoníaca", "descripcion": "Aumenta su ataque por un tiempo limitado.",
+         "efecto": {"tipo": "negativo", "estado": "electrocutado", "valor": 0.08, "duracion": 3, "probabilidad": 0.7, "cooldown": 5}},
+        {"nombre": "Furia Demoniaca", "descripcion": "Aumenta su ataque por un tiempo limitado.",
          "efecto": {"tipo": "buff", "stat": "ataque", "valor": 0.35, "duracion": 3, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Escamas de Hierro", "descripcion": "Aumenta la defensa del enemigo.",
          "efecto": {"tipo": "buff", "stat": "defensa", "valor": 0.4, "duracion": 3, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Maleficio Lento", "descripcion": "Reduce la velocidad del jugador.",
          "efecto": {"tipo": "debuff", "stat": "velocidad", "valor": 0.3, "duracion": 2, "porcentaje": True, "cooldown": 6}},
         {"nombre": "Llama Maldita", "descripcion": "Inflige quemadura dolorosa con alta probabilidad.",
-         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 600, "duracion": 3, "probabilidad": 0.9, "cooldown": 5}},
+         "efecto": {"tipo": "negativo", "estado": "quemado", "valor": 0.05, "duracion": 2, "probabilidad": 0.9, "cooldown": 5}},
         {"nombre": "Garra Sangrienta", "descripcion": "Ataque físico potenciado con daño elevado.",
          "efecto": {"tipo": "daño", "escala_ataque": 4.0, "valor": 80, "cooldown": 2}},
         {"nombre": "Regeneración Oscura", "descripcion": "Cura parte de su salud máxima.",
-         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 1500, "cooldown": 20}},
+         "efecto": {"tipo": "curacion", "escala_salud": 0.6, "valor": 1500, "cooldown": 10}},
         {"nombre": "Mordida Venenosa", "descripcion": "Ataque con posibilidad de envenenar.",
-         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 500, "duracion": 3, "probabilidad": 0.75}},
+         "efecto": {"tipo": "negativo", "estado": "veneno", "valor": 0.1, "duracion": 3, "probabilidad": 0.75}},
     ]
     for habilidad in habilidades:
         ActivaEnemigo.objects.create(nombre=habilidad["nombre"], descripcion=habilidad["descripcion"], efecto=habilidad["efecto"])
@@ -355,13 +377,13 @@ def poblar_enemigos(apps, schema_editor):
             "salud": 20000000,
             "ataque": 20000,
             "defensa": 40000,
-            "velocidad": 9999999,  # Siempre va primero
+            "velocidad": 9999999,  # Siempre va primero, a no ser que se debuffe o sea un nivel elevadísimo
             "dificultad": "Jefe // !?!?!",
             "experiencia_otorgada": 20000000,
             "oro_otorgado": 15000,
             "nivel": 1,
             "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.png",
-            "habilidades": ["Furia Demoniaca", "Escamas de Hierro", "Regeneración Oscura"]
+            "habilidades": ["Furia Demoniaca", "Llama Maldita", "Regeneración Oscura"]
         }
     ]
     for enemigo in enemigos:

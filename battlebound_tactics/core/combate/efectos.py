@@ -1,3 +1,5 @@
+from math import ceil
+
 from ..globales.probabilidades import tirada
 from copy import deepcopy
 
@@ -59,8 +61,9 @@ def procesar_estados(stats_temporales, objeto):
 
         if tipo == "negativo":
             valor = estado.get("valor", 0)
-            stats_temporales["salud"] = max(0, stats_temporales["salud"] - valor)
-            mensajes.append(f"{objeto.nombre} sufre {valor} de daño por {estado.get('estado', 'efecto negativo')}.")
+            recibido = ceil(max(1, stats_temporales["salud_max"] * valor))
+            stats_temporales["salud"] = max(0, stats_temporales["salud"] - recibido)
+            mensajes.append(f"{objeto.nombre} sufre {recibido} de daño por {estado.get('estado', 'efecto negativo')}.")
 
         elif tipo == "buff":
             if not estado.get("activado"):

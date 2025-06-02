@@ -4,6 +4,7 @@
 
 {% block content %}
     <style>
+
         html, body {
             margin: 0;
             padding: 0;
@@ -126,7 +127,6 @@
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;
 
-            // Fade-in al cargar
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
             setTimeout(() => {
