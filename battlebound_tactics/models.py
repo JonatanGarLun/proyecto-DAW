@@ -163,7 +163,7 @@ class Activa(models.Model):
     nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)])
 
     def __str__(self):
-        return f"Habilidad: {self.nombre} - Nivel {self.nivel_necesario}"
+        return f"{self.nombre} - Nivel {self.nivel_necesario}"
 
 
 class ActivaEnemigo(models.Model):

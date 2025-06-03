@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!oh)5!7z2xwoa=qerta5o7!$hiz@t)t9@gago_p$n6c(c#el=s'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] # A LA HORA DE DOCKERIZAR Y SUBIR A AWS HAY QUE CAMBIARLO POR LA IP ELÁSTICA DE LA INSTANCIA
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS',"").split(",") # A LA HORA DE DOCKERIZAR Y SUBIR A AWS HAY QUE CAMBIARLO POR LA IP ELÁSTICA DE LA INSTANCIA
 
 
 # Application definition
@@ -79,10 +83,21 @@ WSGI_APPLICATION = 'proyecto_final.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    # BASE DE DATOS SQLITE, descomentar para usar
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#       'NAME': BASE_DIR / 'db.sqlite3',
+#    },
+    # BASE DE DATOS POSTGRESQL
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DJANGO_USER'),
+        'PASSWORD': os.getenv('DJANGO_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('PORT'),
     }
+
 }
 
 

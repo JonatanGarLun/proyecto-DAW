@@ -1,15 +1,64 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Acceso Denegado{% endblock %}
 
 {% block content %}
-<div style="text-align: center; margin-top: 5rem;">
-    <h1 style="font-size: 3rem; color: #ff4f4f;">⛔ Acceso Denegado</h1>
-    <p style="font-size: 1.3rem; margin-top: 1rem;">
-        Lo sentimos, no tienes permisos para acceder a esta página.
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Si crees que esto es un error, contacta con un administrador o regresa al <a href="{% url 'inicio' %}" style="color: gold; text-decoration: underline;">menú principal</a>.
-    </p>
+<style>
+    body {
+        background-image: url('{% static "resources/menus/error_403.png" %}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 100px);
+    }
+
+    .error-modal {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 3rem 4rem;
+        border-radius: 15px;
+        box-shadow: 0 0 25px black;
+        text-align: center;
+        color: white;
+        max-width: 600px;
+        width: 100%;
+    }
+
+    .error-modal h1 {
+        font-size: 3rem;
+        color: #ff4f4f;
+        margin-bottom: 1rem;
+    }
+
+    .error-modal p {
+        font-size: 1.2rem;
+        margin: 1rem 0;
+    }
+
+    .error-modal a {
+        color: gold;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .error-modal a:hover {
+        color: #ffc107;
+    }
+</style>
+
+<div class="error-container">
+    <div class="error-modal">
+        <h1>⛔ Acceso Denegado</h1>
+        <p>Lo sentimos, no tienes permisos para acceder a esta página.</p>
+        <p>Si crees que esto es un error, contacta con un administrador o regresa al
+            <a href="{% url 'inicio' %}">menú principal</a>.
+        </p>
+    </div>
 </div>
 {% endblock %}

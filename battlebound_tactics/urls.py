@@ -15,6 +15,8 @@ urlpatterns = [
     path('resultado/<int:combate_id>/', views.resultado_combate, name='resultado_combate'),
     path('fuente/', views.fuente, name='fuente'),
     path('equipo/', views.equipamiento, name='equipamiento'),
+    path('habilidades/', views.habilidades, name='habilidades'),
+
     # Retomar en el futuro ⬇⬇⬇
     #    path("verificar_abandono/", views.verificar_abandono, name="verificar_abandono"),
     #    path("resolver_abandono/", views.resolver_abandono, name="resolver_abandono"),

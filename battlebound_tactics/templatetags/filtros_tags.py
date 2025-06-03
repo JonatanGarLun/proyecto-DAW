@@ -4,16 +4,6 @@ from django import template
 
 register = template.Library()
 
-
-@register.filter
-def to(value, arg):
-    """Uso: {% for i in 0|to:10 %} → itera de 0 a 9"""
-    try:
-        return range(int(value), int(arg))
-    except:
-        return []
-
-
 @register.filter
 def porcentaje(valor, maximo):
     try:
@@ -33,3 +23,11 @@ def decimal_a_porcentaje(valor):
         return valor * 100
     except TypeError:
         return valor
+
+@register.filter
+def obtener_habilidad(jugador, numero):
+    return {
+        "1": jugador.habilidad_1,
+        "2": jugador.habilidad_2,
+        "3": jugador.habilidad_3,
+    }

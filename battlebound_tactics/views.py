@@ -193,14 +193,13 @@ def equipamiento(request):
 
 
 @login_required
-def habilidades_view(request):
+def habilidades(request):
     usuario = request.user
     jugador = Jugador.objects.get(user=usuario)
     seleccion = request.POST.get("seleccion", None)
     habilidades = Activa.objects.all().order_by('nivel_necesario')
 
     if request.method == "POST":
-        # Equipar habilidad en una ranura
         for i in range(1, 4):
             if f"equipar_habilidad_{i}" in request.POST:
                 habilidad_id = int(request.POST[f"equipar_habilidad_{i}"])
@@ -210,7 +209,7 @@ def habilidades_view(request):
                     jugador.save()
                 return redirect('habilidades')
 
-    return render(request, 'habilidades.html', {
+    return render(request, 'app/habilidades.html', {
         'jugador': jugador,
         'habilidades': habilidades,
         'seleccion': seleccion,

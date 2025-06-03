@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% load filtros_tags %}
 {% load static %}
-{% block title %}Battlebound Tactics - Gestión de Habilidades{% endblock %}
+{% block title %}Battlebound Tactics - Habilidades{% endblock %}
 
 {% block content %}
-
     <style>
         html, body {
             background-image: url('{% static "resources/imgs/fondo_habilidades.png" %}');
@@ -22,18 +22,19 @@
 
         .modal-estatico {
             background-color: rgba(0, 0, 0, 0.6);
-            padding: 3rem 4rem;
+            padding: 4rem 4rem;
             border-radius: 15px;
             box-shadow: 0 0 25px black;
             text-align: center;
-            max-height: 250px;
+            max-height: 300px;
             max-width: 500px;
             width: 100%;
         }
 
         .modal-estatico h2 {
             font-size: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            color: white;
         }
 
         .modal-estatico button {
@@ -52,14 +53,22 @@
             background-color: #4e0070;
         }
 
+        .modal-estatico p {
+            margin: 0;
+            color: gold;
+        }
 
         .opciones-habilidad {
-            padding: 2rem;
             background-color: rgba(0, 0, 0, 0.7);
             margin: 2rem auto;
             max-width: 900px;
             border-radius: 15px;
             box-shadow: 0 0 15px black;
+            padding: 1.5rem;
+            max-height: calc(100vh - 160px); 
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-top: 3rem;
         }
 
         .opcion-item {
@@ -68,6 +77,7 @@
             margin: 1rem 0;
             border-radius: 10px;
             box-shadow: 0 0 10px #000;
+            color: white;
         }
 
         .opcion-item h4 {
@@ -75,10 +85,8 @@
             color: gold;
         }
 
-        .opcion-item button {
-            margin-top: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+        .opcion-item p {
+            margin: 0.2rem 0;
         }
 
         .btn-equipar {
@@ -142,93 +150,82 @@
             transition: opacity 0.4s ease-in-out;
             z-index: 9999;
         }
-
     </style>
 
-    {% if not seleccion %}
-        <div class="centrado">
+    <div class="centrado">
+        {% if not seleccion %}
             <div class="modal-estatico">
-                <h2>¿Qué desea modificar?</h2>
+                <h2>Elija qué habilidad desea modificar:</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <button type="submit" name="seleccion" value="armas">Armas</button>
-                    <button type="submit" name="seleccion" value="accesorios">Accesorios</button>
+                    <button type="submit" name="seleccion" value="1">Habilidad 1</button>
+                    <p>Equipada actualmente: {{ jugador.habilidad_1|default:"-" }}</p>
+                    <button type="submit" name="seleccion" value="2">Habilidad 2</button>
+                    <p>Equipada actualmente: {{ jugador.habilidad_2|default:"-" }}</p>
+                    <button type="submit" name="seleccion" value="3">Habilidad 3</button>
+                    <p>Equipada actualmente: {{ jugador.habilidad_3|default:"-" }}</p>
                 </form>
             </div>
-        </div>
+        {% else %}
+            <div class="opciones-habilidad">
+                <h2>Seleccione una habilidad para el hueco {{ seleccion }}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="seleccion" value="{{ seleccion }}">
+                    {% for habilidad in habilidades %}
+                        <div class="opcion-item">
+                            <h4>{{ habilidad.nombre }}</h4>
+                            <p><strong>Descripción:</strong> {{ habilidad.descripcion }}</p>
+                            <p><strong>Coste energía:</strong> {{ habilidad.coste_energia }} |
+                                <strong>Coste salud:</strong> {{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0 }}% |
+                                <strong>Nivel necesario:</strong> {{ habilidad.nivel_necesario }}</p>
 
-    {% elif seleccion == 'armas' %}
-        <div class="opciones-habilidad">
-            <h2>Seleccione un arma</h2>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="seleccion" value="armas">
-                {% for arma in armas %}
-                    <div class="opcion-item">
-                        <h4>{{ arma.nombre }}</h4>
-                        <p><strong>Ataque:</strong> {{ arma.ataque }} | <strong>Defensa:</strong> {{ arma.defensa }} |
-                            <strong>Velocidad:</strong> {{ arma.velocidad }}</p>
-                        <p><strong>Nivel necesario:</strong> {{ arma.nivel_necesario }}</p>
+                            {% with efecto=habilidad.efecto %}
+                                {% if efecto.tipo == 'dano' %}
+                                    <p><strong>Daño:</strong> Valor base: {{ efecto.valor }} | Escala de
+                                        ataque: {{ efecto.escala_ataque }}</p>
+                                {% elif efecto.tipo == 'curacion' %}
+                                    <p><strong>Curación:</strong> Valor base: {{ efecto.valor }} | Porcentaje de
+                                        salud: {{ efecto.escala_salud|decimal_a_porcentaje|floatformat:0 }}%</p>
+                                {% elif efecto.tipo == 'buff' or efecto.tipo == 'debuff' %}
+                                    <p><strong>{{ efecto.tipo|title }}:</strong> {{ efecto.stat }} |
+                                        Valor: {{ efecto.valor|decimal_a_porcentaje|floatformat:0 }}% | Duración: {{ efecto.duracion }}</p>
+                                {% elif efecto.tipo == 'negativo' %}
+                                    <p><strong>Estado:</strong> {{ efecto.estado }} |
+                                        Valor: {{ efecto.valor|decimal_a_porcentaje|floatformat:0 }}% | Duración: {{ efecto.duracion }} |
+                                        Probabilidad: {{ efecto.probabilidad|decimal_a_porcentaje|floatformat:0 }}%</p>
+                                {% endif %}
+                            {% endwith %}
 
-                        {% if jugador.arma.id == arma.id %}
-                            <button disabled class="btn-ya-equipado">Ya equipada</button>
-                        {% elif jugador.nivel >= arma.nivel_necesario %}
-                            <button type="submit" name="equipar_arma_id" value="{{ arma.id }}" class="btn-equipar">
-                                Equipar
-                            </button>
-                        {% else %}
-                            <button disabled class="btn-bloqueado">Bloqueada (Nivel {{ arma.nivel_necesario }})</button>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </form>
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit">Volver</button>
-            </form>
-        </div>
+                            {% with actual=jugador|obtener_habilidad:"habilidad_"|add:seleccion %}
+                                {% if actual and actual.id == habilidad.id %}
+                                    <button disabled class="btn-ya-equipado">Ya equipada</button>
+                                {% elif jugador.nivel >= habilidad.nivel_necesario %}
+                                    <button class="btn-equipar" type="submit" name="equipar_habilidad_{{ seleccion }}"
+                                            value="{{ habilidad.id }}">Equipar
+                                    </button>
+                                {% else %}
+                                    <button disabled class="btn-bloqueado">Bloqueada
+                                        (Nivel {{ habilidad.nivel_necesario }})
+                                    </button>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    {% endfor %}
+                </form>
 
-    {% elif seleccion == 'accesorios' %}
-        <div class="opciones-habilidad">
-            <h2>Seleccione un accesorio</h2>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="seleccion" value="accesorios">
-                {% for accesorio in accesorios %}
-                    <div class="opcion-item">
-                        <h4>{{ accesorio.nombre }}</h4>
-                        <p><strong>Salud:</strong> {{ accesorio.salud }} |
-                            <strong>Energia:</strong> {{ accesorio.energia_espiritual }}</p>
-                        <p><strong>Defensa:</strong> {{ accesorio.defensa }} |
-                            <strong>Velocidad:</strong> {{ accesorio.velocidad }} |
-                            <strong>Ataque:</strong> {{ accesorio.ataque }}</p>
-                        <p><strong>Nivel necesario:</strong> {{ accesorio.nivel_necesario }}</p>
-
-                        {% if jugador.accesorio.id == accesorio.id %}
-                            <button disabled class="btn-ya-equipado">Ya equipado</button>
-                        {% elif jugador.nivel >= accesorio.nivel_necesario %}
-                            <button type="submit" name="equipar_accesorio_id" value="{{ accesorio.id }}"
-                                    class="btn-equipar">Equipar
-                            </button>
-                        {% else %}
-                            <button disabled class="btn-bloqueado">Bloqueado (Nivel {{ accesorio.nivel_necesario }})
-                            </button>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </form>
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit">Volver</button>
-            </form>
-        </div>
-    {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit">Volver</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;
-
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
             setTimeout(() => {
@@ -269,5 +266,4 @@
     </script>
 
     <div id="fade-overlay"></div>
-
 {% endblock %}
