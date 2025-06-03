@@ -1,10 +1,273 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Battlebound Tactics - Gestión de Habilidades{% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+    <style>
+        html, body {
+            background-image: url('{% static "resources/imgs/fondo_habilidades.png" %}');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: 100% 100%;
+        }
+
+        .centrado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 100px);
+        }
+
+        .modal-estatico {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 3rem 4rem;
+            border-radius: 15px;
+            box-shadow: 0 0 25px black;
+            text-align: center;
+            max-height: 250px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .modal-estatico h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-estatico button {
+            padding: 0.75rem 2rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            background-color: #34004d;
+            color: white;
+            font-weight: bold;
+            border: 2px solid gold;
+            cursor: pointer;
+        }
+
+        .modal-estatico button:hover {
+            background-color: #4e0070;
+        }
+
+
+        .opciones-habilidad {
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            margin: 2rem auto;
+            max-width: 900px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px black;
+        }
+
+        .opcion-item {
+            background-color: rgba(30, 0, 48, 0.85);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #000;
+        }
+
+        .opcion-item h4 {
+            margin-bottom: 0.5rem;
+            color: gold;
+        }
+
+        .opcion-item button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .btn-equipar {
+            background-image: url('{% static "resources/imgs/fondo_esmeralda.png" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid gold;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            width: 175px;
+            height: 50px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .btn-bloqueado {
+            background-image: url('{% static "resources/imgs/fondo_rubi.png" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid gold;
+            color: #aaa;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            width: 175px;
+            height: 50px;
+            cursor: not-allowed;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .btn-ya-equipado {
+            background-color: #444;
+            color: gold;
+            font-weight: bold;
+            border: 2px solid gold;
+            padding: 0.75rem 2rem;
+            width: 175px;
+            height: 50px;
+            margin-top: 0.5rem;
+            cursor: default;
+        }
+
+        .btn-ya-equipado:hover {
+            background-color: #444;
+        }
+
+        #fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.4s ease-in-out;
+            z-index: 9999;
+        }
+
+    </style>
+
+    {% if not seleccion %}
+        <div class="centrado">
+            <div class="modal-estatico">
+                <h2>¿Qué desea modificar?</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="seleccion" value="armas">Armas</button>
+                    <button type="submit" name="seleccion" value="accesorios">Accesorios</button>
+                </form>
+            </div>
+        </div>
+
+    {% elif seleccion == 'armas' %}
+        <div class="opciones-habilidad">
+            <h2>Seleccione un arma</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="seleccion" value="armas">
+                {% for arma in armas %}
+                    <div class="opcion-item">
+                        <h4>{{ arma.nombre }}</h4>
+                        <p><strong>Ataque:</strong> {{ arma.ataque }} | <strong>Defensa:</strong> {{ arma.defensa }} |
+                            <strong>Velocidad:</strong> {{ arma.velocidad }}</p>
+                        <p><strong>Nivel necesario:</strong> {{ arma.nivel_necesario }}</p>
+
+                        {% if jugador.arma.id == arma.id %}
+                            <button disabled class="btn-ya-equipado">Ya equipada</button>
+                        {% elif jugador.nivel >= arma.nivel_necesario %}
+                            <button type="submit" name="equipar_arma_id" value="{{ arma.id }}" class="btn-equipar">
+                                Equipar
+                            </button>
+                        {% else %}
+                            <button disabled class="btn-bloqueado">Bloqueada (Nivel {{ arma.nivel_necesario }})</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit">Volver</button>
+            </form>
+        </div>
+
+    {% elif seleccion == 'accesorios' %}
+        <div class="opciones-habilidad">
+            <h2>Seleccione un accesorio</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="seleccion" value="accesorios">
+                {% for accesorio in accesorios %}
+                    <div class="opcion-item">
+                        <h4>{{ accesorio.nombre }}</h4>
+                        <p><strong>Salud:</strong> {{ accesorio.salud }} |
+                            <strong>Energia:</strong> {{ accesorio.energia_espiritual }}</p>
+                        <p><strong>Defensa:</strong> {{ accesorio.defensa }} |
+                            <strong>Velocidad:</strong> {{ accesorio.velocidad }} |
+                            <strong>Ataque:</strong> {{ accesorio.ataque }}</p>
+                        <p><strong>Nivel necesario:</strong> {{ accesorio.nivel_necesario }}</p>
+
+                        {% if jugador.accesorio.id == accesorio.id %}
+                            <button disabled class="btn-ya-equipado">Ya equipado</button>
+                        {% elif jugador.nivel >= accesorio.nivel_necesario %}
+                            <button type="submit" name="equipar_accesorio_id" value="{{ accesorio.id }}"
+                                    class="btn-equipar">Equipar
+                            </button>
+                        {% else %}
+                            <button disabled class="btn-bloqueado">Bloqueado (Nivel {{ accesorio.nivel_necesario }})
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit">Volver</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const overlay = document.getElementById("fade-overlay");
+            if (!overlay) return;
+
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.pointerEvents = 'none';
+                }, 400);
+            }, 50);
+
+            const enlaces = document.querySelectorAll("a[href]");
+            enlaces.forEach(link => {
+                link.addEventListener("click", (e) => {
+                    const href = link.getAttribute("href");
+                    if (!href || href === "#") return;
+
+                    e.preventDefault();
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'auto';
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                });
+            });
+        });
+
+        window.addEventListener("pageshow", () => {
+            const overlay = document.getElementById("fade-overlay");
+            if (!overlay) return;
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.pointerEvents = 'none';
+                }, 400);
+            }, 50);
+        });
+    </script>
+
+    <div id="fade-overlay"></div>
+
+{% endblock %}

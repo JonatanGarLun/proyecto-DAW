@@ -56,24 +56,81 @@
             height: 62%;
             background-color: rgba(255, 0, 0, 0);
             border: 2px solid #990000;
-            cursor: pointer;
             clip-path: polygon(
                     11% 8%, 25% 45%, 60% 70%, 100% 58%, 78% 5%
             );
+        }
+
+        .zona-roja:hover {
+            background-color: rgba(255, 0, 0, 0);;
+        }
+
+        .dialogo-simple {
+            display: none;
+            position: fixed;
+            top: 25%;
+            left: 10%;
+            width: 80%;
+            background: rgba(20, 20, 20, 0.95);
+            border: 3px solid #ccc;
+            color: #fff;
+            padding: 20px;
+            z-index: 10001;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .dialogo-simple .continuar {
+            margin-top: 15px;
+            background: none;
+            border: none;
+            color: #ccc;
+            font-style: italic;
+            cursor: pointer;
         }
     </style>
 
     <div class="mapa-container">
         <a href="{% url 'region' %}" class="zona-verde" title="Región tranquila"></a>
-        <a href="#" class="zona-roja" title="Región nevada"></a>
+        <button type="button" class="zona-roja" title="Región nevada"></button>
     </div>
 
+    <div id="modal-region-nevada" class="dialogo-simple">
+        <p>Una fuerte ventisca helada no le permite acceder a esta zona...</p>
+        <button onclick="cerrarDialogo()" class="continuar">Continuar ></button>
+    </div>
+
+    <script>
+
+        let dialogoBloqueado = false;
+
+        function mostrarDialogo() {
+            if (dialogoBloqueado) return;
+
+            dialogoBloqueado = true;
+            document.getElementById("modal-region-nevada").style.display = "block";
+        }
+
+        function cerrarDialogo() {
+            dialogoBloqueado = false;
+            document.getElementById("modal-region-nevada").style.display = "none";
+        }
+
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const zonaNevada = document.querySelector(".zona-roja");
+            zonaNevada.addEventListener("click", (e) => {
+                e.preventDefault();
+                mostrarDialogo();
+            });
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;
 
-            // Fade-in al cargar
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
             setTimeout(() => {
@@ -83,7 +140,6 @@
                 }, 400);
             }, 50);
 
-            // Interceptar clics en zonas clickeables del mapa
             const zonas = document.querySelectorAll(".zona-verde, .zona-roja");
             zonas.forEach(zona => {
                 zona.addEventListener("click", (e) => {
@@ -100,7 +156,6 @@
             });
         });
 
-        // Reaplicar fade-in al volver desde historial
         window.addEventListener("pageshow", () => {
             const overlay = document.getElementById("fade-overlay");
             if (!overlay) return;

@@ -13,7 +13,7 @@ from battlebound_tactics.core.combate.enemigos import ejecutar_turno_enemigo
 from battlebound_tactics.core.combate.jugador import ejecutar_turno_jugador
 from battlebound_tactics.core.globales.estadisticas import generar_pasiva_aleatoria_jugador
 from .forms import RegistroForm
-from .models import Jugador, Combate, Enemigo, Arma, Accesorio
+from .models import Jugador, Combate, Enemigo, Arma, Accesorio, Activa
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from battlebound_tactics.core.combate.utils_resolvedor import (
@@ -43,8 +43,8 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
              "imagen_central": "/static/resources/menus/fuente.png"},
             {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/equipo/",
              "imagen_central": "/static/resources/menus/inventario.png"},
-            {"nombre": "Habilidades", "imagen": "/static/resources/menus/estadisticas.png", "url": "/habilidades/",
-             "imagen_central": "/static/resources/menus/estadisticas.png"},
+            {"nombre": "Habilidades", "imagen": "/static/resources/menus/habilidades.png", "url": "/habilidades/",
+             "imagen_central": "/static/resources/menus/habilidades.png"},
             {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/ranking/",
              "imagen_central": "/static/resources/menus/combate.png"}
         ]
@@ -128,7 +128,7 @@ class LoginUserView(LoginView):
 
 class RankingPageView(LoginRequiredMixin, TemplateView):
     template_name = 'app/ranking.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['jugador'] = get_object_or_404(Jugador, user=self.request.user)
@@ -154,9 +154,14 @@ class CastlevyrPageView(LoginRequiredMixin, TemplateView):
         return context
 
 
+# =================
+# EQUIPAMIENTO
+# ==================
+
 @login_required
 def equipamiento(request):
-    jugador = request.user.jugador  # Ajusta según tu modelo
+    usuario = request.user
+    jugador = Jugador.objects.get(user=usuario)
     seleccion = request.POST.get("seleccion", None)
 
     if request.method == "POST":
@@ -166,7 +171,7 @@ def equipamiento(request):
             if jugador.nivel >= arma.nivel_necesario:
                 jugador.arma = arma
                 jugador.save()
-            return redirect('equipamiento')  # Evitar re-envío del form
+            return redirect('equipamiento')
 
         elif 'equipar_accesorio_id' in request.POST:
             accesorio_id = request.POST['equipar_accesorio_id']
@@ -186,9 +191,35 @@ def equipamiento(request):
         'seleccion': seleccion
     })
 
-# =================
+
+@login_required
+def habilidades_view(request):
+    usuario = request.user
+    jugador = Jugador.objects.get(user=usuario)
+    seleccion = request.POST.get("seleccion", None)
+    habilidades = Activa.objects.all().order_by('nivel_necesario')
+
+    if request.method == "POST":
+        # Equipar habilidad en una ranura
+        for i in range(1, 4):
+            if f"equipar_habilidad_{i}" in request.POST:
+                habilidad_id = int(request.POST[f"equipar_habilidad_{i}"])
+                habilidad = get_object_or_404(Activa, id=habilidad_id)
+                if jugador.nivel >= habilidad.nivel_necesario:
+                    setattr(jugador, f"habilidad_{i}", habilidad)
+                    jugador.save()
+                return redirect('habilidades')
+
+    return render(request, 'habilidades.html', {
+        'jugador': jugador,
+        'habilidades': habilidades,
+        'seleccion': seleccion,
+    })
+
+
+# =====================
 # LÓGICA DE COMBATE
-# ==================
+# ======================
 
 @login_required
 @require_GET
@@ -251,17 +282,21 @@ def combate(request, combate_id):
         jugador_primero = stats_jugador["velocidad"] >= stats_enemigo["velocidad"]
 
         if jugador_primero:
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)  # Nuestro turno
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)  # Nuestro turno
             if resultado:  # Victoria
                 return resultado
-            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate) # Turno enemigo
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log,
+                                               combate)  # Turno enemigo
             if resultado:  # Derrota
                 return resultado
         else:
-            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate) # Turno enemigo
+            resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log,
+                                               combate)  # Turno enemigo
             if resultado:  # Derrota
                 return resultado
-            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)  # Nuestro turno
+            resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)  # Nuestro turno
             if resultado:  # Victoria
                 return resultado
 
@@ -290,7 +325,6 @@ def combate(request, combate_id):
 
 
 def resultado_combate(request, combate_id):
-    
     combate = get_object_or_404(Combate, id=combate_id)
     jugador = combate.jugador
     enemigo = combate.enemigo

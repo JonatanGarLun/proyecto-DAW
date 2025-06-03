@@ -240,7 +240,7 @@
                 }, 400);
             }, 50);
 
-            const enlaces = document.querySelectorAll("a[href]:not([href='#'])");
+            const enlaces = document.querySelectorAll("a[href]");
             enlaces.forEach(link => {
                 link.addEventListener("click", (e) => {
                     const href = link.getAttribute("href");
