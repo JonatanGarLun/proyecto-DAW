@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG_STATE')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS',"").split(",") # A LA HORA DE DOCKERIZAR Y SUBIR A AWS HAY QUE CAMBIARLO POR LA IP ELÁSTICA DE LA INSTANCIA
 
@@ -84,19 +84,19 @@ WSGI_APPLICATION = 'proyecto_final.wsgi.application'
 
 DATABASES = {
     # BASE DE DATOS SQLITE, descomentar para usar
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#       'NAME': BASE_DIR / 'db.sqlite3',
-#    },
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+      'NAME': BASE_DIR / 'db.sqlite3',
+   },
     # BASE DE DATOS POSTGRESQL
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DJANGO_USER'),
-        'PASSWORD': os.getenv('DJANGO_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('PORT'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.getenv('DB_NAME'),
+    #     'USER': os.getenv('DJANGO_USER'),
+    #     'PASSWORD': os.getenv('DJANGO_PASSWORD'),
+    #     'HOST': os.getenv('DB_HOST'),
+    #     'PORT': os.getenv('PORT'),
+    # }
 
 }
 
@@ -155,4 +155,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/inicio/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/'

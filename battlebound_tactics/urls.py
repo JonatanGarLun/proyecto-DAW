@@ -1,9 +1,10 @@
 from django.urls import path
 from battlebound_tactics import views
 from battlebound_tactics.views import RegistroPageView, InicioPageView, MapaContinentePageView, RegionPageView, \
-    CastlevyrPageView, RankingPageView
+    CastlevyrPageView, RankingPageView, BienvenidaPageView
 
 urlpatterns = [
+    path('', BienvenidaPageView.as_view(), name='bienvenida'),
     path('inicio/', InicioPageView.as_view(), name='inicio'),
     path('ranking/', RankingPageView.as_view(), name='ranking'),
     path('registro/', RegistroPageView.as_view(), name='registro'),

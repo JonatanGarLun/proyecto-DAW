@@ -17,7 +17,7 @@ password = os.getenv('DJANGO_SUPERUSER_PASSWORD')
 email = os.getenv('DJANGO_SUPERUSER_EMAIL')
 
 if not all([username, password, email]):
-    raise Exception("Faltan variables necesarias en el archivo .env")
+    raise Exception("Faltan variables necesarias en el archivo ..env")
 
 # Crear superusuario si no existe
 user, created = User.objects.get_or_create(username=username, defaults={

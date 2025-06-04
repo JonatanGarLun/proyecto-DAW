@@ -23,6 +23,12 @@ from battlebound_tactics.core.combate.utils_resolvedor import (
     resolver_victoria
 )
 
+# =================
+# BIENVENIDA
+# ==================
+
+class BienvenidaPageView(TemplateView):
+    template_name = "app/bienvenida.html"
 
 # =================
 # INICIO
