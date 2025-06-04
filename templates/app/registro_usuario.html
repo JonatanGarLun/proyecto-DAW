@@ -14,12 +14,27 @@
             background-size: 100% 100%;
 
         }
+
         #login a {
             color: purple;
             text-decoration: none;
         }
+
         #login a:hover {
             text-decoration: underline;
+        }
+
+        #fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.4s ease-in-out;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -37,42 +52,42 @@
     {% endif %}
 
     <div class="form-section">
-    
+
         <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
         {{ form.username }}
-    
+
         {% for error in form.username.errors %}
             <div class="form-errors">{{ error }}</div>
         {% endfor %}
 
         <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
         {{ form.email }}
-    
+
         {% for error in form.email.errors %}
             <div class="form-errors">{{ error }}</div>
         {% endfor %}
 
         <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
         {{ form.password1 }}
-    
+
         {% for error in form.password1.errors %}
             <div class="form-errors">{{ error }}</div>
         {% endfor %}
 
         <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
         {{ form.password2 }}
-    
+
         {% for error in form.password2.errors %}
             <div class="form-errors">{{ error }}</div>
         {% endfor %}
-    
+
     </div>
 
     <hr class="divider">
 
     <h2>Datos Juegos</h2>
     <div class="form-section">
-    
+
         <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
         {{ form.nombre }}
 
@@ -82,7 +97,7 @@
 
         <label for="{{ form.alineacion.id_for_label }}">{{ form.alineacion.label }}</label>
         {{ form.alineacion }}
-    
+
         {% for error in form.alineacion.errors %}
             <div class="form-errors">{{ error }}</div>
         {% endfor %}
@@ -92,9 +107,9 @@
     </div>
 
     <section class="carousel-section">
-        
+
         <h2>Selecciona tu clase</h2>
-        
+
         <div class="carousel">
             <button type="button" class="arrow left" onclick="moverCarrusel(-1)">&#8592;</button>
             <img id="prevImg" class="side-img" src="" alt="Clase anterior">
@@ -102,21 +117,67 @@
             <img id="nextImg" class="side-img" src="" alt="Clase siguiente">
             <button type="button" class="arrow right" onclick="moverCarrusel(1)">&#8594;</button>
         </div>
-        
+
         <div class="class-name">
             <h3 id="nombreClaseSeleccionada"></h3>
         </div>
-        
+
         <div class="image-description">
             <p class="animated-text" id="textoClase"></p>
         </div>
     </section>
     <div id="login">
-        <p style="text-align: center;">¿Ya has emprendido tu jornada? Retome su aventura <a href="{% url 'login' %}">aquí</a></p>
+        <p style="text-align: center;">¿Ya has emprendido tu jornada? Retome su aventura <a href="{% url 'login' %}">aquí</a>
+        </p>
     </div>
     <button type="submit">Empieza tu aventura</button>
 </form>
 
 <script src="{% static 'js/carrusel.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("fade-overlay");
+        if (!overlay) return;
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.pointerEvents = 'none';
+            }, 400);
+        }, 50);
+
+        const enlaces = document.querySelectorAll("a[href]");
+        enlaces.forEach(link => {
+            link.addEventListener("click", (e) => {
+                const href = link.getAttribute("href");
+                if (!href || href === "#") return;
+
+                e.preventDefault();
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
+            });
+        });
+    });
+
+    window.addEventListener("pageshow", () => {
+        const overlay = document.getElementById("fade-overlay");
+        if (!overlay) return;
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.pointerEvents = 'none';
+            }, 400);
+        }, 50);
+    });
+</script>
+
+<div id="fade-overlay"></div>
+
 </body>
 </html>

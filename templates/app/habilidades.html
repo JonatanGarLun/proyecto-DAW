@@ -22,7 +22,7 @@
 
         .modal-estatico {
             background-color: rgba(0, 0, 0, 0.6);
-            padding: 4rem 4rem;
+            padding: 8rem 1rem;
             border-radius: 15px;
             box-shadow: 0 0 25px black;
             text-align: center;
@@ -65,7 +65,7 @@
             border-radius: 15px;
             box-shadow: 0 0 15px black;
             padding: 1.5rem;
-            max-height: calc(100vh - 160px); 
+            max-height: calc(100vh - 160px);
             overflow-y: auto;
             overflow-x: hidden;
             margin-top: 3rem;
@@ -154,16 +154,21 @@
 
     <div class="centrado">
         {% if not seleccion %}
+            <!-- Modal estático para elegir hueco, igual que antes -->
             <div class="modal-estatico">
                 <h2>Elija qué habilidad desea modificar:</h2>
                 <form method="post">
                     {% csrf_token %}
                     <button type="submit" name="seleccion" value="1">Habilidad 1</button>
                     <p>Equipada actualmente: {{ jugador.habilidad_1|default:"-" }}</p>
+
                     <button type="submit" name="seleccion" value="2">Habilidad 2</button>
                     <p>Equipada actualmente: {{ jugador.habilidad_2|default:"-" }}</p>
+
                     <button type="submit" name="seleccion" value="3">Habilidad 3</button>
                     <p>Equipada actualmente: {{ jugador.habilidad_3|default:"-" }}</p>
+
+                    <button type="button" onclick="window.location.href='{% url 'inicio' %}'">Volver</button>
                 </form>
             </div>
         {% else %}
@@ -172,44 +177,50 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="seleccion" value="{{ seleccion }}">
+
                     {% for habilidad in habilidades %}
                         <div class="opcion-item">
                             <h4>{{ habilidad.nombre }}</h4>
                             <p><strong>Descripción:</strong> {{ habilidad.descripcion }}</p>
-                            <p><strong>Coste energía:</strong> {{ habilidad.coste_energia }} |
-                                <strong>Coste salud:</strong> {{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0 }}% |
-                                <strong>Nivel necesario:</strong> {{ habilidad.nivel_necesario }}</p>
+                            <p>
+                                <strong>Coste energía:</strong> {{ habilidad.coste_energia }} |
+                                <strong>Coste
+                                    salud:</strong> {{ habilidad.coste_salud|floatformat:0|stringformat:"%s%%" }} |
+                                <strong>Nivel necesario:</strong> {{ habilidad.nivel_necesario }}
+                            </p>
 
-                            {% with efecto=habilidad.efecto %}
-                                {% if efecto.tipo == 'dano' %}
-                                    <p><strong>Daño:</strong> Valor base: {{ efecto.valor }} | Escala de
-                                        ataque: {{ efecto.escala_ataque }}</p>
-                                {% elif efecto.tipo == 'curacion' %}
-                                    <p><strong>Curación:</strong> Valor base: {{ efecto.valor }} | Porcentaje de
-                                        salud: {{ efecto.escala_salud|decimal_a_porcentaje|floatformat:0 }}%</p>
-                                {% elif efecto.tipo == 'buff' or efecto.tipo == 'debuff' %}
-                                    <p><strong>{{ efecto.tipo|title }}:</strong> {{ efecto.stat }} |
-                                        Valor: {{ efecto.valor|decimal_a_porcentaje|floatformat:0 }}% | Duración: {{ efecto.duracion }}</p>
-                                {% elif efecto.tipo == 'negativo' %}
-                                    <p><strong>Estado:</strong> {{ efecto.estado }} |
-                                        Valor: {{ efecto.valor|decimal_a_porcentaje|floatformat:0 }}% | Duración: {{ efecto.duracion }} |
-                                        Probabilidad: {{ efecto.probabilidad|decimal_a_porcentaje|floatformat:0 }}%</p>
+                            {# “efecto” es un JSONField, así que lo tratamos como un diccionario: #}
+                            {% with e=habilidad.efecto %}
+                                {% if e.tipo == 'dano' %}
+                                    <p><strong>Daño:</strong> Valor base: {{ e.valor }} | Escala de
+                                        ataque: {{ e.escala_ataque }}</p>
+                                {% elif e.tipo == 'curacion' %}
+                                    <p><strong>Curación:</strong> Valor base: {{ e.valor }} | Porcentaje de
+                                        salud: {{ e.escala_salud|stringformat:"%s%%" }}</p>
+                                {% elif e.tipo == 'buff' or e.tipo == 'debuff' %}
+                                    <p><strong>{{ e.tipo|title }}:</strong> {{ e.stat }} |
+                                        Valor: {{ e.valor|stringformat:"%s%%" }} | Duración: {{ e.duracion }}</p>
+                                {% elif e.tipo == 'negativo' %}
+                                    <p><strong>Estado:</strong> {{ e.estado }} |
+                                        Valor: {{ e.valor|stringformat:"%s%%" }} | Duración: {{ e.duracion }} |
+                                        Probabilidad: {{ e.probabilidad|stringformat:"%s%%" }}</p>
                                 {% endif %}
                             {% endwith %}
 
-                            {% with actual=jugador|obtener_habilidad:"habilidad_"|add:seleccion %}
-                                {% if actual and actual.id == habilidad.id %}
-                                    <button disabled class="btn-ya-equipado">Ya equipada</button>
-                                {% elif jugador.nivel >= habilidad.nivel_necesario %}
-                                    <button class="btn-equipar" type="submit" name="equipar_habilidad_{{ seleccion }}"
-                                            value="{{ habilidad.id }}">Equipar
-                                    </button>
-                                {% else %}
-                                    <button disabled class="btn-bloqueado">Bloqueada
-                                        (Nivel {{ habilidad.nivel_necesario }})
-                                    </button>
-                                {% endif %}
-                            {% endwith %}
+                            {# Comparamos contra “habilidad_actual” en vez de llamar un filtro por cada iteración #}
+                            {% if habilidad_actual and habilidad_actual.id == habilidad.id %}
+                                <button disabled class="btn-ya-equipado">Ya equipada</button>
+                            {% elif jugador.nivel >= habilidad.nivel_necesario %}
+                                <button class="btn-equipar" type="submit"
+                                        name="equipar_habilidad_{{ seleccion }}"
+                                        value="{{ habilidad.id }}">
+                                    Equipar
+                                </button>
+                            {% else %}
+                                <button disabled class="btn-bloqueado">
+                                    Bloqueada (Nivel {{ habilidad.nivel_necesario }})
+                                </button>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </form>

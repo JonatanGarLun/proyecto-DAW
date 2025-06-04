@@ -153,6 +153,7 @@
                     {% csrf_token %}
                     <button type="submit" name="seleccion" value="armas">Armas</button>
                     <button type="submit" name="seleccion" value="accesorios">Accesorios</button>
+                    <button type="button" onclick="window.location.href='{% url 'inicio' %}'">Volver</button>
                 </form>
             </div>
         </div>

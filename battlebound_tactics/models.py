@@ -160,7 +160,7 @@ class Activa(models.Model):
     )
     descripcion = models.TextField(max_length=300, blank=True, null=True)
     efecto = models.JSONField(default=dict)
-    nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)])
+    nivel_necesario = models.IntegerField(default=1, validators=[MinValueValidator(1)], db_index=True)
 
     def __str__(self):
         return f"{self.nombre} - Nivel {self.nivel_necesario}"

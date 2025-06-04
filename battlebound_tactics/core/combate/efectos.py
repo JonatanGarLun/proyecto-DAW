@@ -18,7 +18,7 @@ def aplicar_estado(stats_temporales, estado_nuevo):
         mismo_estado = ((
             tipo == "negativo" and estado.get("estado") == estado_copia.get("estado")) or ( tipo in ["buff", "debuff"] and estado.get("stat") == estado_copia.get("stat")))
         if mismo_estado:
-            # Si ya estaba aplicado y el nuevo es mejor, lo actualizamos
+            # Si ya estaba aplicado y el nuevo es "mejor" (valor mayor), lo actualizamos
             if estado.get("valor", 0) < estado_copia.get("valor", 0):
                 estado["valor"] = estado_copia["valor"]
                 estado["duracion"] = estado_copia["duracion"]
@@ -109,7 +109,7 @@ def limpiar_estados_expirados(stats_temporales):
 
     stats_temporales["estados"] = nuevos_estados
 
-
+# Pensada para una hablidad que te quite todos los estados negativos
 def remover_estado(stats_temporales, tipo, identificador=None):
     def coincide(e):
         if e["tipo"] != tipo:

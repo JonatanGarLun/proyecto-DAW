@@ -30,4 +30,4 @@ def obtener_habilidad(jugador, numero):
         "1": jugador.habilidad_1,
         "2": jugador.habilidad_2,
         "3": jugador.habilidad_3,
-    }
+    }.get(str(numero), None)

@@ -23,12 +23,14 @@ from battlebound_tactics.core.combate.utils_resolvedor import (
     resolver_victoria
 )
 
+
 # =================
 # BIENVENIDA
 # ==================
 
 class BienvenidaPageView(TemplateView):
     template_name = "app/bienvenida.html"
+
 
 # =================
 # INICIO
@@ -201,14 +203,34 @@ def equipamiento(request):
 @login_required
 def habilidades(request):
     usuario = request.user
-    jugador = Jugador.objects.get(user=usuario)
+    jugador = Jugador.objects.only(
+        'nivel', 'habilidad_1', 'habilidad_2', 'habilidad_3'
+    ).get(user=usuario)
     seleccion = request.POST.get("seleccion", None)
-    habilidades = Activa.objects.all().order_by('nivel_necesario')
+
+    habilidad_actual = None
+    habilidades = None
+
+    if seleccion:
+        try:
+            espacio = int(seleccion)
+        except (TypeError, ValueError):
+            espacio = None
+
+        if espacio in (1, 2, 3):
+            habilidad_actual = getattr(jugador, f"habilidad_{espacio}")
+
+        habilidades = Activa.objects.all().order_by('nivel_necesario')
 
     if request.method == "POST":
-        for i in range(1, 4):
-            if f"equipar_habilidad_{i}" in request.POST:
-                habilidad_id = int(request.POST[f"equipar_habilidad_{i}"])
+        for i in (1, 2, 3):
+            campo_equipar = f"equipar_habilidad_{i}"
+            if campo_equipar in request.POST:
+                try:
+                    habilidad_id = int(request.POST[campo_equipar])
+                except (TypeError, ValueError):
+                    return redirect('habilidades')
+
                 habilidad = get_object_or_404(Activa, id=habilidad_id)
                 if jugador.nivel >= habilidad.nivel_necesario:
                     setattr(jugador, f"habilidad_{i}", habilidad)
@@ -219,6 +241,7 @@ def habilidades(request):
         'jugador': jugador,
         'habilidades': habilidades,
         'seleccion': seleccion,
+        'habilidad_actual': habilidad_actual
     })
 
 
