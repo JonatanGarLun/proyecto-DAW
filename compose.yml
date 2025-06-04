@@ -1,0 +1,130 @@
+# version: '3.8'
+
+services:
+  traefik:
+    image: "traefik:v3.2"
+    container_name: "traefik"
+    # restart: always # add
+    command:
+      - "--log.level=INFO"  # logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+
+      - "--entrypoints.web.address=:80"
+
+      # Bloque letsencrypt
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entryPoints.websecure.address=:443"
+
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=lc.2fa.testing@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
+      ## La línea comentada --certificatesresolvers.myresolver.acme.caserver apunta al entorno de pruebas de ## Let's Encrypt. Esto es útil para evitar límites de emisión durante las pruebas.
+      # # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`dashboard.jonatan-daw2.tech`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      # Añade autenticación test/test
+      - "traefik.http.routers.traefik.middlewares=myauth"
+      - "traefik.http.middlewares.myauth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/"
+
+    ports:
+      - "443:443"
+      - "8080:8080"
+      # - "8000:8000"
+      - "80:80"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.jonatan-daw2.tech`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+
+  app:
+    build: .
+    image: ${IMAGE}
+    container_name: app
+    # ports:
+    #   - "80:8000"
+    environment:
+      - DEBUG=${DEBUG_STATE}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DJANGO_USER=${DJANGO_USER}
+      - DJANGO_PASSWORD=${DJANGO_PASSWORD}
+      - PORT=${PORT}
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - PYTHONPATH=/app
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`jonatan-daw2.tech`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.services.gestion.loadbalancer.server.port=8000"
+    command: >
+      bash -c "
+        echo 'Esperando 15 segundos para que la base de datos arranque...' &&
+        sleep 15 &&
+        python manage.py collectstatic &&
+        python manage.py migrate &&
+        python battlebound_tactics/scripts/crear_admin.py &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+
+  db:
+    image: postgres:17
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DJANGO_USER}
+      POSTGRES_PASSWORD: ${DJANGO_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    # ports:
+    #   - "5432:5432"
+    volumes:
+      - db_data_pg:/var/lib/postgresql/data
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+
+
+  # db:
+  #   image:  mariadb #  mysql
+  #   container_name: db
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+
+volumes:
+  # db_data:
+  db_data_pg:
+  media_data:

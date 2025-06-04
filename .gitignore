@@ -1,7 +1,0 @@
-.gitignore
-.idea/
-db.*
-anotaciones.txt
-.env
-.venv/
-media/fotos_enemigos/*
