@@ -75,6 +75,7 @@ services:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     volumes:
+      - ./static:/app/static
       - media_data:/app/media
     depends_on:
       - db
