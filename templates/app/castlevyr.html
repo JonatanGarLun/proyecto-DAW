@@ -6,7 +6,7 @@
 {% block content %}
     <style>
         body {
-            background-image: url("{% static 'resources/imgs/castlevyr_ruinas.png' %}");
+            background-image: url("{% static 'resources/imgs/castlevyr_ruinas.webp' %}");
             background-repeat: no-repeat;
             background-size: 100% 100%;
             background-position: center;
@@ -144,11 +144,11 @@
         }
 
         .button-gema.verde {
-            background-image: url("{% static 'resources/imgs/fondo_esmeralda.png' %}");
+            background-image: url("{% static 'resources/imgs/fondo_esmeralda.webp' %}");
         }
 
         .button-gema.rojo {
-            background-image: url("{% static 'resources/imgs/fondo_rubi.png' %}");
+            background-image: url("{% static 'resources/imgs/fondo_rubi.webp' %}");
         }
 
         .modal.animar-modal {
@@ -261,7 +261,7 @@
 
     <div class="image-container">
         <div class="image-box" onclick="iniciarDialogoHavva()">
-            <img src="{% static 'resources/Pixelarts/abuelo_1.png' %}" alt="Havva Skript">
+            <img src="{% static 'resources/Pixelarts/abuelo_1.webp' %}" alt="Havva Skript">
         </div>
     </div>
 
@@ -290,7 +290,7 @@
     <div id="modal-combate" class="modal">
         <div class="modal-content">
             <h3>¡El antiguo rey ataca de nuevo!</h3>
-            <img class="img-modal-enemigo" src="{% static 'resources/Pixelarts/abuelo_1.png' %}" alt="Havva Skript">
+            <img class="img-modal-enemigo" src="{% static 'resources/Pixelarts/abuelo_1.webp' %}" alt="Havva Skript">
             <p>Nombre: {{ enemigo.nombre }}</p>
             <p>Dificultad: {{ enemigo.dificultad }}</p>
             <a href="{% url 'iniciar_combate' enemigo.id %}" class="button-gema verde">Enfrentar</a>
@@ -319,12 +319,12 @@
         ];
 
         const imagenesJugador = {
-            "guerrero": "{% static 'resources/Pixelarts/Guerrero/Guerrero_ataque.png' %}",
-            "mago": "{% static 'resources/Pixelarts/Mago/Mago_ataque.png' %}",
-            "arquero": "{% static 'resources/Pixelarts/Arquero/Arquero_ataque.png' %}",
-            "luchador": "{% static 'resources/Pixelarts/Luchador/Luchador_ataque.png' %}",
-            "espiritualista": "{% static 'resources/Pixelarts/Espiritualista/Espiritualista_ataque.png' %}",
-            "astral": "{% static 'resources/Pixelarts/Astral/Astral_ataque.png' %}"
+            "guerrero": "{% static 'resources/Pixelarts/Guerrero/Guerrero_ataque.webp' %}",
+            "mago": "{% static 'resources/Pixelarts/Mago/Mago_ataque.webp' %}",
+            "arquero": "{% static 'resources/Pixelarts/Arquero/Arquero_ataque.webp' %}",
+            "luchador": "{% static 'resources/Pixelarts/Luchador/Luchador_ataque.webp' %}",
+            "espiritualista": "{% static 'resources/Pixelarts/Espiritualista/Espiritualista_ataque.webp' %}",
+            "astral": "{% static 'resources/Pixelarts/Astral/Astral_ataque.webp' %}"
         };
 
         function bloquearInteraccion() {
@@ -349,7 +349,7 @@
         }
 
         window.addEventListener('load', function () {
-            document.getElementById('jugador-img').src = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.png' %}";
+            document.getElementById('jugador-img').src = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.webp' %}";
             document.getElementById('texto-secuencia').innerText = frasesSecuencia[0];
             document.getElementById('dialogo-secuencia').style.display = 'flex';
             document.getElementById('nombre-dialogo-secuencia').innerText = nombreJugador;
@@ -388,7 +388,7 @@
             mostrarDialogoHavva();
         }
 
-        const imagenJugador = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.png' %}";
+        const imagenJugador = imagenesJugador[claseJugador] || "{% static 'resources/Pixelarts/personaje_default.webp' %}";
 
         function mostrarDialogoHavva() {
             const dialogo = dialogos[pasoHavva];
@@ -399,7 +399,7 @@
             }
 
             const img = dialogo.quien === 'abuelo'
-                ? "{% static 'resources/Pixelarts/abuelo_1.png' %}"
+                ? "{% static 'resources/Pixelarts/abuelo_1.webp' %}"
                 : imagenJugador;
 
             const nombre = dialogo.quien === 'abuelo'

@@ -1,14 +1,14 @@
 const clases = [
     {
         nombre: "Arquero",
-        imagen: "/static/resources/Pixelarts/Arquero/Arquero_base.png",
+        imagen: "/static/resources/Pixelarts/Arquero/Arquero_base.webp",
         descripcion: "La Sombra certera\n" +
             "Nadie escapa de su arco, y nadie lo alcanza.\n" +
             "🏹 “Si puedes verlo, ya es tarde.”\n\n" + "El Arquero domina la agilidad y el daño técnico. Gracias a su altísima probabilidad de esquivar y a su velocidad, puede evitar la mayoría de los golpes enemigos y responder con ataques certeros, incluso ataques especiales adicionales. Cuanto más tiempo pasa en combate, más fuerte se vuelve, acumulando bonificaciones ofensivas y probabilidad de crítico. Es la clase perfecta para jugadores que disfrutan de un estilo de juego rápido, esquivo y demoledor a largo plazo."
     },
     {
         nombre: "Espiritualista",
-        imagen: "/static/resources/Pixelarts/Espiritualista/Espiritualista_base.png",
+        imagen: "/static/resources/Pixelarts/Espiritualista/Espiritualista_base.webp",
         descripcion: "El Eco del Alma\n" +
             "Convierte el dolor en fuerza y la calma en poder.\n" +
             "🌫️ “Donde otros caen, yo me elevo.”\n\n" +
@@ -16,7 +16,7 @@ const clases = [
     },
     {
         nombre: "Guerrero",
-        imagen: "/static/resources/Pixelarts/Guerrero/Guerrero_base.png",
+        imagen: "/static/resources/Pixelarts/Guerrero/Guerrero_base.webp",
         descripcion: "El Muro Imparable\n" +
             "Una fuerza bruta que aumenta con cada golpe recibido.\n" +
             "🗡️ “Cuando el hierro sangra, la guerra empieza.”\n\n" +
@@ -24,7 +24,7 @@ const clases = [
     },
     {
         nombre: "Luchador",
-        imagen: "/static/resources/Pixelarts/Luchador/Luchador_base.png",
+        imagen: "/static/resources/Pixelarts/Luchador/Luchador_base.webp",
         descripcion: "El Puño del Equilibrio y la justicia\n" +
             "Golpea, resiste y se levanta una vez más.\n" +
             "💥 “Mi cuerpo es mi escudo. Mis puños, mi destino.”\n\n" +
@@ -32,7 +32,7 @@ const clases = [
     },
     {
         nombre: "Mago",
-        imagen: "/static/resources/Pixelarts/Mago/Mago_base.png",
+        imagen: "/static/resources/Pixelarts/Mago/Mago_base.webp",
         descripcion: "El Tormento Arcano\n" +
             "Un canal de magia pura que se desborda con cada hechizo.\n" +
             "✨ “El maná fluye, el mundo tiembla.”\n\n" +
@@ -40,7 +40,7 @@ const clases = [
     },
     {
         nombre: "Astral",
-        imagen: "/static/resources/Pixelarts/Astral/Astral_base.png",
+        imagen: "/static/resources/Pixelarts/Astral/Astral_base.webp",
         descripcion: "El Renacido del cosmos\n" +
             "Cuanto más cerca de la muerte, más cerca de su verdad.\n" +
             "🔥 “No me has vencido… solo has despertado mi verdadero yo.”\n\n" +

@@ -16,7 +16,7 @@ async function cargarRanking(orden = "nivel") {
 
     top5.forEach((jugador, index) => {
         const clase = jugador.estadisticas.clase.toLowerCase();
-        const imagenRuta = `${rutaClases}${clase}/${clase}_victoria.png`;
+        const imagenRuta = `${rutaClases}${clase}/${clase}_victoria.webp`;
 
         let valor = "";
         if (orden === "nivel") valor = `Nivel: ${jugador.estadisticas.nivel}`;
