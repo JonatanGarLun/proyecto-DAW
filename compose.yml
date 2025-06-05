@@ -73,6 +73,7 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - PYTHONPATH=/app
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     volumes:
       - media_data:/app/media
     depends_on:
@@ -87,8 +88,9 @@ services:
       bash -c "
         echo 'Esperando 15 segundos para que la base de datos arranque...' &&
         sleep 15 &&
-        python manage.py collectstatic &&
+        echo 'Hacemos las migraciones iniciales' &&
         python manage.py migrate &&
+        echo 'Creamos al heroe legendario (Superusuario)' &&
         python battlebound_tactics/scripts/crear_admin.py &&
         python manage.py runserver 0.0.0.0:8000
       "

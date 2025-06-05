@@ -100,6 +100,10 @@ DATABASES = {
 
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://jonatan-daw2.tech"
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
