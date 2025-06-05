@@ -277,6 +277,8 @@ def ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles):
 
 
 def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate):
+    from battlebound_tactics.core.combate.utils_resolvedor import resolver_derrota
+
     log.append(f"TURNO {enemigo.nombre}")
 
     # Reducir cooldowns al inicio del turno
@@ -325,7 +327,6 @@ def ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemi
             log.append(mensaje)
 
     if stats_jugador["salud"] <= 0:
-        from combate.utils_resolvedor import resolver_derrota
         return resolver_derrota(request, jugador, combate)
 
     return None
