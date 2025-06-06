@@ -39,7 +39,9 @@
                             <p>
                                 <strong>Coste energía:</strong> {{ habilidad.coste_energia }} |
                                 <strong>Coste
-                                    salud:</strong> {% if habilidad.coste_salud %}{{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0 }}%{% else %}Ninguno{% endif %} |
+                                    salud:</strong> {% if habilidad.coste_salud %}
+                                {{ habilidad.coste_salud|decimal_a_porcentaje|floatformat:0 }}%{% else %}
+                                Ninguno{% endif %} |
                                 <strong>Nivel necesario:</strong> {{ habilidad.nivel_necesario }}
                             </p>
 
@@ -85,48 +87,6 @@
         {% endif %}
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const overlay = document.getElementById("fade-overlay");
-            if (!overlay) return;
-            overlay.style.opacity = '1';
-            overlay.style.pointerEvents = 'auto';
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.pointerEvents = 'none';
-                }, 400);
-            }, 50);
-
-            const enlaces = document.querySelectorAll("a[href]");
-            enlaces.forEach(link => {
-                link.addEventListener("click", (e) => {
-                    const href = link.getAttribute("href");
-                    if (!href || href === "#") return;
-
-                    e.preventDefault();
-                    overlay.style.opacity = '1';
-                    overlay.style.pointerEvents = 'auto';
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500);
-                });
-            });
-        });
-
-        window.addEventListener("pageshow", () => {
-            const overlay = document.getElementById("fade-overlay");
-            if (!overlay) return;
-            overlay.style.opacity = '1';
-            overlay.style.pointerEvents = 'auto';
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.pointerEvents = 'none';
-                }, 400);
-            }, 50);
-        });
-    </script>
-
+    <script src="{% static 'js/transicion_comun.js' %}"></script>
     <div id="fade-overlay"></div>
 {% endblock %}
