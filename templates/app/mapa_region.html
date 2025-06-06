@@ -14,7 +14,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url("{% static 'resources/maps/region_tranquila.png' %}") no-repeat center center;
+            background: url("{% static 'resources/maps/region_tranquila.webp' %}") no-repeat center center;
             background-size: 100% 100%;
         }
 
@@ -150,11 +150,11 @@
         }
 
         .button-gema.verde {
-            background-image: url("{% static 'resources/imgs/fondo_esmeralda.png' %}");
+            background-image: url("{% static 'resources/imgs/fondo_esmeralda.webp' %}");
         }
 
         .button-gema.rojo {
-            background-image: url("{% static 'resources/imgs/fondo_rubi.png' %}");
+            background-image: url("{% static 'resources/imgs/fondo_rubi.webp' %}");
         }
 
         .dialogo {
@@ -292,7 +292,7 @@
     <div id="modal-castillo" class="modal">
         <div class="modal-content">
             <h2>Castelvyr</h2>
-            <img src="{% static 'resources/imgs/castillo.png' %}" alt="Castillo"/>
+            <img src="{% static 'resources/imgs/castillo.webp' %}" alt="Castillo"/>
             <a href="{% url 'castlevyr' %}" class="button-gema verde">Acceder</a>
             <a class="button-gema rojo" onclick="cerrarModal('modal-castillo')">Cancelar</a>
         </div>
@@ -300,7 +300,7 @@
 
     <!-- Caja de diálogo Thalendor -->
     <div id="dialogo-thalendor" class="dialogo">
-        <img id="npc-imagen" src="{% static 'resources/Pixelarts/npcs/npc1.png' %}" alt="NPC"/>
+        <img id="npc-imagen" src="{% static 'resources/Pixelarts/npcs/npc1.webp' %}" alt="NPC"/>
         <div class="linea">
             <p id="texto-dialogo">...</p>
             <button class="continuar" onclick="cerrarDialogo()">Continuar ></button>
@@ -447,12 +447,12 @@
             ];
 
             const imagenes = [
-                "{% static 'resources/Pixelarts/npcs/npc1.png' %}",
-                "{% static 'resources/Pixelarts/npcs/npc2.png' %}",
-                "{% static 'resources/Pixelarts/npcs/npc3.png' %}",
-                "{% static 'resources/Pixelarts/npcs/npc4.png' %}",
-                "{% static 'resources/Pixelarts/npcs/npc5.png' %}",
-                "{% static 'resources/Pixelarts/npcs/npc6.png' %}"
+                "{% static 'resources/Pixelarts/npcs/npc1.webp' %}",
+                "{% static 'resources/Pixelarts/npcs/npc2.webp' %}",
+                "{% static 'resources/Pixelarts/npcs/npc3.webp' %}",
+                "{% static 'resources/Pixelarts/npcs/npc4.webp' %}",
+                "{% static 'resources/Pixelarts/npcs/npc5.webp' %}",
+                "{% static 'resources/Pixelarts/npcs/npc6.webp' %}"
             ];
 
             const frase = frases[Math.floor(Math.random() * frases.length)] || frases[0];

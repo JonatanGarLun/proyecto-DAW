@@ -45,16 +45,16 @@ class InicioPageView(LoginRequiredMixin, TemplateView):
 
         opciones = [
 
-            {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.png", "url": "/mapa/",
-             "imagen_central": "/static/resources/menus/mapas.png"},
-            {"nombre": "Fuente Sagrada", "imagen": "/static/resources/menus/fuente.png", "url": "/fuente/",
-             "imagen_central": "/static/resources/menus/fuente.png"},
-            {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.png", "url": "/equipo/",
-             "imagen_central": "/static/resources/menus/inventario.png"},
-            {"nombre": "Habilidades", "imagen": "/static/resources/menus/habilidades.png", "url": "/habilidades/",
-             "imagen_central": "/static/resources/menus/habilidades.png"},
-            {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.png", "url": "/ranking/",
-             "imagen_central": "/static/resources/menus/combate.png"}
+            {"nombre": "Mapa", "imagen": "/static/resources/menus/mapas.webp", "url": "/mapa/",
+             "imagen_central": "/static/resources/menus/mapas.webp"},
+            {"nombre": "Fuente Sagrada", "imagen": "/static/resources/menus/fuente.webp", "url": "/fuente/",
+             "imagen_central": "/static/resources/menus/fuente.webp"},
+            {"nombre": "Equipo", "imagen": "/static/resources/menus/inventario.webp", "url": "/equipo/",
+             "imagen_central": "/static/resources/menus/inventario.webp"},
+            {"nombre": "Habilidades", "imagen": "/static/resources/menus/habilidades.webp", "url": "/habilidades/",
+             "imagen_central": "/static/resources/menus/habilidades.webp"},
+            {"nombre": "Ranking", "imagen": "/static/resources/menus/combate.webp", "url": "/ranking/",
+             "imagen_central": "/static/resources/menus/combate.webp"}
         ]
 
         porcentaje_salud = ceil((jugador.salud / jugador.salud_maxima) * 100)

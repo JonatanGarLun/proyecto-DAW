@@ -6,7 +6,7 @@
     <title>Bienvenido a Battelbound Tactics</title>
     <style>
         body {
-            background-image: url('{% static "resources/imgs/fondo_bienvenida.png" %}');
+            background-image: url('{% static "resources/imgs/fondo_bienvenida.webp" %}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -38,7 +38,7 @@
         }
 
         .btn-acceder {
-            background-image: url('{% static "resources/imgs/fondo_esmeralda.png" %}');
+            background-image: url('{% static "resources/imgs/fondo_esmeralda.webp" %}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -75,7 +75,7 @@
 <body>
 <div class="pantalla-inicio">
     <div class="contenedor-bienvenida">
-        <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo del Juego">
+        <img src="{% static 'resources/imgs/logo.webp' %}" alt="Logo del Juego">
         <form method="get" action="{% url 'login' %}">
             <button type="submit" class="btn-acceder">Acceder</button>
         </form>

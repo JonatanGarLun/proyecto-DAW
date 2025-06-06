@@ -5,7 +5,7 @@
 {% block content %}
     <style>
         body {
-            background-image: url("{% static 'resources/imgs/login.png' %}");
+            background-image: url("{% static 'resources/imgs/login.webp' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -112,7 +112,7 @@
 
     <form class="login-container" method="post" action="">
         {% csrf_token %}
-        <img src="{% static 'resources/imgs/logo.png' %}" alt="Logo del juego" class="logo grande">
+        <img src="{% static 'resources/imgs/logo.webp' %}" alt="Logo del juego" class="logo grande">
 
         <h2>Iniciar sesión</h2>
 
