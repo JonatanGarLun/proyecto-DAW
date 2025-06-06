@@ -19,7 +19,7 @@ on:
       - compose.yml
 
 env:
-  IMAGE_NAME: battlebound_tactics
+  IMAGE_NAME: bbt_png
   IMAGE_TAG: latest
   FILES: compose.yml
 

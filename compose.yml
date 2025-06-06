@@ -56,7 +56,6 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
 
   app:
-    build: .
     image: ${IMAGE}
     container_name: app
     # ports:
