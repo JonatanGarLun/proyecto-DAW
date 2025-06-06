@@ -166,25 +166,8 @@
         </div>
     </div>
 
-    <script>
-        function toggleLog() {
-            let log = document.getElementById('logContent');
-            if (log.style.display === 'block') {
-                log.style.display = 'none'
-            } else {
-                log.style.display = 'block';
-            }
-        }
-    </script>
-    <script>
-        function abrirModalHabilidades() {
-            document.getElementById('modalHabilidades').style.display = 'block';
-        }
-
-        function cerrarModalHabilidades() {
-            document.getElementById('modalHabilidades').style.display = 'none';
-        }
-    </script>
+    <script src="{% static 'js/toggle_log.js' %}"></script>
+    <script src="{% static 'js/mostrar_habilidades.js' %}"></script>
 {% endblock %}
 {% block song_data %}
     {% if "Jefe" in enemigo.dificultad %}
@@ -210,6 +193,4 @@
             ];
         </script>
     {% endif %}
-
-
 {% endblock %}
