@@ -1,9 +1,11 @@
 body {
     margin: 0;
     padding: 0;
-    background-size: cover;
     font-family: Arial, sans-serif;
     color: white;
+    background-image: url("../resources/imgs/registro_fondo.webp");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .login-container {
@@ -182,4 +184,27 @@ button[type="submit"]:hover {
     .login-container {
         padding: 1rem;
     }
+}
+
+
+#login a {
+    color: purple;
+    text-decoration: none;
+}
+
+#login a:hover {
+    text-decoration: underline;
+}
+
+#fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.4s ease-in-out;
+    z-index: 9999;
 }

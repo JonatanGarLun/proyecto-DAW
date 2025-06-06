@@ -1,94 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Battlebound Tactics - Mapa del mundo{% endblock %}
+{% block links %}
+	<link rel="stylesheet" href="{% static 'css/mapa_continente.css' %}">
+{% endblock %}
 
 {% block content %}
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
 
-        .mapa-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: url("{% static 'resources/maps/continente.webp' %}") no-repeat center center;
-            background-size: 100% 100%;
-        }
-
-        #fade-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: black;
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 0.4s ease-in-out;
-            z-index: 9999;
-        }
-
-        /* === ZONA VERDE (bosque/izquierda) === */
-        .zona-verde {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 48%;
-            height: 58%;
-            background-color: rgba(0, 255, 0, 0);
-            border: 2px solid #00aa00;
-            cursor: pointer;
-            clip-path: polygon(
-                    20% 10%, 70% 0%, 87% 20%, 45% 75%, 10% 65%
-            );
-        }
-
-        /* === ZONA ROJA (nieve/derecha) === */
-        .zona-roja {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 47%;
-            height: 62%;
-            background-color: rgba(255, 0, 0, 0);
-            border: 2px solid #990000;
-            clip-path: polygon(
-                    11% 8%, 25% 45%, 60% 70%, 100% 58%, 78% 5%
-            );
-        }
-
-        .zona-roja:hover {
-            background-color: rgba(255, 0, 0, 0);;
-        }
-
-        .dialogo-simple {
-            display: none;
-            position: fixed;
-            top: 25%;
-            left: 10%;
-            width: 80%;
-            background: rgba(20, 20, 20, 0.95);
-            border: 3px solid #ccc;
-            color: #fff;
-            padding: 20px;
-            z-index: 10001;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .dialogo-simple .continuar {
-            margin-top: 15px;
-            background: none;
-            border: none;
-            color: #ccc;
-            font-style: italic;
-            cursor: pointer;
-        }
-    </style>
 
     <div class="mapa-container">
         <a href="{% url 'region' %}" class="zona-verde" title="Región tranquila"></a>
@@ -100,8 +18,7 @@
         <button onclick="cerrarDialogo()" class="continuar">Continuar ></button>
     </div>
 
-    <script>
-
+    <script>    
         let dialogoBloqueado = false;
 
         function mostrarDialogo() {
