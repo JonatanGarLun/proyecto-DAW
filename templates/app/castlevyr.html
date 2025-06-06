@@ -48,13 +48,13 @@
 
     <div id="overlay-bloqueo" style="display: none;"></div>
 
-    {% block song_data %}
-        <script>
-            let songs = [
-                {url: "{% static 'resources/songs/tension/tension_1.mp3' %}"},
-            ]
-        </script>
-    {% endblock %}
+{#    {% block song_data %}#}
+{#        <script>#}
+{#            let songs = [#}
+{#                {url: "{% static 'resources/songs/tension/tension_1.mp3' %}"},#}
+{#            ]#}
+{#        </script>#}
+{#    {% endblock %}#}
 
     <script>
         const nombreJugador = "{{ jugador.nombre }}";

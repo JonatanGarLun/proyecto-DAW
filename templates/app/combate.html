@@ -169,28 +169,28 @@
     <script src="{% static 'js/toggle_log.js' %}"></script>
     <script src="{% static 'js/mostrar_habilidades.js' %}"></script>
 {% endblock %}
-{% block song_data %}
-    {% if "Jefe" in enemigo.dificultad %}
-        <script>
-            let songs = [
-                {url: "{% static 'resources/songs/jefe/jefe_1.mp3' %}"},
-                {url: "{% static 'resources/songs/jefe/jefe_2.mp3' %}"},
-                {url: "{% static 'resources/songs/jefe/jefe_3.mp3' %}"},
-                {url: "{% static 'resources/songs/jefe/jefe_4.mp3' %}"},
-                {url: "{% static 'resources/songs/jefe/jefe_5.mp3' %}"},
-                {url: "{% static 'resources/songs/jefe/jefe_6.mp3' %}"}
-            ];
-        </script>
-    {% else %}
-        <script>
-            let songs = [
-                {url: "{% static 'resources/songs/combate/combate_1.mp3' %}"},
-                {url: "{% static 'resources/songs/combate/combate_2.mp3' %}"},
-                {url: "{% static 'resources/songs/combate/combate_3.mp3' %}"},
-                {url: "{% static 'resources/songs/combate/combate_4.mp3' %}"},
-                {url: "{% static 'resources/songs/combate/combate_5.mp3' %}"},
-                {url: "{% static 'resources/songs/combate/combate_6.mp3' %}"}
-            ];
-        </script>
-    {% endif %}
-{% endblock %}
+{#{% block song_data %}#}
+{#    {% if "Jefe" in enemigo.dificultad %}#}
+{#        <script>#}
+{#            let songs = [#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_1.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_2.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_3.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_4.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_5.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/jefe/jefe_6.mp3' %}"}#}
+{#            ];#}
+{#        </script>#}
+{#    {% else %}#}
+{#        <script>#}
+{#            let songs = [#}
+{#                {url: "{% static 'resources/songs/combate/combate_1.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/combate/combate_2.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/combate/combate_3.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/combate/combate_4.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/combate/combate_5.mp3' %}"},#}
+{#                {url: "{% static 'resources/songs/combate/combate_6.mp3' %}"}#}
+{#            ];#}
+{#        </script>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
