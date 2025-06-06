@@ -203,7 +203,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 95000,
             "oro_otorgado": 2000,
             "nivel": 35,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_2.webp",
             "habilidades": ["Zarpazo Infernal", "Furia Demoníaca", "Escamas de Hierro"]
         },
         {
@@ -218,7 +218,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 55500,
             "oro_otorgado": 120,
             "nivel": 28,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_dificiles/enemigo_fuerte_1_nobg.webp",
             "habilidades": ["Furia Demoníaca", "Garra Sangrienta"]
         },
         # ===========
@@ -236,7 +236,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 47000,
             "oro_otorgado": 72,
             "nivel": 23,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio2.webp",
             "habilidades": ["Aliento Corrosivo", "Maleficio Lento"]
         },
         {
@@ -251,7 +251,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 33000,
             "oro_otorgado": 72,
             "nivel": 15,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio1.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_medios/enemigo_medio1.webp",
             "habilidades": ["Chispa Eléctrica"]
         },
         # ===========
@@ -269,7 +269,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 7500,
             "oro_otorgado": 20,
             "nivel": 5,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_2-1.webp",
             "habilidades": []
         },
         {
@@ -284,7 +284,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 4000,
             "oro_otorgado": 24,
             "nivel": 12,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-6.webp",
             "habilidades": []
         },
         {
@@ -299,7 +299,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 3000,
             "oro_otorgado": 24,
             "nivel": 6,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-3.webp",
             "habilidades": []
         },
         {
@@ -314,7 +314,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 3000,
             "oro_otorgado": 24,
             "nivel": 4,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-5.webp",
             "habilidades": []
         },
         {
@@ -329,7 +329,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 25000,
             "oro_otorgado": 28,
             "nivel": 12,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-4.webp",
             "habilidades": ["Mordida venenosa"]
         },
         {
@@ -344,7 +344,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 8000,
             "oro_otorgado": 53,
             "nivel": 3,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/sprite_enemigo_facil1-2.webp",
             "habilidades": []
         },
         {
@@ -359,7 +359,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 1500,
             "oro_otorgado": 12,
             "nivel": 1,
-            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.png",
+            "imagen_path": "resources/Pixelarts/enemigos/enemigos_faciles/enemigo_facil_3.webp",
             "habilidades": []
         },
         # ===========
@@ -377,7 +377,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 1750000,
             "oro_otorgado": 8000,
             "nivel": 60,
-            "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.png",
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/jefe_duende.webp",
             "habilidades": ["Zarpazo Infernal", "Llama Maldita", "Regeneración Oscura"]
         },
         {
@@ -392,7 +392,7 @@ def poblar_enemigos(apps, schema_editor):
             "experiencia_otorgada": 20000000,
             "oro_otorgado": 15000,
             "nivel": 1,
-            "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.png",
+            "imagen_path": "resources/Pixelarts/enemigos/jefes/gerbacio.webp",
             "habilidades": ["Furia Demoniaca", "Llama Maldita", "Regeneración Oscura"]
         }
     ]
