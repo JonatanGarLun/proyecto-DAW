@@ -160,13 +160,13 @@
     {% if combate.resultado == "victoria" %}
         <style>
             html, body {
-                background-image: url("{% static 'resources/imgs/victoria.png' %}");
+                background-image: url("{% static 'resources/imgs/victoria.webp' %}");
             }
         </style>
     {% else %}
         <style>
             html, body {
-                background-image: url("{% static 'resources/imgs/derrota.png' %}");
+                background-image: url("{% static 'resources/imgs/derrota.webp' %}");
             }
         </style>
     {% endif %}
@@ -177,9 +177,9 @@
         <div class="resultado-header">
 
             {% if combate.resultado == "victoria" %}
-                <img src="{% static 'resources/imgs/texto_victoria_nobg.png' %}" alt="Victoria">
+                <img src="{% static 'resources/imgs/texto_victoria_nobg.webp' %}" alt="Victoria">
             {% else %}
-                <img src="{% static 'resources/imgs/texto_derrota_nobg.png' %}" alt="Derrota">
+                <img src="{% static 'resources/imgs/texto_derrota_nobg.webp' %}" alt="Derrota">
             {% endif %}
             <hr class="header-separator">
         </div>
@@ -188,12 +188,12 @@
             <div class="versus-section">
                 <div class="jugador-col">
                     <h3>{{ jugador.nombre }}</h3>
-                    <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_ataque.png' %}"
+                    <img src="{% static 'resources/Pixelarts/'|add:jugador.clase|add:'/'|add:jugador.clase|add:'_ataque.webp' %}"
                          alt="Jugador">
                     <div class="resultado-etiqueta">
                         {% if combate.resultado == "victoria" %}
-                            <img src="{% static 'resources/imgs/texto_ganador_nobg.png' %}" alt="Ganador"> {% else %}
-                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.png' %}" alt="Perdedor"> {% endif %}
+                            <img src="{% static 'resources/imgs/texto_ganador_nobg.webp' %}" alt="Ganador"> {% else %}
+                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.webp' %}" alt="Perdedor"> {% endif %}
                     </div>
                 </div>
 
@@ -206,8 +206,8 @@
                     <img src="{{ enemigo.imagen.url }}" alt="Enemigo">
                     <div class="resultado-etiqueta">
                         {% if combate.resultado == "victoria" %}
-                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.png' %}" alt="Perdedor"> {% else %}
-                            <img src="{% static 'resources/imgs/texto_ganador_nobg.png' %}" alt="Ganador"> {% endif %}
+                            <img src="{% static 'resources/imgs/texto_perdedor_nobg.webp' %}" alt="Perdedor"> {% else %}
+                            <img src="{% static 'resources/imgs/texto_ganador_nobg.webp' %}" alt="Ganador"> {% endif %}
                     </div>
                 </div>
             </div>
