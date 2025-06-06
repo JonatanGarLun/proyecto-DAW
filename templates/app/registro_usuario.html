@@ -5,38 +5,8 @@
     <meta charset="UTF-8">
     <title>Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
     <link rel="stylesheet" href="{% static 'css/registro.css' %}">
-    <style>
-        body {
-            background-image: url("{% static 'resources/imgs/registro_fondo.webp' %}");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-
-        }
-
-        #login a {
-            color: purple;
-            text-decoration: none;
-        }
-
-        #login a:hover {
-            text-decoration: underline;
-        }
-
-        #fade-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: black;
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 0.4s ease-in-out;
-            z-index: 9999;
-        }
-    </style>
+    <link rel="icon" type="image/x-icon" href="{% static 'resources/imgs/logo.ico' %}">
 </head>
 <body>
 <form class="login-container" method="POST" action="">
