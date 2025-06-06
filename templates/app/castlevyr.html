@@ -3,7 +3,7 @@
 
 {% block title %}Battlebound Tactics — ¿Castlevyr?{% endblock %}
 {% block links %}
-	<link rel="stylesheet" href="{% static 'css/castlevyr.css' %}">
+    <link rel="stylesheet" href="{% static 'css/castlevyr.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -55,6 +55,8 @@
             ]
         </script>
     {% endblock %}
+
+    <!-- Script único, crear archivo propio. -->
 
     <script>
         const nombreJugador = "{{ jugador.nombre }}";
