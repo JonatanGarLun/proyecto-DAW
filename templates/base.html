@@ -17,9 +17,9 @@
         <img src="{% static 'resources/imgs/logo.webp' %}" alt="Logo">
     </div>
     <div class="nav-buttons">
-        <button id="prevBtn" onclick="prevSong()">⏮️</button>
-        <button id="playPauseBtn" onclick="toggleMusic()">⏯️</button>
-        <button id="nextBtn" onclick="nextSong()">⏭️</button>
+{#        <button id="prevBtn" onclick="prevSong()">⏮️</button>#}
+{#        <button id="playPauseBtn" onclick="toggleMusic()">⏯️</button>#}
+{#        <button id="nextBtn" onclick="nextSong()">⏭️</button>#}
         <div class="dropdown">
             <button>Enlaces 🔽</button>
             <div class="dropdown-content">
@@ -43,15 +43,15 @@
 </main>
 
 {% block song_data %}
-    <script>
-        let songs = [
-            {url: "{% static 'resources/songs/general/general_1.mp3' %}"},
+{#    <script>#}
+{#        let songs = [#}
+{#            {url: "{% static 'resources/songs/general/general_1.mp3' %}"},#}
             {#{url: "{% static 'resources/songs/general/general_2.mp3' %}"},#}
             {#{url: "{% static 'resources/songs/general/general_3.mp3' %}"},#}
             {#{url: "{% static 'resources/songs/general/general_4.mp3' %}"},#}
             {#{url: "{% static 'resources/songs/general/general_5.mp3' %}"}#}
-        ];
-    </script>
+{#        ];#}
+{#    </script>#}
 {% endblock %}
 
 <script src="{% static 'js/musica_base.js' %}"></script>
