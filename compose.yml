@@ -4,7 +4,7 @@ services:
   traefik:
     image: "traefik:v3.2"
     container_name: "traefik"
-    # restart: always # add
+    restart: always # add
     command:
       - "--log.level=INFO"  # logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
       - "--api.dashboard=true"
@@ -56,7 +56,6 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
 
   app:
-    build: .
     image: ${IMAGE}
     container_name: app
     # ports:
@@ -83,7 +82,7 @@ services:
       - "traefik.http.routers.api.rule=Host(`jonatan-daw2.tech`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
-      - "traefik.http.services.gestion.loadbalancer.server.port=8000"
+      - "traefik.http.services.api.loadbalancer.server.port=8000"
     command: >
       bash -c "
         echo 'Esperando 15 segundos para que la base de datos arranque...' &&

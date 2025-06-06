@@ -126,6 +126,7 @@ class RegistroPageView(FormView):
 # LOGIN
 # ==================
 
+
 class LoginUserView(LoginView):
     template_name = 'registration/login.html'
 
