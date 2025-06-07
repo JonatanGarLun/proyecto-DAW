@@ -9,7 +9,7 @@ on:
       - api/**
       - manage.py
       - compose.yml
-      - templates
+      - templates/**
   pull_request:
     branches: [ main ]
     paths:
@@ -18,7 +18,7 @@ on:
       - api/**
       - manage.py
       - compose.yml
-      - templates
+      - templates/**
 
 env:
   IMAGE_NAME: bbt_final
