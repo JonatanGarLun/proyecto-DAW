@@ -19,7 +19,7 @@ on:
       - compose.yml
 
 env:
-  IMAGE_NAME: bbt_png
+  IMAGE_NAME: bbt_final
   IMAGE_TAG: latest
   FILES: compose.yml
 
