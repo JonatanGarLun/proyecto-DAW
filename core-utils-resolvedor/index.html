@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Resolución de Turnos &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Resolución de Turnos</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#inicializacion-de-combate">⚙️ Inicialización de combate</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#aplicacion-de-efectos-por-turno">☠️ Aplicación de efectos por turno</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#resolucion-de-victoria">🏆 Resolución de victoria</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#resolucion-de-derrota">💀 Resolución de derrota</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-otros-modulos">🧩 Relación con otros módulos</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-utils-combate/">&laquo; Previous</a></div>
+    <div class="next"><a href="../api/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="resolucion-de-turnos-y-combates-utils_resolvedorpy">🧩 Resolución de Turnos y Combates (<code>utils_resolvedor.py</code>)<a class="headerlink" href="#resolucion-de-turnos-y-combates-utils_resolvedorpy" title="Permanent link">&para;</a></h1>
+<p>Este módulo orquesta las transiciones globales de cada combate: desde la inicialización de los datos hasta la aplicación
+de efectos y la resolución de victorias o derrotas. Actúa como un controlador lógico que mantiene la integridad del
+combate turno a turno, manipulando el estado de la sesión, aplicando efectos y finalizando el combate cuando
+corresponde.</p>
+<p>Su diseño mantiene el flujo general del combate separado de la lógica de ataque o habilidad, facilitando una estructura
+más modular.</p>
+<hr />
+<h2 id="inicializacion-de-combate">⚙️ Inicialización de combate<a class="headerlink" href="#inicializacion-de-combate" title="Permanent link">&para;</a></h2>
+<h3 id="inicializar_combaterequest-combate"><code>inicializar_combate(request, combate)</code><a class="headerlink" href="#inicializar_combaterequest-combate" title="Permanent link">&para;</a></h3>
+<p>Carga las estadísticas temporales de jugador y enemigo en la sesión si aún no han sido inicializadas.</p>
+<ul>
+<li>Usa la función <code>obtener_stats_temporales()</code> desde <code>estadisticas.py</code>.</li>
+<li>Guarda las estadísticas bajo las claves <code>"stats_jugador"</code> y <code>"stats_enemigo"</code> en la sesión del usuario.</li>
+<li>Marca la sesión como iniciada con la clave <code>"combate_{id}_iniciado"</code>.</li>
+</ul>
+<p>Este paso es esencial para que todas las operaciones posteriores (ataques, efectos, etc.) trabajen con un estado
+aislado y modificable turno a turno.</p>
+<hr />
+<h2 id="aplicacion-de-efectos-por-turno">☠️ Aplicación de efectos por turno<a class="headerlink" href="#aplicacion-de-efectos-por-turno" title="Permanent link">&para;</a></h2>
+<h3 id="registrar_efecto_turnostats_obj-objeto-log"><code>registrar_efecto_turno(stats_obj, objeto, log)</code><a class="headerlink" href="#registrar_efecto_turnostats_obj-objeto-log" title="Permanent link">&para;</a></h3>
+<p>Aplica los efectos de estado que estén activos y registra los resultados en el log del combate.</p>
+<ul>
+<li>Llama a <code>procesar_estados()</code> para aplicar efectos (venenos, regeneraciones, etc.).</li>
+<li>Luego, invoca <code>limpiar_estados_expirados()</code> para remover efectos cuya duración haya terminado.</li>
+<li>Todos los mensajes generados se agregan al <code>log</code>.</li>
+</ul>
+<p>Este método se ejecuta al inicio del turno para mantener el sistema de efectos sincronizado con el flujo del combate.</p>
+<hr />
+<h2 id="resolucion-de-victoria">🏆 Resolución de victoria<a class="headerlink" href="#resolucion-de-victoria" title="Permanent link">&para;</a></h2>
+<h3 id="resolver_victoriarequest-jugador-enemigo-combate"><code>resolver_victoria(request, jugador, enemigo, combate)</code><a class="headerlink" href="#resolver_victoriarequest-jugador-enemigo-combate" title="Permanent link">&para;</a></h3>
+<p>Finaliza el combate declarando al jugador como vencedor.</p>
+<ul>
+<li>Actualiza los valores definitivos del jugador con <code>actualizar_stats_finales()</code>.</li>
+<li>Cambia el estado del combate: <code>terminado = True</code>, <code>resultado = "victoria"</code>.</li>
+<li>Otorga experiencia al jugador con <code>ganar_experiencia()</code>.</li>
+<li>Elimina los datos de combate de la sesión con <code>limpiar_sesion_combate()</code>.</li>
+<li>Aumenta el contador de victorias del jugador.</li>
+<li>Redirige al usuario a la vista <code>resultado_combate</code>.</li>
+</ul>
+<hr />
+<h2 id="resolucion-de-derrota">💀 Resolución de derrota<a class="headerlink" href="#resolucion-de-derrota" title="Permanent link">&para;</a></h2>
+<h3 id="resolver_derrotarequest-jugador-combate"><code>resolver_derrota(request, jugador, combate)</code><a class="headerlink" href="#resolver_derrotarequest-jugador-combate" title="Permanent link">&para;</a></h3>
+<p>Finaliza el combate indicando que el jugador ha perdido.</p>
+<ul>
+<li>Similar a <code>resolver_victoria()</code>, pero sin otorgar experiencia.</li>
+<li>Marca <code>resultado = "derrota"</code> y aumenta las derrotas del jugador.</li>
+<li>Limpia sesión y redirige al resultado del combate.</li>
+</ul>
+<hr />
+<h2 id="relacion-con-otros-modulos">🧩 Relación con otros módulos<a class="headerlink" href="#relacion-con-otros-modulos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Invocado desde <code>views.py</code> y <code>combate.py</code>, principalmente tras evaluar los efectos de cada acción.</li>
+<li>Depende de funciones de los módulos:<ul>
+<li><code>estadisticas.py</code> para las estadísticas temporales</li>
+<li><code>efectos.py</code> para el manejo de estados</li>
+<li><code>jugador.py</code> para la experiencia y resultados</li>
+<li><code>session.py</code> para la limpieza de datos de combate</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>utils_resolvedor.py</code> centraliza la lógica del flujo de combate en torno a la sesión, efectos y finalización.
+Gracias a su estructura, garantiza un control coherente del estado global del combate, separando responsabilidades entre
+los módulos de acción y el sistema de control general.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-utils-combate/" title="Utilidades de Combate"><span>Previous</span></a></div>
+        <div class="next"><a href="../api/" title="🧩 API y Endpoints Externos"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

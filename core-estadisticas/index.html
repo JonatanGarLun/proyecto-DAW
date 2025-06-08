@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Estadísticas &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Estadísticas</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#inicializacion-de-estadisticas">🧱 Inicialización de estadísticas</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#bonificadores-de-pasiva">🧬 Bonificadores de pasiva</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#bonificadores-de-equipo">🛡️ Bonificadores de equipo</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#composicion-total-de-estadisticas">🧮 Composición total de estadísticas</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#ajustes-proporcionales">🔧 Ajustes proporcionales</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#wrapper-principal">⚙️ Wrapper principal</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#pasiva-aleatoria-al-registrarse">🎲 Pasiva aleatoria al registrarse</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-otros-modulos">🧩 Relación con otros módulos</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-efectos/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-probabilidades/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="estadisticas-de-combate-estadisticaspy">📊 Estadísticas de Combate (<code>estadisticas.py</code>)<a class="headerlink" href="#estadisticas-de-combate-estadisticaspy" title="Permanent link">&para;</a></h1>
+<p>Este módulo centraliza el cálculo de las estadísticas del jugador y los enemigos en combate. Se encarga de combinar los
+valores base con bonificaciones por pasiva, equipamiento y otros factores contextuales para producir los valores
+temporales que se usan en cada turno.</p>
+<p>También ofrece utilidades para ajustar salud y energía, mantener la proporción de estado entre combates, y generar
+pasivas aleatorias al registrar un nuevo jugador.</p>
+<hr />
+<h2 id="inicializacion-de-estadisticas">🧱 Inicialización de estadísticas<a class="headerlink" href="#inicializacion-de-estadisticas" title="Permanent link">&para;</a></h2>
+<h3 id="inicializar_statsobjeto"><code>inicializar_stats(objeto)</code><a class="headerlink" href="#inicializar_statsobjeto" title="Permanent link">&para;</a></h3>
+<p>Obtiene las estadísticas base de un objeto (jugador o enemigo):</p>
+<ul>
+<li><code>salud_max</code>, <code>salud</code>, <code>ataque</code>, <code>defensa</code>, <code>velocidad</code></li>
+<li>Si el objeto tiene energía espiritual (<code>jugador</code>), añade también <code>energia_max</code> y <code>energia</code></li>
+</ul>
+<p>Este es el punto de partida de todos los cálculos estadísticos posteriores.</p>
+<hr />
+<h2 id="bonificadores-de-pasiva">🧬 Bonificadores de pasiva<a class="headerlink" href="#bonificadores-de-pasiva" title="Permanent link">&para;</a></h2>
+<h3 id="aplicar_pasivajugador-stats"><code>aplicar_pasiva(jugador, stats)</code><a class="headerlink" href="#aplicar_pasivajugador-stats" title="Permanent link">&para;</a></h3>
+<p>Aplica los efectos de la habilidad pasiva del jugador sobre las estadísticas base.</p>
+<ul>
+<li>Extrae el diccionario <code>efecto</code> de la instancia <code>Pasiva</code></li>
+<li>Aumenta <code>salud_max</code>, <code>energia_max</code>, <code>ataque</code>, <code>defensa</code> y <code>velocidad</code> según porcentajes definidos en la pasiva</li>
+</ul>
+<p>Este paso ocurre únicamente si el jugador tiene asignada una habilidad pasiva, que por defecto siempre la tiene.</p>
+<hr />
+<h2 id="bonificadores-de-equipo">🛡️ Bonificadores de equipo<a class="headerlink" href="#bonificadores-de-equipo" title="Permanent link">&para;</a></h2>
+<h3 id="aplicar_equipojugador-stats"><code>aplicar_equipo(jugador, stats)</code><a class="headerlink" href="#aplicar_equipojugador-stats" title="Permanent link">&para;</a></h3>
+<p>Aplica los modificadores que otorgan el arma y el accesorio del jugador.</p>
+<ul>
+<li>Aumenta o disminuye directamente estadísticas como <code>ataque</code>, <code>defensa</code>, <code>velocidad</code></li>
+<li>Si el accesorio lo permite, añade o resta salud y energía espiritual</li>
+</ul>
+<hr />
+<h2 id="composicion-total-de-estadisticas">🧮 Composición total de estadísticas<a class="headerlink" href="#composicion-total-de-estadisticas" title="Permanent link">&para;</a></h2>
+<h3 id="calcular_stats_totalesobjeto"><code>calcular_stats_totales(objeto)</code><a class="headerlink" href="#calcular_stats_totalesobjeto" title="Permanent link">&para;</a></h3>
+<p>Realiza la suma total de estadísticas base + pasiva + equipo.</p>
+<ul>
+<li>Internamente llama a <code>inicializar_stats()</code>, <code>aplicar_pasiva()</code> y <code>aplicar_equipo()</code> si aplican.</li>
+<li>Funciona tanto para jugadores como enemigos (detecta si el objeto tiene <code>habilidad_pasiva</code> o <code>arma</code>).</li>
+</ul>
+<hr />
+<h2 id="ajustes-proporcionales">🔧 Ajustes proporcionales<a class="headerlink" href="#ajustes-proporcionales" title="Permanent link">&para;</a></h2>
+<h3 id="ajuste_statsobjeto-stats"><code>ajuste_stats(objeto, stats)</code><a class="headerlink" href="#ajuste_statsobjeto-stats" title="Permanent link">&para;</a></h3>
+<p>Recalcula la salud y energía actuales para ajustarlo a sus estadísticas base.</p>
+<ul>
+<li>Usa porcentajes para escalar correctamente los nuevos valores.</li>
+<li>Asegura que la salud y energía no se regeneren ni pierdan tras un cambio de stats.</li>
+</ul>
+<hr />
+<h2 id="wrapper-principal">⚙️ Wrapper principal<a class="headerlink" href="#wrapper-principal" title="Permanent link">&para;</a></h2>
+<h3 id="obtener_stats_temporalesobjeto"><code>obtener_stats_temporales(objeto)</code><a class="headerlink" href="#obtener_stats_temporalesobjeto" title="Permanent link">&para;</a></h3>
+<p>Función clave que se invoca desde la vista <code>combate</code> para obtener las estadísticas actuales de un jugador o enemigo.</p>
+<ul>
+<li>Llama a <code>calcular_stats_totales()</code> y luego a <code>ajuste_stats()</code>.</li>
+<li>Devuelve un diccionario listo para usar en combate, con todos los campos relevantes.</li>
+</ul>
+<p>Este método se usa justo antes de procesar un turno o acción, asegurando que se emplean las estadísticas más precisas.</p>
+<hr />
+<h2 id="pasiva-aleatoria-al-registrarse">🎲 Pasiva aleatoria al registrarse<a class="headerlink" href="#pasiva-aleatoria-al-registrarse" title="Permanent link">&para;</a></h2>
+<h3 id="generar_pasiva_aleatoria_jugadorjugador"><code>generar_pasiva_aleatoria_jugador(jugador)</code><a class="headerlink" href="#generar_pasiva_aleatoria_jugadorjugador" title="Permanent link">&para;</a></h3>
+<p>Genera una instancia de <code>Pasiva</code> única al registrar un nuevo jugador.</p>
+<ul>
+<li>Asigna valores aleatorios entre 0.0 y 1.0 a todos los campos de <code>efecto</code></li>
+<li>Crea el objeto <code>Pasiva</code> en la base de datos</li>
+<li>Se asocia automáticamente al jugador</li>
+</ul>
+<p>Este método garantiza que cada jugador inicia con una combinación pasiva única.</p>
+<hr />
+<h2 id="relacion-con-otros-modulos">🧩 Relación con otros módulos<a class="headerlink" href="#relacion-con-otros-modulos" title="Permanent link">&para;</a></h2>
+<p>Este módulo es utilizado constantemente por:</p>
+<ul>
+<li><code>jugador.py</code> y <code>enemigos.py</code>, para obtener estadísticas en combate.</li>
+<li><code>views.py</code>, cuando se prepara el contexto de combate o se inicia una nueva sesión.</li>
+<li><code>models.py</code>, al registrar jugadores y asignar pasivas.</li>
+</ul>
+<p>Las estadísticas generadas son claves para que los efectos, habilidades, y daños funcionen correctamente.</p>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>estadisticas.py</code> actúa como el núcleo de cálculo para todo lo relacionado con los atributos en combate. Su
+diseño flexible permite extender fácilmente los modificadores, integrar nuevos tipos de pasivas o equipo, y mantener la
+coherencia entre diferentes entidades del juego.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-efectos/" title="Efectos"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-probabilidades/" title="Probabilidades"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

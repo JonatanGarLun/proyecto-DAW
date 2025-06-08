@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Probabilidades &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Probabilidades</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#tirada-base">🧪 Tirada base</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#tabla-de-probabilidades-por-clase">📊 Tabla de probabilidades por clase</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#probabilidades-de-combate">⚔️ Probabilidades de combate</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-otros-modulos">🧩 Relación con otros módulos</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-estadisticas/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-utils-combate/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="sistema-de-probabilidades-probabilidadespy">🎲 Sistema de Probabilidades (<code>probabilidades.py</code>)<a class="headerlink" href="#sistema-de-probabilidades-probabilidadespy" title="Permanent link">&para;</a></h1>
+<p>Este módulo define todas las probabilidades que intervienen en el combate: golpes críticos, esquivas y ataques
+adicionales. Permite encapsular la lógica de azar dentro de funciones claras y reutilizables, ajustadas al tipo de clase
+del jugador (el enemigo tiene unos porcentajes predefinidos).</p>
+<p>Su propósito es centralizar la aleatoriedad y personalizarla según la clase de cada combatiente, garantizando coherencia
+y balance.</p>
+<hr />
+<h2 id="tirada-base">🧪 Tirada base<a class="headerlink" href="#tirada-base" title="Permanent link">&para;</a></h2>
+<h3 id="tiradaprobabilidad"><code>tirada(probabilidad)</code><a class="headerlink" href="#tiradaprobabilidad" title="Permanent link">&para;</a></h3>
+<p>Realiza una tirada aleatoria según un valor entre 0.0 y 1.0.</p>
+<ul>
+<li>Usa <code>random()</code> para generar un número aleatorio.</li>
+<li>Devuelve <code>True</code> si el resultado cae dentro de la probabilidad pasada como parámetro.</li>
+<li>Internamente utilizada por todas las funciones de este módulo.</li>
+</ul>
+<hr />
+<h2 id="tabla-de-probabilidades-por-clase">📊 Tabla de probabilidades por clase<a class="headerlink" href="#tabla-de-probabilidades-por-clase" title="Permanent link">&para;</a></h2>
+<h3 id="obtener_probabilidades_por_claseclase"><code>obtener_probabilidades_por_clase(clase)</code><a class="headerlink" href="#obtener_probabilidades_por_claseclase" title="Permanent link">&para;</a></h3>
+<p>Devuelve un diccionario con las probabilidades correspondientes a una clase:</p>
+<ul>
+<li><code>critico</code>: probabilidad de golpe crítico</li>
+<li><code>esquivar</code>: probabilidad de evadir un ataque</li>
+<li><code>adicional</code>: probabilidad de realizar un ataque extra</li>
+</ul>
+<h3 id="clases-definidas-y-sus-valores">Clases definidas y sus valores:<a class="headerlink" href="#clases-definidas-y-sus-valores" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Clase</th>
+<th>Crítico</th>
+<th>Esquivar</th>
+<th>Adicional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GUERRERO</td>
+<td>0.15</td>
+<td>0.04</td>
+<td>0.10</td>
+</tr>
+<tr>
+<td>ARQUERO</td>
+<td>0.22</td>
+<td>0.18</td>
+<td>0.22</td>
+</tr>
+<tr>
+<td>MAGO</td>
+<td>0.17</td>
+<td>0.05</td>
+<td>0.12</td>
+</tr>
+<tr>
+<td>LUCHADOR</td>
+<td>0.16</td>
+<td>0.07</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>ESPIRITUALISTA</td>
+<td>0.18</td>
+<td>0.09</td>
+<td>0.13</td>
+</tr>
+<tr>
+<td>ASTRAL</td>
+<td>0.20</td>
+<td>0.10</td>
+<td>0.18</td>
+</tr>
+</tbody>
+</table>
+<p>Si se pasa una clase desconocida (o un enemigo), se devuelve un conjunto de probabilidades neutras por defecto (<code>0.10</code>
+en cada
+categoría).</p>
+<hr />
+<h2 id="probabilidades-de-combate">⚔️ Probabilidades de combate<a class="headerlink" href="#probabilidades-de-combate" title="Permanent link">&para;</a></h2>
+<h3 id="criticoobjetivo"><code>critico(objetivo)</code><a class="headerlink" href="#criticoobjetivo" title="Permanent link">&para;</a></h3>
+<p>Determina si el ataque del objetivo resulta en un golpe crítico.</p>
+<ul>
+<li>Extrae la clase del <code>objetivo</code>, obtiene su probabilidad correspondiente y ejecuta una <code>tirada()</code>.</li>
+<li>Devuelve <code>True</code> si se produce un crítico, <code>False</code> en caso contrario.</li>
+</ul>
+<h3 id="esquivarobjetivo"><code>esquivar(objetivo)</code><a class="headerlink" href="#esquivarobjetivo" title="Permanent link">&para;</a></h3>
+<p>Determina si el <code>objetivo</code> logra esquivar un ataque recibido.</p>
+<ul>
+<li>Funciona igual que <code>critico()</code>, pero evaluando la probabilidad de esquiva.</li>
+</ul>
+<h3 id="adicionalobjetivo"><code>adicional(objetivo)</code><a class="headerlink" href="#adicionalobjetivo" title="Permanent link">&para;</a></h3>
+<p>Determina si el <code>objetivo</code> realiza un segundo ataque en el mismo turno.</p>
+<ul>
+<li>Se usa comúnmente tras realizar un <code>accion_basica()</code> para verificar si se repite el ataque.</li>
+</ul>
+<hr />
+<h2 id="relacion-con-otros-modulos">🧩 Relación con otros módulos<a class="headerlink" href="#relacion-con-otros-modulos" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>probabilidades.py</code> es utilizado directamente en:</p>
+<ul>
+<li><code>jugador.py</code> y <code>enemigos.py</code>, durante las funciones <code>accion_basica()</code>, <code>ataque_adicional()</code> y cálculo de
+  <code>calcular_golpe_recibido()</code></li>
+<li><code>efectos.py</code>, en <code>aplicar_efecto_contrario()</code> para verificar si un efecto logra aplicarse</li>
+</ul>
+<p>Su diseño garantiza consistencia entre las clases y sus atributos probabilísticos, generando una experiencia de combate
+variada y equilibrada.</p>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>probabilidades.py</code> encapsula la lógica de azar en el combate, permitiendo controlar con claridad qué tan
+probable es un efecto en función de la clase del personaje. Es sencillo, reutilizable y actúa como base para un sistema
+de combate dinámico y estratégico.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-estadisticas/" title="Estadísticas"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-utils-combate/" title="Utilidades de Combate"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

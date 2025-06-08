@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentación oficial de Battlebound Tactics">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <title>🏠 Presentación &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="./search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1 current"><a class="nav-item current" href=".">🏠 Presentación</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#que-es-battlebound-tactics">📌 ¿Qué es Battlebound Tactics?</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#que-puedes-encontrar-en-esta-documentacion">🧭 ¿Qué puedes encontrar en esta documentación?</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#tecnologias-principales-utilizadas">🛠️ Tecnologías principales utilizadas</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#objetivos-del-proyecto">🎯 Objetivos del proyecto</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#estado-actual">🏁 Estado actual</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#autor-y-creditos">🤝 Autor y créditos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="next"><a href="modelos/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="battlebound-tactics">🎮 Battlebound Tactics<a class="headerlink" href="#battlebound-tactics" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><em>Un RPG por turnos táctico desarrollado como proyecto final del CFGS de DAW por Jonatan García Luna.</em></p>
+</blockquote>
+<hr />
+<p><img alt="Portada del proyecto" src="resources/portada.png" /></p>
+<h2 id="que-es-battlebound-tactics">📌 ¿Qué es Battlebound Tactics?<a class="headerlink" href="#que-es-battlebound-tactics" title="Permanent link">&para;</a></h2>
+<p><strong>Battlebound Tactics</strong> es una aplicación web que simula un juego de rol táctico de combates por turnos, inspirada en
+los RPG clásicos pero desarrollada con herramientas modernas como Django, HTML, CSS, JavaScript y Docker.<br />
+En este juego, los jugadores crean su propio personaje, lo desarrollan, equipan habilidades, armas y accesorios únicos,
+y se
+enfrentan a enemigos con inteligencia artificial en un mapa dividido por regiones.</p>
+<p>El objetivo principal es proporcionar una <strong>experiencia estratégica, progresiva y divertida</strong> dentro de un mundo
+visualmente atractivo, accesible desde navegador y hecho para el disfrute de todos.</p>
+<hr />
+<h2 id="que-puedes-encontrar-en-esta-documentacion">🧭 ¿Qué puedes encontrar en esta documentación?<a class="headerlink" href="#que-puedes-encontrar-en-esta-documentacion" title="Permanent link">&para;</a></h2>
+<p>Esta documentación técnica está organizada para que desarrolladores, profesores o cualquier persona interesada pueda
+comprender el funcionamiento del proyecto a nivel <strong>estructural, técnico y funcional</strong>.</p>
+<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">📄 Estructura General</label><div class="tabbed-content"></div>
+</div>
+<table>
+<thead>
+<tr>
+<th>Sección</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="modelos/">📦 Modelos del Proyecto</a></td>
+<td>Explica cada modelo de Django y sus relaciones.</td>
+</tr>
+<tr>
+<td><a href="vistas/">🖥️ Vistas de Django</a></td>
+<td>Explicación detallada de las views, rutas y flujos de usuario.</td>
+</tr>
+<tr>
+<td><a href="logica-combate/">⚔️ Lógica del Combate</a></td>
+<td>Desglose detallado de toda la mecánica de combate: módulos <code>core/</code> y vista <code>combate</code>.</td>
+</tr>
+<tr>
+<td><a href="api/">🧩 API y Ranking</a></td>
+<td>Detalles del sistema de ranking y uso de endpoints externos.</td>
+</tr>
+<tr>
+<td><a href="despliegue/">🚀 Despliegue</a></td>
+<td>Cómo levantar el proyecto localmente o en producción con Docker.</td>
+</tr>
+<tr>
+<td><a href="conclusiones/">🧾 Conclusiones</a></td>
+<td>Reflexiones sobre el desarrollo, dificultades y aprendizajes.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tecnologias-principales-utilizadas">🛠️ Tecnologías principales utilizadas<a class="headerlink" href="#tecnologias-principales-utilizadas" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Backend:</strong> Python + Django (ORM para modelos, vistas lógicas y sesión)</li>
+<li><strong>Frontend:</strong> HTML + CSS + JavaScript (renderizado de estados, interfaz de combate, navegación)</li>
+<li><strong>Despliegue:</strong> Docker, Docker Compose, AWS EC2, dominio personalizado</li>
+<li><strong>Extras:</strong> Pillow (gestión de imágenes), API externa para rankings, Sora AI para generación visual</li>
+</ul>
+<hr />
+<h2 id="objetivos-del-proyecto">🎯 Objetivos del proyecto<a class="headerlink" href="#objetivos-del-proyecto" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Construir un sistema de combate por turnos con lógica avanzada.</li>
+<li>Desarrollar personajes con progresión, niveles, equipo y habilidades.</li>
+<li>Implementar enemigos con IA reactiva.</li>
+<li>Crear una experiencia de juego completa: mapa, combate, ranking.</li>
+<li>Diseñar una interfaz clara, jugable y atractiva.</li>
+<li>Documentar y desplegar en AWS.</li>
+</ul>
+<hr />
+<h2 id="estado-actual">🏁 Estado actual<a class="headerlink" href="#estado-actual" title="Permanent link">&para;</a></h2>
+<p>✅ Sistema de combate funcional<br />
+✅ Interfaz completa<br />
+✅ Registro de jugadores<br />
+✅ Equipamiento y habilidades<br />
+✅ Ranking de usuarios<br />
+✅ Despliegue funcional con Docker<br />
+❌ PvP, tienda y música (recortado por tiempo / limitaciones de hosting)</p>
+<hr />
+<h2 id="autor-y-creditos">🤝 Autor y créditos<a class="headerlink" href="#autor-y-creditos" title="Permanent link">&para;</a></h2>
+<p>Proyecto realizado por <strong>Jonatan García Luna</strong>, como parte del módulo <em>Proyecto Integrado</em> del CFGS en <strong>Desarrollo de
+Aplicaciones Web (DAW)</strong> en el I.E.S. Francisco Romero Vargas.</p>
+<hr />
+<blockquote>
+<p><strong>Nota:</strong> Esta documentación se irá ampliando continuamente. Todas las secciones están estructuradas para facilitar
+tanto la comprensión del código como su mantenimiento o ampliación futura.</p>
+</blockquote></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="next"><a href="modelos/" title="📦 Modelos del Proyecto"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js"></script>
+    <script src="search/main.js"></script>
+</body>
+
+</html>

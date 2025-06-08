@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>🧾 Conclusiones &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🧾 Conclusiones</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#vision-general-del-trabajo-realizado">🔍 Visión General del Trabajo Realizado</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#principales-dificultades">⚠️ Principales Dificultades</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#evolucion-del-proyecto">📈 Evolución del Proyecto</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#estado-final-del-proyecto">✅ Estado Final del Proyecto</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#aprendizajes-y-valoracion">📚 Aprendizajes y Valoración</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#cierre">🎉 Cierre</a></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../despliegue/">&laquo; Previous</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="conclusiones-finales">✅ Conclusiones Finales<a class="headerlink" href="#conclusiones-finales" title="Permanent link">&para;</a></h1>
+<p>El desarrollo de <strong>Battlebound Tactics</strong> ha supuesto un proceso intenso, desafiante y muy gratificante, en el que he
+abordado de forma integral el diseño, construcción, pruebas y despliegue de una aplicación web que combina los
+principios de desarrollo backend con una experiencia visual frontend envolvente, todo ello dentro de un sistema de
+combate táctico por turnos.</p>
+<hr />
+<h2 id="vision-general-del-trabajo-realizado">🔍 Visión General del Trabajo Realizado<a class="headerlink" href="#vision-general-del-trabajo-realizado" title="Permanent link">&para;</a></h2>
+<p>Desde el inicio del proyecto, me propuse diseñar un juego web completo con mecánicas inspiradas en los RPG clásicos, que
+ofreciera al jugador una experiencia estratégica, envolvente y entretenida. El proyecto ha abarcado:</p>
+<ul>
+<li>La definición de una base de datos compleja con modelos como <code>Jugador</code>, <code>Enemigo</code>, <code>Habilidad</code>, <code>Pasiva</code>, <code>Arma</code>,
+  <code>Accesorio</code>, y <code>Combate</code>.</li>
+<li>La creación del sistema de combate por turnos más profundo que he desarrollado hasta la fecha, con IA enemiga,
+  habilidades activas y pasivas, efectos de estado y estadísticas dinámicas.</li>
+<li>El diseño de una interfaz de usuario visualmente atractiva y coherente, basada en plantillas HTML, CSS personalizado y
+  lógica de interacción con JavaScript.</li>
+<li>La integración de funcionalidades clave como: mapa interactivo, zonas de jefes, sistema de curación, ranking de
+  jugadores a través de una API, gestión de equipo, habilidades, y registro/login personalizado con pasivas únicas.</li>
+<li>El uso de <strong>Docker</strong> para contenedorización y <strong>GitHub Actions</strong> para automatizar el despliegue en <strong>AWS</strong>,
+  garantizando una entrega profesional del producto final.</li>
+</ul>
+<hr />
+<h2 id="principales-dificultades">⚠️ Principales Dificultades<a class="headerlink" href="#principales-dificultades" title="Permanent link">&para;</a></h2>
+<p>Durante el desarrollo me enfrenté a múltiples retos técnicos:</p>
+<ul>
+<li>
+<p><strong>Lógica compleja del combate</strong>: La cantidad de condiciones, efectos, turnos y ramificaciones del sistema de combate
+  requirió un diseño modular y cuidadoso. Resolver los efectos acumulativos, el flujo de los turnos, y la IA enemiga me
+  exigió una gran precisión.</p>
+</li>
+<li>
+<p><strong>Frontend avanzado</strong>: Aunque tenía más experiencia en backend, enfrentarme a interacciones complejas con JavaScript
+  (como las animaciones del combate o las peticiones a la API) fue un desafío que logré superar con investigación y
+  dedicación constantes.</p>
+</li>
+<li>
+<p><strong>Despliegue en AWS</strong>: El entorno gratuito de AWS presentó límites de recursos que me obligaron a optimizar el
+  proyecto, deshabilitando funciones no esenciales como la música de fondo para evitar saturar el servidor.</p>
+</li>
+<li>
+<p><strong>Diseño visual personalizado</strong>: Me propuse un diseño muy específico para los mapas y pantallas, lo que implicó muchas
+  horas ajustando estilos CSS y capas visuales para que el resultado final fuese fiel a la idea original que tenía
+  en mente.</p>
+</li>
+</ul>
+<hr />
+<h2 id="evolucion-del-proyecto">📈 Evolución del Proyecto<a class="headerlink" href="#evolucion-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>Si bien la planificación inicial era ambiciosa, durante el desarrollo fue necesario realizar ajustes realistas. Algunas
+funcionalidades como el sistema de tiendas, combates PvP o inventario de objetos fueron finalmente descartadas, no por
+falta de capacidad, sino por una decisión de priorizar <strong>calidad sobre cantidad</strong>. Prefiero no incluir una funcionalidad
+que no está madura, que implementarla de forma incompleta o apresurada.</p>
+<p>Estos ajustes me permitieron centrarme en lo verdaderamente importante: un sistema de combate sólido, una experiencia
+jugable clara, y una interfaz pulida. Cada modificación que se hizo al plan inicial fue razonada, documentada y
+ejecutada con criterio.</p>
+<hr />
+<h2 id="estado-final-del-proyecto">✅ Estado Final del Proyecto<a class="headerlink" href="#estado-final-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>Actualmente, <em>Battlebound Tactics</em> incluye:</p>
+<ul>
+<li>Sistema completo de combate por turnos, con IA enemiga, efectos de estado, pasivas y habilidades.</li>
+<li>Progresión del jugador basada en experiencia, niveles, equipo y estadísticas calculadas dinámicamente durante el
+  combate.</li>
+<li>Múltiples pantallas accesibles desde un menú visual: mapa del mundo, combate, jefe final (castillo), equipo,
+  habilidades, fuente, y ranking.</li>
+<li>Sistema de autenticación con registro personalizado que asigna una pasiva aleatoria.</li>
+<li>API REST funcional para acceder al top de jugadores, consumida por la vista de ranking.</li>
+<li>Despliegue contenedorizado con Docker y actualización automática mediante GitHub Actions.</li>
+</ul>
+<p>El juego funciona correctamente, tiene flujo completo desde el login hasta la pantalla de victoria, y se encuentra
+<strong>preparado para futuras ampliaciones</strong>.</p>
+<hr />
+<h2 id="aprendizajes-y-valoracion">📚 Aprendizajes y Valoración<a class="headerlink" href="#aprendizajes-y-valoracion" title="Permanent link">&para;</a></h2>
+<p>Este proyecto ha sido un verdadero viaje de crecimiento personal y profesional. He aprendido:</p>
+<ul>
+<li>A <strong>modularizar</strong> correctamente la lógica compleja.</li>
+<li>A integrar frontend y backend de forma fluida.</li>
+<li>A desplegar con herramientas modernas como Docker y GitHub Actions.</li>
+<li>A <strong>documentar</strong> cada componente del proyecto, desde el diseño conceptual hasta la API y el despliegue.</li>
+<li>A <strong>resolver problemas reales</strong> en tiempo real, haciendo pruebas y ajustes en cada fase del desarrollo.</li>
+</ul>
+<p>Además, este trabajo me ha enseñado a tomar decisiones de diseño, priorizar tareas y construir una aplicación que no
+solo sea funcional, sino también mantenible, escalable y atractiva visualmente.</p>
+<hr />
+<h2 id="cierre">🎉 Cierre<a class="headerlink" href="#cierre" title="Permanent link">&para;</a></h2>
+<p>Battlebound Tactics no es solo un juego: es la culminación de todo lo aprendido durante mi formación. Estoy orgulloso
+del resultado y de haber podido entregar un producto completo, divertido y técnicamente sólido. Todo el trabajo —desde
+el código hasta la documentación— ha sido hecho desde cero y con mucha dedicación y cariño.</p>
+<p>Muchas gracias por acompañarme hasta el final de este viaje.</p>
+<p><img src="../resources/goku-final.gif" alt="Fin del proyecto" style="width: 400px; height: 400px;"/></p>
+<p><strong>— Jonatan García Luna</strong></p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../despliegue/" title="🚀 Despliegue y Configuración"><span>Previous</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

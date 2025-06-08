@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>🗂️ Limpieza de Sesión de Combate (session.py) &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="limpieza-de-sesion-de-combate-sessionpy">🗂️ Limpieza de Sesión de Combate (<code>session.py</code>)<a class="headerlink" href="#limpieza-de-sesion-de-combate-sessionpy" title="Permanent link">&para;</a></h1>
+<p>Este módulo ofrece una única función: eliminar de la sesión del usuario todos los datos relacionados con un combate. 
+Su propósito es garantizar que, una vez finalizado un combate (ya sea por victoria, derrota o abandono), el
+sistema no conserve estadísticas temporales o indicadores de estado innecesarios.</p>
+<hr />
+<h2 id="limpieza-de-sesion">🧹 Limpieza de sesión<a class="headerlink" href="#limpieza-de-sesion" title="Permanent link">&para;</a></h2>
+<h3 id="limpiar_sesion_combaterequest-combate_id"><code>limpiar_sesion_combate(request, combate_id)</code><a class="headerlink" href="#limpiar_sesion_combaterequest-combate_id" title="Permanent link">&para;</a></h3>
+<p>Elimina de la sesión del usuario todas las claves asociadas al combate con ID proporcionado.</p>
+<ul>
+<li><code>stats_jugador</code>: estadísticas temporales del jugador.</li>
+<li><code>stats_enemigo</code>: estadísticas temporales del enemigo.</li>
+<li><code>combate_{combate_id}_iniciado</code>: bandera que marca si el combate ya se ha inicializado en sesión.</li>
+</ul>
+<p>Utiliza <code>session.pop(clave, None)</code> para eliminar cada clave sin lanzar errores si no existe.</p>
+<hr />
+<h2 id="relacion-con-otros-modulos">🧩 Relación con otros módulos<a class="headerlink" href="#relacion-con-otros-modulos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Usado en <code>utils_resolvedor.py</code>, tanto en <code>resolver_victoria()</code> como en <code>resolver_derrota()</code> para limpiar la sesión
+  tras finalizar el combate.</li>
+<li>Garantiza que futuros combates empiecen con una sesión limpia, evitando estados corruptos o residuales.</li>
+</ul>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Aunque sencillo, el módulo <code>session.py</code> cumple una función crítica: limpiar adecuadamente los datos de combate en sesión
+para asegurar un flujo correcto en nuevos enfrentamientos. Esta limpieza ayuda a mantener la integridad del sistema de
+combate entre partidas.</p></div>
+                <footer>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

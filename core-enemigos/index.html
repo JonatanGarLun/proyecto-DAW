@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Enemigos &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Enemigos</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#acciones-basicas-del-enemigo">⚔️ Acciones básicas del enemigo</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#cooldowns">🔁 Cooldowns</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#uso-de-habilidades-enemigas">✨ Uso de habilidades enemigas</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#ia-enemiga">🧠 IA enemiga</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#ejecucion-del-turno-enemigo">🧪 Ejecución del turno enemigo</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-la-vista-combate">🧩 Relación con la vista combate()</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#fragmento-en-viewspy">Fragmento en views.py:</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-jugador/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-efectos/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="logica-del-enemigo-enemigospy">👾 Lógica del Enemigo (<code>enemigos.py</code>)<a class="headerlink" href="#logica-del-enemigo-enemigospy" title="Permanent link">&para;</a></h1>
+<p>Este módulo define el comportamiento de los enemigos durante un combate. Contiene tanto la inteligencia artificial que
+decide sus acciones como la ejecución de ataques, habilidades, efectos y cooldowns. Es el contrapunto directo del módulo
+<code>jugador.py</code>, y su función principal <code>ejecutar_turno_enemigo()</code> es llamada desde la vista <code>combate()</code> para resolver el
+turno del enemigo.</p>
+<hr />
+<h2 id="acciones-basicas-del-enemigo">⚔️ Acciones básicas del enemigo<a class="headerlink" href="#acciones-basicas-del-enemigo" title="Permanent link">&para;</a></h2>
+<h3 id="accion_basica_enemigostats_enemigo-enemigo-nivel_jugador"><code>accion_basica_enemigo(stats_enemigo, enemigo, nivel_jugador)</code><a class="headerlink" href="#accion_basica_enemigostats_enemigo-enemigo-nivel_jugador" title="Permanent link">&para;</a></h3>
+<p>Realiza un ataque estándar del enemigo, escalado por su nivel y comparado con el del jugador.</p>
+<ul>
+<li>Aplica un golpe base y lo amplifica en función del nivel del enemigo y el del jugador.</li>
+<li>Puede ser un golpe crítico, lo que dobla el daño infligido (<code>critico()</code>).</li>
+<li>Devuelve el daño y un mensaje temático.</li>
+</ul>
+<h3 id="ataque_adicional_enemigostats_enemigo-enemigo-nivel_jugador"><code>ataque_adicional_enemigo(stats_enemigo, enemigo, nivel_jugador)</code><a class="headerlink" href="#ataque_adicional_enemigostats_enemigo-enemigo-nivel_jugador" title="Permanent link">&para;</a></h3>
+<p>Intenta ejecutar un segundo ataque si la probabilidad lo permite (<code>adicional()</code>).</p>
+<ul>
+<li>Si tiene éxito, repite <code>accion_basica_enemigo()</code>.</li>
+<li>Si no, genera un mensaje narrativo sin infligir daño adicional.</li>
+</ul>
+<h3 id="calcular_golpe_recibido_enemigogolpe-enemigo-stats_temporales"><code>calcular_golpe_recibido_enemigo(golpe, enemigo, stats_temporales)</code><a class="headerlink" href="#calcular_golpe_recibido_enemigogolpe-enemigo-stats_temporales" title="Permanent link">&para;</a></h3>
+<p>Calcula el daño que el enemigo recibe al ser atacado por el jugador.</p>
+<ul>
+<li>Considera defensa y evasión (<code>esquivar()</code>).</li>
+<li>Establece un daño mínimo del 1% de la salud máxima.</li>
+</ul>
+<hr />
+<h2 id="cooldowns">🔁 Cooldowns<a class="headerlink" href="#cooldowns" title="Permanent link">&para;</a></h2>
+<h3 id="reducir_cooldownscombate"><code>reducir_cooldowns(combate)</code><a class="headerlink" href="#reducir_cooldownscombate" title="Permanent link">&para;</a></h3>
+<p>Reduce en 1 todos los cooldowns activos de habilidades enemigas.</p>
+<ul>
+<li>Se ejecuta al inicio del turno del enemigo.</li>
+<li>Guarda los nuevos valores en la instancia <code>Combate</code>.</li>
+</ul>
+<h3 id="cooldown_disponiblehabilidad-combate"><code>cooldown_disponible(habilidad, combate)</code><a class="headerlink" href="#cooldown_disponiblehabilidad-combate" title="Permanent link">&para;</a></h3>
+<p>Verifica si una habilidad enemiga está lista para ser usada (cooldown en 0).</p>
+<h3 id="aplicar_cooldownhabilidad-combate"><code>aplicar_cooldown(habilidad, combate)</code><a class="headerlink" href="#aplicar_cooldownhabilidad-combate" title="Permanent link">&para;</a></h3>
+<p>Registra el cooldown de una habilidad usada, extraído de su efecto, y lo almacena en el combate.</p>
+<hr />
+<h2 id="uso-de-habilidades-enemigas">✨ Uso de habilidades enemigas<a class="headerlink" href="#uso-de-habilidades-enemigas" title="Permanent link">&para;</a></h2>
+<h3 id="usar_habilidad_enemigohabilidad-stats_enemigo-stats_jugador-enemigo-jugador-log"><code>usar_habilidad_enemigo(habilidad, stats_enemigo, stats_jugador, enemigo, jugador, log)</code><a class="headerlink" href="#usar_habilidad_enemigohabilidad-stats_enemigo-stats_jugador-enemigo-jugador-log" title="Permanent link">&para;</a></h3>
+<p>Ejecuta el efecto de una habilidad enemiga. Interpreta el tipo del efecto usando <code>leer_efecto()</code> y aplica sus
+consecuencias:</p>
+<ul>
+<li><strong>Daño</strong>: basado en el ataque del enemigo.</li>
+<li><strong>Curación</strong>: restauración de salud en base a salud máxima.</li>
+<li><strong>Buff/Debuff/Negativo</strong>: genera y aplica un estado con <code>aplicar_efecto_contrario()</code>.</li>
+</ul>
+<p>Devuelve una lista de efectos (<code>daño</code>, <code>curacion</code>, <code>estado</code>) y un mensaje para el log del combate.</p>
+<hr />
+<h2 id="ia-enemiga">🧠 IA enemiga<a class="headerlink" href="#ia-enemiga" title="Permanent link">&para;</a></h2>
+<h3 id="ia_enemigastats_enemigo-stats_jugador-habilidades_disponibles"><code>ia_enemiga(stats_enemigo, stats_jugador, habilidades_disponibles)</code><a class="headerlink" href="#ia_enemigastats_enemigo-stats_jugador-habilidades_disponibles" title="Permanent link">&para;</a></h3>
+<p>Decide qué acción tomará el enemigo en su turno, asignando pesos a cada opción:</p>
+<ul>
+<li>Evalúa salud propia y del jugador, estados activos y diferencias estadísticas.</li>
+<li>Usa <code>evaluar_buff_o_debuff()</code> para asignar prioridades a efectos estratégicos.</li>
+<li>Siempre añade la opción de ataque básico con peso bajo.</li>
+</ul>
+<p>Devuelve una elección aleatoria ponderada (habilidad o <code>"basico"</code>).</p>
+<h3 id="evaluar_buff_o_debufftipo-stat_objetivo-stats_enemigo-stats_jugador"><code>evaluar_buff_o_debuff(tipo, stat_objetivo, stats_enemigo, stats_jugador)</code><a class="headerlink" href="#evaluar_buff_o_debufftipo-stat_objetivo-stats_enemigo-stats_jugador" title="Permanent link">&para;</a></h3>
+<p>Asigna un peso de prioridad a buffs o debuffs dependiendo de las diferencias estadísticas entre jugador y enemigo.</p>
+<ul>
+<li>Si la estadística del enemigo es inferior a la del jugador, prioriza su uso.</li>
+<li>Se usa solo internamente por <code>ia_enemiga()</code>.</li>
+</ul>
+<hr />
+<h2 id="ejecucion-del-turno-enemigo">🧪 Ejecución del turno enemigo<a class="headerlink" href="#ejecucion-del-turno-enemigo" title="Permanent link">&para;</a></h2>
+<h3 id="ejecutar_turno_enemigorequest-jugador-stats_jugador-stats_enemigo-enemigo-log-combate"><code>ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)</code><a class="headerlink" href="#ejecutar_turno_enemigorequest-jugador-stats_jugador-stats_enemigo-enemigo-log-combate" title="Permanent link">&para;</a></h3>
+<p>Función principal que resuelve el turno completo del enemigo. Es llamada desde la vista <code>combate()</code>.</p>
+<ul>
+<li><strong>Inicio</strong>: reduce cooldowns con <code>reducir_cooldowns()</code>.</li>
+<li><strong>Decisión</strong>: selecciona acción con <code>ia_enemiga()</code>.</li>
+<li><strong>Acción básica</strong>: ejecuta <code>accion_basica_enemigo()</code> y posible <code>ataque_adicional_enemigo()</code>.</li>
+<li><strong>Habilidad</strong>: usa <code>usar_habilidad_enemigo()</code>, aplica efectos, estados y cooldowns.</li>
+</ul>
+<p>Al final del turno, comprueba si el jugador ha sido derrotado y llama a <code>resolver_derrota()</code> si procede.</p>
+<hr />
+<h2 id="relacion-con-la-vista-combate">🧩 Relación con la vista <code>combate()</code><a class="headerlink" href="#relacion-con-la-vista-combate" title="Permanent link">&para;</a></h2>
+<p>La vista <code>combate()</code> invoca <code>ejecutar_turno_enemigo()</code> para resolver la respuesta del enemigo</p>
+<h2 id="fragmento-en-viewspy">Fragmento en <code>views.py</code>:<a class="headerlink" href="#fragmento-en-viewspy" title="Permanent link">&para;</a></h2>
+<h4 id="resultado-ejecutar_turno_enemigorequest-jugador-stats_jugador-stats_enemigo-enemigo-log-combate"><code>resultado = ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log, combate)</code><a class="headerlink" href="#resultado-ejecutar_turno_enemigorequest-jugador-stats_jugador-stats_enemigo-enemigo-log-combate" title="Permanent link">&para;</a></h4>
+<p>Esto asegura que cada combate siga una secuencia completa: jugador → enemigo (o enemigo → jugador, si el enemigo es más
+rápido).</p>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>enemigos.py</code> representa la inteligencia y ejecución de la lógica de los enemigos. Controla sus decisiones,
+gestiona sus habilidades y permite una respuesta dinámica y estratégica dentro del sistema de combate. Su diseño modular
+permite una IA flexible y adaptativa en función del contexto del combate.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-jugador/" title="Jugador"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-efectos/" title="Efectos"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Utilidades de Combate &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Utilidades de Combate</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#interpretacion-de-efectos-individuales">📥 Interpretación de efectos individuales</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#interpretacion-de-efectos-multiples">🧪 Interpretación de efectos múltiples</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-otros-modulos">🧩 Relación con otros módulos</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-probabilidades/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-utils-resolvedor/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="utilidades-de-combate-utils_combatepy">🛠️ Utilidades de Combate (<code>utils_combate.py</code>)<a class="headerlink" href="#utilidades-de-combate-utils_combatepy" title="Permanent link">&para;</a></h1>
+<p>Este módulo proporciona funciones auxiliares para interpretar los efectos de las habilidades tanto de jugadores como de
+los enemigos. Su objetivo es abstraer el acceso a los datos del campo <code>efecto</code> y garantizar que siempre se pueda obtener
+una representación unificada.</p>
+<p>Estas utilidades son fundamentales para que módulos como <code>jugador.py</code>, <code>enemigos.py</code> o <code>efectos.py</code> puedan trabajar con
+habilidades sin preocuparse por su estructura interna.</p>
+<hr />
+<h2 id="interpretacion-de-efectos-individuales">📥 Interpretación de efectos individuales<a class="headerlink" href="#interpretacion-de-efectos-individuales" title="Permanent link">&para;</a></h2>
+<h3 id="leer_efectohabilidad-campo-defaultnone"><code>leer_efecto(habilidad, campo, default=None)</code><a class="headerlink" href="#leer_efectohabilidad-campo-defaultnone" title="Permanent link">&para;</a></h3>
+<p>Devuelve el valor de un campo específico desde el atributo <code>efecto</code> de una habilidad.</p>
+<ul>
+<li>Si la habilidad pertenece a un <strong>jugador</strong>, extrae directamente el diccionario <code>habilidad.efecto</code>.</li>
+<li>Si la habilidad es de un <strong>enemigo</strong>, accede a <code>habilidad.efecto</code>.</li>
+<li>Si el campo no existe o el formato es incorrecto, devuelve <code>default</code>.</li>
+</ul>
+<p>🔍 Este método es útil para acceder a campos como <code>"tipo"</code>, <code>"stat"</code>, <code>"valor"</code>, <code>"porcentaje"</code> o <code>"duracion"</code> desde
+cualquier habilidad.</p>
+<hr />
+<h2 id="interpretacion-de-efectos-multiples">🧪 Interpretación de efectos múltiples<a class="headerlink" href="#interpretacion-de-efectos-multiples" title="Permanent link">&para;</a></h2>
+<h3 id="leer_efectoshabilidad"><code>leer_efectos(habilidad)</code><a class="headerlink" href="#leer_efectoshabilidad" title="Permanent link">&para;</a></h3>
+<p>Devuelve una <strong>lista de efectos</strong> aplicables desde una habilidad.</p>
+<ul>
+<li>Si el campo <code>efecto</code> es una <strong>lista</strong>, la retorna tal cual.</li>
+<li>Si es un <strong>diccionario con clave <code>efectos</code></strong>, retorna el contenido de esa clave.</li>
+<li>Si es un <strong>diccionario simple</strong>, lo envuelve en una lista.</li>
+<li>Si no hay efectos reconocibles, devuelve una lista vacía.</li>
+</ul>
+<p>✅ Este método garantiza que cualquier habilidad —por simple o compleja que sea— pueda ser tratada como una lista de
+efectos en el sistema de combate.</p>
+<hr />
+<h2 id="relacion-con-otros-modulos">🧩 Relación con otros módulos<a class="headerlink" href="#relacion-con-otros-modulos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>En <code>jugador.py</code> y <code>enemigos.py</code>, estas funciones son invocadas desde <code>usar_habilidad()</code> y <code>usar_habilidad_enemigo()</code>,
+  respectivamente.</li>
+<li>En <code>efectos.py</code>, los efectos devueltos por <code>leer_efectos()</code> son aplicados con <code>aplicar_estado()</code> o
+  <code>aplicar_efecto_contrario()</code>.</li>
+</ul>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>utils_combate.py</code> aporta una capa de compatibilidad y uniformidad al tratamiento de habilidades en el
+combate. Gracias a estas funciones, el sistema es capaz de manejar habilidades con estructuras variadas sin comprometer
+la robustez del flujo de combate.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-probabilidades/" title="Probabilidades"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-utils-resolvedor/" title="Resolución de Turnos"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

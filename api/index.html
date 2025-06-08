@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>🧩 API y Endpoints Externos &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🧩 API y Endpoints Externos</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#estructura-general-de-la-api">🧩 Estructura general de la API</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#serializadores-serializerspy">📦 Serializadores (serializers.py)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#jugadorviewset">🔄 JugadorViewSet</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#apirootviewset">🔍 ApiRootViewSet</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#integracion-con-el-frontend-ranking">🧑‍💻 Integración con el Frontend (ranking)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#script-llamada_apijs">📜 Script: llamada_api.js</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#escalabilidad">📈 Escalabilidad</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#consideraciones-finales">📌 Consideraciones finales</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-utils-resolvedor/">&laquo; Previous</a></div>
+    <div class="next"><a href="../despliegue/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="api-y-sistema-de-ranking">🌐 API y Sistema de Ranking<a class="headerlink" href="#api-y-sistema-de-ranking" title="Permanent link">&para;</a></h1>
+<p>Esta sección documenta en profundidad la <strong>API REST</strong> del proyecto y su integración con el <strong>sistema de ranking</strong>
+mostrado en el frontend. Esta API permite acceder a los datos de los jugadores y visualizar un ranking dinámico ordenado
+por diferentes criterios como nivel, victorias, derrotas u oro.</p>
+<hr />
+<h2 id="estructura-general-de-la-api">🧩 Estructura general de la API<a class="headerlink" href="#estructura-general-de-la-api" title="Permanent link">&para;</a></h2>
+<p>La API está construida usando <strong>Django REST Framework</strong> y expone un punto principal: <code>/api/jugadores/</code>, correspondiente
+al modelo <code>Jugador</code>.</p>
+<h3 id="urls-registradas-urlspy">🔗 URLs registradas (<code>urls.py</code>)<a class="headerlink" href="#urls-registradas-urlspy" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>/api/jugadores/</code> → gestionado por <code>JugadorViewSet</code></li>
+<li><code>/api/</code> → raíz de la API, gestionado por <code>ApiRootViewSet</code></li>
+</ul>
+<p>Estas rutas se registran mediante un <code>DefaultRouter</code> de DRF, lo que permite exponer automáticamente las rutas estándar
+de un <code>ModelViewSet</code>.</p>
+<hr />
+<h2 id="serializadores-serializerspy">📦 Serializadores (<code>serializers.py</code>)<a class="headerlink" href="#serializadores-serializerspy" title="Permanent link">&para;</a></h2>
+<p>Se definen serializadores para varios modelos (<code>Jugador</code>, <code>Enemigo</code>, <code>Jefe</code>, <code>Combate</code>) pero el único que se utiliza en
+esta API es:</p>
+<ul>
+<li><code>JugadorSerializer</code>: serializa todos los campos del modelo <code>Jugador</code> usando <code>fields = '__all__'</code>.</li>
+</ul>
+<p>Esto permite acceder de forma detallada a todos los atributos del jugador, aunque en la vista se formatea la salida
+manualmente.</p>
+<hr />
+<h2 id="jugadorviewset">🔄 <code>JugadorViewSet</code><a class="headerlink" href="#jugadorviewset" title="Permanent link">&para;</a></h2>
+<h3 id="tipo-modelviewset">Tipo: <code>ModelViewSet</code><a class="headerlink" href="#tipo-modelviewset" title="Permanent link">&para;</a></h3>
+<h3 id="permisos-isauthenticated-requiere-autenticacion">Permisos: <code>IsAuthenticated</code> (requiere autenticación)<a class="headerlink" href="#permisos-isauthenticated-requiere-autenticacion" title="Permanent link">&para;</a></h3>
+<h3 id="filtros">Filtros:<a class="headerlink" href="#filtros" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Ordenamiento (<code>filters.OrderingFilter</code>)</li>
+<li>Campos disponibles: <code>id</code>, <code>nombre</code>, <code>victorias</code>, <code>derrotas</code>, <code>oro</code>, <code>nivel</code></li>
+<li>Orden por defecto: <code>victorias</code> descendente</li>
+</ul>
+<h3 id="paginacion-cursorpagination-recomendado-para-listas-largas">Paginación: <code>CursorPagination</code> (recomendado para listas largas)<a class="headerlink" href="#paginacion-cursorpagination-recomendado-para-listas-largas" title="Permanent link">&para;</a></h3>
+<h3 id="metodo-personalizado-list">Método personalizado: <code>list()</code><a class="headerlink" href="#metodo-personalizado-list" title="Permanent link">&para;</a></h3>
+<p>En lugar de usar el comportamiento por defecto de DRF, se personaliza la respuesta para estructurar los datos de los
+jugadores de forma específica. Cada jugador devuelto tiene esta estructura:</p>
+<ul>
+<li><code>id_jugador</code></li>
+<li><code>usuario</code>: nombre de usuario de Django</li>
+<li><code>nombre_personaje</code></li>
+<li><code>alineacion</code></li>
+<li><code>oro</code></li>
+<li><code>estadisticas</code>: diccionario con clase, nivel, experiencia, salud, energía, ataque, defensa, velocidad</li>
+<li><code>victorias</code></li>
+<li><code>derrotas</code></li>
+<li><code>porcentaje_victorias</code>: calculado dinámicamente</li>
+</ul>
+<p>Este método se adapta tanto si se usa paginación como si no.</p>
+<hr />
+<h2 id="apirootviewset">🔍 <code>ApiRootViewSet</code><a class="headerlink" href="#apirootviewset" title="Permanent link">&para;</a></h2>
+<p>Devuelve un diccionario con enlaces a los recursos disponibles. En este caso, solo expone el endpoint <code>jugadores</code>.</p>
+<hr />
+<h2 id="integracion-con-el-frontend-ranking">🧑‍💻 Integración con el Frontend (ranking)<a class="headerlink" href="#integracion-con-el-frontend-ranking" title="Permanent link">&para;</a></h2>
+<p>El ranking se muestra en la página <code>ranking.html</code>. Este utiliza un archivo JS (<code>llamada_api.js</code>) que accede a la API
+para cargar dinámicamente el top 5 de jugadores según el criterio elegido.</p>
+<h3 id="plantilla-rankinghtml">🖼️ Plantilla <code>ranking.html</code><a class="headerlink" href="#plantilla-rankinghtml" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Usa una estructura CSS para mostrar tarjetas de jugadores llamativa al usuario.</li>
+<li>Contiene filtros visuales para alternar entre ordenamiento por:<ul>
+<li>Nivel</li>
+<li>Victorias</li>
+<li>Derrotas</li>
+<li>Oro</li>
+</ul>
+</li>
+<li>Cada vez que se pulsa un botón, se llama a la función <code>cargarRanking()</code> con el criterio correspondiente.</li>
+</ul>
+<hr />
+<h2 id="script-llamada_apijs">📜 Script: <code>llamada_api.js</code><a class="headerlink" href="#script-llamada_apijs" title="Permanent link">&para;</a></h2>
+<p>Este script realiza una <strong>petición asíncrona</strong> a la API con ordenamiento dinámico según el botón pulsado. Por ejemplo:</p>
+<ul>
+<li><code>/api/jugadores/?ordering=-nivel</code></li>
+<li><code>/api/jugadores/?ordering=-victorias</code></li>
+</ul>
+<h3 id="flujo">Flujo:<a class="headerlink" href="#flujo" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Se obtiene el <code>JSON</code> de respuesta de la API.</li>
+<li>Se recorre el top 5 jugadores (<code>data.results</code> o <code>data.slice</code>).</li>
+<li>Se genera el HTML para cada uno:<ul>
+<li>Imagen del personaje según su clase.</li>
+<li>Nombre del personaje y usuario.</li>
+<li>Dato destacado según el filtro activo.</li>
+<li>Porcentaje de victorias si se muestra por victorias.</li>
+</ul>
+</li>
+</ol>
+<p>Esta lógica convierte la API en un recurso <strong>interactivo y visual</strong>, lo que mejora la experiencia de usuario y evita
+recargar toda la página al cambiar de filtro.</p>
+<hr />
+<h2 id="escalabilidad">📈 Escalabilidad<a class="headerlink" href="#escalabilidad" title="Permanent link">&para;</a></h2>
+<p>El sistema de ranking está preparado para escalar gracias a:</p>
+<ul>
+<li>Uso de paginación (<code>CursorPagination</code>)</li>
+<li>Serialización parcial y adaptada a cliente</li>
+<li>Consultas optimizadas por ordenamiento en la base de datos</li>
+<li>Facilidad de integración con asincronía (JavaScript dinámico)</li>
+</ul>
+<hr />
+<h2 id="consideraciones-finales">📌 Consideraciones finales<a class="headerlink" href="#consideraciones-finales" title="Permanent link">&para;</a></h2>
+<p>Este módulo representa uno de los puntos fuertes del proyecto, ya que combina:</p>
+<ul>
+<li>Backend con Django REST Framework</li>
+<li>API autenticada y protegida</li>
+<li>Respuesta enriquecida con datos derivados (como el porcentaje de victorias)</li>
+<li>Frontend con actualización en tiempo real del ranking</li>
+</ul>
+<p>Además, esta estructura puede reutilizarse fácilmente para exponer otras entidades del juego, como enemigos, combates o
+estadísticas globales, con solo añadir nuevos <code>ViewSets</code> y <code>Serializers</code>.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-utils-resolvedor/" title="Resolución de Turnos"><span>Previous</span></a></div>
+        <div class="next"><a href="../despliegue/" title="🚀 Despliegue y Configuración"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

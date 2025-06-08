@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Efectos &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Efectos</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#aplicacion-y-mantenimiento-de-estados">🧬 Aplicación y mantenimiento de estados</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#eliminacion-de-estados">❌ Eliminación de estados</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#aplicacion-condicional-con-probabilidad">🌀 Aplicación condicional con probabilidad</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#visualizacion-e-inspeccion-de-efectos">🧾 Visualización e inspección de efectos</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#integracion-con-el-sistema-de-combate">🧩 Integración con el sistema de combate</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../core-enemigos/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-estadisticas/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="sistema-de-efectos-efectospy">🧪 Sistema de Efectos (<code>efectos.py</code>)<a class="headerlink" href="#sistema-de-efectos-efectospy" title="Permanent link">&para;</a></h1>
+<p>Este módulo gestiona todo el sistema de efectos de estado del combate: desde los clásicos buffs y debuffs hasta efectos
+negativos como veneno o quemadura. También maneja la aplicación, mantenimiento, expiración y visualización de estos
+efectos.</p>
+<p>Todos los efectos se almacenan en el diccionario <code>stats_temporales["estados"]</code>, que es evaluado turno a turno para
+aplicar o actualizar su impacto. Este módulo es invocado principalmente por los módulos <code>jugador.py</code>, <code>enemigos.py</code> y
+<code>utils_resolvedor.py</code>.</p>
+<hr />
+<h2 id="aplicacion-y-mantenimiento-de-estados">🧬 Aplicación y mantenimiento de estados<a class="headerlink" href="#aplicacion-y-mantenimiento-de-estados" title="Permanent link">&para;</a></h2>
+<h3 id="aplicar_estadostats_temporales-estado_nuevo"><code>aplicar_estado(stats_temporales, estado_nuevo)</code><a class="headerlink" href="#aplicar_estadostats_temporales-estado_nuevo" title="Permanent link">&para;</a></h3>
+<p>Aplica un nuevo efecto (buff, debuff o negativo) al conjunto de estadísticas temporales de un personaje.</p>
+<ul>
+<li>Evita duplicados: si un efecto similar ya existe, lo reemplaza o actualiza la duración.</li>
+<li>Aplica directamente el efecto si es un <code>buff</code> o <code>debuff</code> (alterando <code>ataque</code>, <code>defensa</code>, etc.).</li>
+<li>Los efectos <code>negativos</code> se registran, pero se activan en <code>procesar_estados()</code>.</li>
+</ul>
+<h3 id="procesar_estadosstats_temporales-objeto"><code>procesar_estados(stats_temporales, objeto)</code><a class="headerlink" href="#procesar_estadosstats_temporales-objeto" title="Permanent link">&para;</a></h3>
+<p>Ejecuta los efectos activos:</p>
+<ul>
+<li>Los efectos <code>negativos</code> causan daño porcentual a la salud máxima.</li>
+<li>Los <code>buffs</code> y <code>debuffs</code> se activan si aún no lo estaban.</li>
+<li>Reduce en 1 la duración de cada estado.</li>
+</ul>
+<p>Devuelve una lista de mensajes descriptivos para el log del combate.</p>
+<h3 id="limpiar_estados_expiradosstats_temporales"><code>limpiar_estados_expirados(stats_temporales)</code><a class="headerlink" href="#limpiar_estados_expiradosstats_temporales" title="Permanent link">&para;</a></h3>
+<p>Elimina efectos cuya duración ha terminado y revierte sus alteraciones estadísticas.</p>
+<ul>
+<li>Buffs y debuffs restauran su efecto aplicado antes de ser eliminados.</li>
+<li>Los efectos expirados no se mantienen en el array de estados.</li>
+</ul>
+<hr />
+<h2 id="eliminacion-de-estados">❌ Eliminación de estados<a class="headerlink" href="#eliminacion-de-estados" title="Permanent link">&para;</a></h2>
+<h3 id="remover_estadostats_temporales-tipo-identificadornone"><code>remover_estado(stats_temporales, tipo, identificador=None)</code><a class="headerlink" href="#remover_estadostats_temporales-tipo-identificadornone" title="Permanent link">&para;</a></h3>
+<p>Elimina un estado específico según tipo (<code>buff</code>, <code>debuff</code> o <code>negativo</code>) y su identificador (<code>stat</code> o <code>estado</code>).</p>
+<ul>
+<li>Si no se pasa <code>identificador</code>, elimina todos los estados del tipo dado.</li>
+<li>Útil para habilidades de purga o inmunidad.</li>
+</ul>
+<hr />
+<h2 id="aplicacion-condicional-con-probabilidad">🌀 Aplicación condicional con probabilidad<a class="headerlink" href="#aplicacion-condicional-con-probabilidad" title="Permanent link">&para;</a></h2>
+<h3 id="aplicar_efecto_contrarioefecto-stats_objetivo-objetivo-log_combatenone"><code>aplicar_efecto_contrario(efecto, stats_objetivo, objetivo, log_combate=None)</code><a class="headerlink" href="#aplicar_efecto_contrarioefecto-stats_objetivo-objetivo-log_combatenone" title="Permanent link">&para;</a></h3>
+<p>Aplica un efecto a un objetivo solo si supera una tirada de probabilidad (<code>tirada()</code>).</p>
+<ul>
+<li>Si falla la tirada, registra en el log que el objetivo resistió el efecto.</li>
+<li>Si se aplica, utiliza <code>aplicar_estado()</code> y añade una descripción del resultado.</li>
+</ul>
+<p>Este método centraliza la aplicación de efectos desde habilidades ofensivas o defensivas.</p>
+<hr />
+<h2 id="visualizacion-e-inspeccion-de-efectos">🧾 Visualización e inspección de efectos<a class="headerlink" href="#visualizacion-e-inspeccion-de-efectos" title="Permanent link">&para;</a></h2>
+<h3 id="listar_estados_activosstats_temporales"><code>listar_estados_activos(stats_temporales)</code><a class="headerlink" href="#listar_estados_activosstats_temporales" title="Permanent link">&para;</a></h3>
+<p>Devuelve una lista con descripciones legibles de todos los estados activos del personaje.</p>
+<ul>
+<li>Efectos <code>negativos</code>: muestran nombre, daño/turno y duración.</li>
+<li>Buffs y debuffs: indican <code>stat</code> afectado, porcentaje o valor, y duración restante.</li>
+</ul>
+<h3 id="estado_activostats_temporales-tipo-identificador"><code>estado_activo(stats_temporales, tipo, identificador)</code><a class="headerlink" href="#estado_activostats_temporales-tipo-identificador" title="Permanent link">&para;</a></h3>
+<p>Comprueba si un efecto concreto está activo.</p>
+<ul>
+<li>Identifica por <code>tipo</code> y <code>estado</code> (si es <code>negativo</code>) o <code>stat</code> (si es <code>buff</code>/<code>debuff</code>).</li>
+<li>Devuelve <code>True</code> si se encuentra activo, <code>False</code> en caso contrario.</li>
+</ul>
+<hr />
+<h2 id="integracion-con-el-sistema-de-combate">🧩 Integración con el sistema de combate<a class="headerlink" href="#integracion-con-el-sistema-de-combate" title="Permanent link">&para;</a></h2>
+<p>Este módulo se utiliza en momentos clave del combate:</p>
+<ul>
+<li>Al aplicar efectos desde habilidades (<code>usar_habilidad()</code> o <code>usar_habilidad_enemigo()</code>).</li>
+<li>Al inicio de cada turno (<code>procesar_estados()</code>).</li>
+<li>Al finalizar el turno (<code>limpiar_estados_expirados()</code>).</li>
+<li>Al generar descripciones visuales (<code>listar_estados_activos()</code>).</li>
+</ul>
+<p>Cada efecto se maneja como un diccionario estructurado con claves como <code>tipo</code>, <code>stat</code>, <code>valor</code>, <code>duracion</code>, <code>porcentaje</code>
+y <code>estado</code>.</p>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>El módulo <code>efectos.py</code> permite una implementación robusta y extensible del sistema de estados, crucial para añadir
+profundidad estratégica al combate. Controla todo el ciclo de vida de los efectos y ofrece interfaces claras para
+aplicarlos, activarlos y revertirlos.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../core-enemigos/" title="Enemigos"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-estadisticas/" title="Estadísticas"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

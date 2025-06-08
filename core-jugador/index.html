@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Jugador &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">Jugador</a>
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#acciones-basicas-del-combate">⚔️ Acciones básicas del combate</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#uso-de-habilidades">✨ Uso de habilidades</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#calculos-post-combate">🧮 Cálculos post-combate</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#progresion-y-experiencia">📈 Progresión y experiencia</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#ejecucion-del-turno-del-jugador">🔁 Ejecución del turno del jugador</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#relacion-con-la-vista-combate">🧩 Relación con la vista combate()</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#fragmento-relevante-en-viewspy">Fragmento relevante en views.py:</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#conclusion">🧠 Conclusión</a></li>
+</ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../logica-combate/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-enemigos/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>🧠 Módulos de core/</li>
+</ul>
+</nav>
+                <div id="content"><h1 id="logica-del-jugador-jugadorpy">🧙‍♂️ Lógica del Jugador (<code>jugador.py</code>)<a class="headerlink" href="#logica-del-jugador-jugadorpy" title="Permanent link">&para;</a></h1>
+<p>Este módulo contiene la lógica fundamental del jugador durante el combate. Define cómo el jugador ataca, utiliza
+habilidades, recibe daño, sube de nivel, gana experiencia y ejecuta su turno. Es llamado directamente desde la vista
+<code>combate()</code> a través de la función <code>ejecutar_turno_jugador()</code>, lo que lo convierte en una pieza central del sistema.</p>
+<hr />
+<h2 id="acciones-basicas-del-combate">⚔️ Acciones básicas del combate<a class="headerlink" href="#acciones-basicas-del-combate" title="Permanent link">&para;</a></h2>
+<h3 id="accion_basicastats_temporales-jugador"><code>accion_basica(stats_temporales, jugador)</code><a class="headerlink" href="#accion_basicastats_temporales-jugador" title="Permanent link">&para;</a></h3>
+<p>Realiza un ataque básico. Calcula el daño infligido, incluyendo si se trata de un golpe crítico.</p>
+<ul>
+<li>Si hay crítico (probabilidad determinada por <code>critico()</code>), el daño se multiplica por 2.5.</li>
+<li>Devuelve el daño infligido y un mensaje para el registro del combate.</li>
+</ul>
+<h3 id="ataque_adicionalstats-jugador"><code>ataque_adicional(stats, jugador)</code><a class="headerlink" href="#ataque_adicionalstats-jugador" title="Permanent link">&para;</a></h3>
+<p>Intenta realizar un segundo ataque en el mismo turno si se cumple la probabilidad (<code>adicional()</code>).</p>
+<ul>
+<li>Si se activa, llama a <code>accion_basica()</code> y lo ejecuta de nuevo.</li>
+<li>Si no, devuelve un mensaje indicando que no fue posible continuar la ofensiva.</li>
+</ul>
+<h3 id="calcular_golpe_recibidogolpe-jugador-stats_temporales"><code>calcular_golpe_recibido(golpe, jugador, stats_temporales)</code><a class="headerlink" href="#calcular_golpe_recibidogolpe-jugador-stats_temporales" title="Permanent link">&para;</a></h3>
+<p>Calcula el daño que recibe el jugador, teniendo en cuenta su defensa y probabilidad de esquivar (
+<code>probabilidades.esquivar()</code>).</p>
+<ul>
+<li>Si esquiva, el daño es 0.</li>
+<li>Si no, el daño se reduce por defensa y se garantiza un mínimo del 0.125% de la salud máxima.</li>
+</ul>
+<hr />
+<h2 id="uso-de-habilidades">✨ Uso de habilidades<a class="headerlink" href="#uso-de-habilidades" title="Permanent link">&para;</a></h2>
+<h3 id="uso_habilidadjugador-habilidad-stats_temporales"><code>uso_habilidad(jugador, habilidad, stats_temporales)</code><a class="headerlink" href="#uso_habilidadjugador-habilidad-stats_temporales" title="Permanent link">&para;</a></h3>
+<p>Lógica para el uso de habilidades activas (habilidad_1, 2 o 3).</p>
+<ul>
+<li>Verifica si el jugador tiene energía y salud suficiente para ejecutar la habilidad.</li>
+<li>Aplica el coste correspondiente.</li>
+<li>Interpreta el efecto (daño, curación, buff, debuff) usando <code>leer_efecto()</code> y <code>aplicar_estado()</code>.</li>
+<li>Devuelve los efectos generados y los mensajes a mostrar en el log del combate.</li>
+</ul>
+<hr />
+<h2 id="calculos-post-combate">🧮 Cálculos post-combate<a class="headerlink" href="#calculos-post-combate" title="Permanent link">&para;</a></h2>
+<h3 id="actualizar_stats_finalesjugador-stats_temporales"><code>actualizar_stats_finales(jugador, stats_temporales)</code><a class="headerlink" href="#actualizar_stats_finalesjugador-stats_temporales" title="Permanent link">&para;</a></h3>
+<p>Actualiza la salud y energía reales del jugador después del combate.</p>
+<ul>
+<li>Calcula los porcentajes restantes de salud y energía.</li>
+<li>Los aplica sobre los valores máximos del jugador para guardarlos en la base de datos.</li>
+</ul>
+<hr />
+<h2 id="progresion-y-experiencia">📈 Progresión y experiencia<a class="headerlink" href="#progresion-y-experiencia" title="Permanent link">&para;</a></h2>
+<h3 id="subir_niveljugador-nuevo_nivel"><code>subir_nivel(jugador, nuevo_nivel)</code><a class="headerlink" href="#subir_niveljugador-nuevo_nivel" title="Permanent link">&para;</a></h3>
+<p>Incrementa el nivel del jugador y escala sus estadísticas según su clase.</p>
+<ul>
+<li>Aplica una curva base y un multiplicador por nivel y clase.</li>
+<li>Aumenta salud máxima, energía espiritual, ataque, defensa y velocidad.</li>
+</ul>
+<h3 id="obtener_incremento_exp_por_nivelnivel"><code>obtener_incremento_exp_por_nivel(nivel)</code><a class="headerlink" href="#obtener_incremento_exp_por_nivelnivel" title="Permanent link">&para;</a></h3>
+<p>Devuelve el porcentaje de incremento de la experiencia máxima por nivel según el rango de niveles:</p>
+<ul>
+<li>0.05 hasta nivel 25</li>
+<li>0.08 hasta nivel 50</li>
+<li>0.12 hasta nivel 80</li>
+<li>0.15 hasta nivel 120</li>
+<li>0.20 a partir de ahí</li>
+</ul>
+<h3 id="ganar_experienciajugador-exp_ganada"><code>ganar_experiencia(jugador, exp_ganada)</code><a class="headerlink" href="#ganar_experienciajugador-exp_ganada" title="Permanent link">&para;</a></h3>
+<p>Añade experiencia al jugador y maneja las subidas de nivel si se supera el máximo.</p>
+<ul>
+<li>Utiliza <code>subir_nivel()</code> y <code>obtener_incremento_exp_por_nivel()</code>.</li>
+<li>Devuelve un log con mensajes de experiencia ganada y niveles alcanzados.</li>
+</ul>
+<hr />
+<h2 id="ejecucion-del-turno-del-jugador">🔁 Ejecución del turno del jugador<a class="headerlink" href="#ejecucion-del-turno-del-jugador" title="Permanent link">&para;</a></h2>
+<h3 id="ejecutar_turno_jugadorrequest-jugador-combate-stats_jugador-stats_enemigo-enemigo-accion-log"><code>ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)</code><a class="headerlink" href="#ejecutar_turno_jugadorrequest-jugador-combate-stats_jugador-stats_enemigo-enemigo-accion-log" title="Permanent link">&para;</a></h3>
+<p>Esta función es llamada desde la vista <code>combate()</code> cuando el jugador realiza una acción.</p>
+<ul>
+<li><strong>"atacar"</strong>: Ejecuta <code>accion_basica()</code>, aplica el daño al enemigo, y ,si se activa, realiza un <code>ataque_adicional()</code>.</li>
+<li><strong>"habilidad_1", "habilidad_2", "habilidad_3"</strong>: Llama a <code>uso_habilidad()</code> y procesa sus efectos.</li>
+<li><strong>"huir"</strong>: Termina el combate como derrota para el jugador con <code>resolver_derrota()</code>.</li>
+<li>
+<p><strong>"pasar"</strong>: El jugador no actúa y recupera un pequeño porcentaje de salud.</p>
+</li>
+<li>
+<p>Todos los efectos se anotan en el <code>log</code>, y se comprueba si el enemigo ha sido derrotado para llamar a
+  <code>resolver_victoria()</code>.</p>
+</li>
+</ul>
+<hr />
+<h2 id="relacion-con-la-vista-combate">🧩 Relación con la vista <code>combate()</code><a class="headerlink" href="#relacion-con-la-vista-combate" title="Permanent link">&para;</a></h2>
+<p>La función <code>ejecutar_turno_jugador()</code> es invocada directamente en la vista <code>combate()</code> cuando el jugador envía un <code>POST</code>
+con una acción. Es el punto de entrada de toda interacción del jugador en combate y delega internamente en el resto de
+funciones del módulo.</p>
+<h2 id="fragmento-relevante-en-viewspy">Fragmento relevante en <code>views.py</code>:<a class="headerlink" href="#fragmento-relevante-en-viewspy" title="Permanent link">&para;</a></h2>
+<h4 id="resultado-ejecutar_turno_jugadorrequest-jugador-combate-stats_jugador-stats_enemigo-enemigo-accion-log"><code>resultado = ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion, log)</code><a class="headerlink" href="#resultado-ejecutar_turno_jugadorrequest-jugador-combate-stats_jugador-stats_enemigo-enemigo-accion-log" title="Permanent link">&para;</a></h4>
+<hr />
+<h2 id="conclusion">🧠 Conclusión<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Este módulo representa el comportamiento completo del jugador en combate. Desde sus ataques básicos y habilidades hasta
+su evolución y progresión por niveles. Todas las funciones están integradas en la vista de combate y definen la
+experiencia jugable del jugador desde el punto de vista de la lógica del servidor.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../logica-combate/" title="⚔️ Lógica del combate"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-enemigos/" title="Enemigos"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

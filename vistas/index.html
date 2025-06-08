@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>🖥️ Vistas de Django &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🖥️ Vistas de Django</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#bienvenidapageviewrequest">🖼️ BienvenidaPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#iniciopageviewrequest">🏠 InicioPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#mapacontinentepageviewrequest">🗺️ MapaContinentePageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#regionpageviewrequest">🌍 RegionPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#registropageviewrequest">👤 RegistroPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#loginuserviewrequest">🔐 LoginUserView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#rankingpageviewrequest">🏆 RankingPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#castlevyrpageviewrequest">🏰 CastlevyrPageView(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#equipamientorequest">⚔️ equipamiento(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#habilidadesrequest">📚 habilidades(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#iniciar_combaterequest-enemigo_id">⚔️ iniciar_combate(request, enemigo_id)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#combaterequest-combate_id">🧠 combate(request, combate_id)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#resultado_combaterequest-combate_id">🎯 resultado_combate(request, combate_id)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#fuenterequest">💧 fuente(request)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#comentadas-abandonar_combate-verificar_abandono-resolver_abandono">🛠️ Comentadas: abandonar_combate, verificar_abandono, resolver_abandono</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../modelos/">&laquo; Previous</a></div>
+    <div class="next"><a href="../logica-combate/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="vistas-de-django">🌐 Vistas de Django<a class="headerlink" href="#vistas-de-django" title="Permanent link">&para;</a></h1>
+<p>Esta sección documenta en detalle cada una de las vistas del proyecto, mostrando los parámetros recibidos y
+decoradores aplicados. Aquí explico cómo cada vista contribuye a la funcionalidad del juego.</p>
+<hr />
+<h2 id="bienvenidapageviewrequest">🖼️ BienvenidaPageView(request)<a class="headerlink" href="#bienvenidapageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: Ninguno<br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Vista de tipo <code>TemplateView</code> que carga la plantilla de bienvenida. Es la pantalla inicial que ve el usuario antes de
+iniciar sesión o registrarse. No requiere autenticación.</p>
+<hr />
+<h2 id="iniciopageviewrequest">🏠 InicioPageView(request)<a class="headerlink" href="#iniciopageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>LoginRequiredMixin</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Esta vista principal se muestra tras iniciar sesión. Calcula el porcentaje de salud, energía y experiencia del jugador
+para mostrarlos gráficamente. También muestra las rutas disponibles: mapa, fuente, equipo, habilidades y ranking.</p>
+<hr />
+<h2 id="mapacontinentepageviewrequest">🗺️ MapaContinentePageView(request)<a class="headerlink" href="#mapacontinentepageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>LoginRequiredMixin</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Muestra el mapa general del continente. Es una plantilla estática que permite al jugador seleccionar una región
+específica para explorar.</p>
+<hr />
+<h2 id="regionpageviewrequest">🌍 RegionPageView(request)<a class="headerlink" href="#regionpageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>LoginRequiredMixin</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Muestra una región concreta con enemigos aleatorios. Excluye jefes (salvo uno especial que sí puede aparecer en una
+ubicación preseleccionada) y muestra siete enemigos diferentes. Cada zona del mapa puede presentar un enemigo distinto.</p>
+<hr />
+<h2 id="registropageviewrequest">👤 RegistroPageView(request)<a class="headerlink" href="#registropageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: Ninguno<br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Vista basada en formularios (<code>FormView</code>) que gestiona el registro del usuario. Crea un usuario en base al modelo
+<code>Jugador</code>, le asigna una pasiva aleatoria y luego inicia sesión automáticamente con <code>login</code>.</p>
+<hr />
+<h2 id="loginuserviewrequest">🔐 LoginUserView(request)<a class="headerlink" href="#loginuserviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: Ninguno<br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Vista heredada de <code>LoginView</code> de Django. Muestra el formulario de login de usuarios, cuenta con una plantilla
+personalizada.</p>
+<hr />
+<h2 id="rankingpageviewrequest">🏆 RankingPageView(request)<a class="headerlink" href="#rankingpageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>LoginRequiredMixin</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Muestra el ranking general de jugadores. Aquí mostramos los 5 mejores jugadores ordenados por categorías (oro,
+victorias, derrotas y nivel), esto lo hacemos mediante el uso de una API propia que contiene esta información.</p>
+<hr />
+<h2 id="castlevyrpageviewrequest">🏰 CastlevyrPageView(request)<a class="headerlink" href="#castlevyrpageviewrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>LoginRequiredMixin</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Vista que representa el castillo final del juego. Carga un jefe específico llamado "Havva Skript" y prepara al jugador
+para enfrentarlo. Esta vista representa el punto culminante de la versión actual del juego.</p>
+<hr />
+<h2 id="equipamientorequest">⚔️ equipamiento(request)<a class="headerlink" href="#equipamientorequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>@login_required</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Permite al jugador cambiar su arma o accesorio. Verifica que el jugador tenga el nivel necesario antes de aplicar los
+cambios. Carga todos los objetos disponibles y actualiza a nuestro jugador.</p>
+<hr />
+<h2 id="habilidadesrequest">📚 habilidades(request)<a class="headerlink" href="#habilidadesrequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>@login_required</code><br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Permite al jugador gestionar sus habilidades. Valida si cuenta con el nivel necesario para equiparlas y permite
+sustituir cualquiera de las tres ranuras disponibles. Usa el modelo <code>Activa</code>.</p>
+<hr />
+<h2 id="iniciar_combaterequest-enemigo_id">⚔️ iniciar_combate(request, enemigo_id)<a class="headerlink" href="#iniciar_combaterequest-enemigo_id" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>@login_required</code>, <code>@require_GET</code><br />
+<strong>Parámetros</strong>: <code>request</code>, <code>enemigo_id</code></p>
+<p>Inicializa un nuevo combate contra el enemigo seleccionado. Crea una instancia del modelo <code>Combate</code>, guardando el
+jugador y el enemigo involucrados, y redirige a la vista <code>combate</code>.</p>
+<hr />
+<h2 id="combaterequest-combate_id">🧠 combate(request, combate_id)<a class="headerlink" href="#combaterequest-combate_id" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: <code>@login_required</code><br />
+<strong>Parámetros</strong>: <code>request</code>, <code>combate_id</code></p>
+<p>Vista central de combate por turnos. Controla la lógica del enfrentamiento:</p>
+<ul>
+<li>Aplica efectos de estado</li>
+<li>Determina el orden de turnos por velocidad</li>
+<li>Ejecuta acciones del jugador y del enemigo</li>
+<li>Registra logs y efectos visuales</li>
+<li>Actualiza el turno en el modelo <code>Combate</code></li>
+</ul>
+<p>Trabaja con múltiples módulos del núcleo (<code>estadisticas.py</code>, <code>jugador.py</code>, <code>enemigos.py</code>, <code>efectos.py</code>,
+<code>utils_resolvedor.py</code>) y es la pieza más importante de la mecánica del juego.</p>
+<p>Para más detalles, por favor, consulte nuestra <a href="../logica-combate/">⚔️ Lógica del Combate</a></p>
+<hr />
+<h2 id="resultado_combaterequest-combate_id">🎯 resultado_combate(request, combate_id)<a class="headerlink" href="#resultado_combaterequest-combate_id" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: ninguno<br />
+<strong>Parámetros</strong>: <code>request</code>, <code>combate_id</code></p>
+<p>Muestra el resultado final del combate: victoria o derrota. Carga todos los datos relevantes desde la instancia del
+modelo <code>Combate</code> y los pasa a la plantilla <code>resultado.html</code>.</p>
+<hr />
+<h2 id="fuenterequest">💧 fuente(request)<a class="headerlink" href="#fuenterequest" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: ninguno<br />
+<strong>Parámetros</strong>: <code>request</code></p>
+<p>Restaura completamente la salud y energía del jugador, luego, redirige al <code>inicio</code>.</p>
+<hr />
+<h2 id="comentadas-abandonar_combate-verificar_abandono-resolver_abandono">🛠️ Comentadas: abandonar_combate, verificar_abandono, resolver_abandono<a class="headerlink" href="#comentadas-abandonar_combate-verificar_abandono-resolver_abandono" title="Permanent link">&para;</a></h2>
+<p><strong>Decoradores</strong>: (comentados)<br />
+<strong>Parámetros</strong>: varios</p>
+<p>Estas funciones están desactivadas actualmente, pero estaban diseñadas para registrar el abandono de un combate.
+Incluyen opciones para continuar o rendirse, y estaban pensadas para prevenir exploits o fallos en el flujo de batalla.</p>
+<hr /></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../modelos/" title="📦 Modelos del Proyecto"><span>Previous</span></a></div>
+        <div class="next"><a href="../logica-combate/" title="⚔️ Lógica del combate"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

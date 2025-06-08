@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>⚔️ Lógica del combate &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">⚔️ Lógica del combate</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#modulos">Módulos</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#autorizacion-y-control-de-acceso">🎬 Autorización y control de acceso</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#inicializacion-del-combate">⚙️ Inicialización del combate</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#aplicacion-de-efectos-al-inicio-del-turno">💡 Aplicación de efectos al inicio del turno</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#procesamiento-de-la-accion-del-jugador">📥 Procesamiento de la acción del jugador</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#prioridad-por-velocidad">⏱️ Prioridad por velocidad</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#ciclo-de-turnos">🔁 Ciclo de turnos</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#deteccion-de-dano-y-animacion">💢 Detección de daño y animación</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#persistencia-de-las-estadisticas">💾 Persistencia de las estadísticas</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#renderizado-de-la-vista">🧾 Renderizado de la vista</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#funciones-clave-utilizadas">📈 Funciones clave utilizadas</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#vista-resultado_combate">🏁 Vista resultado_combate</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#flujo-completo-del-combate">🔄 Flujo completo del combate</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#reflexion">🧠 Reflexión</a></li>
+</ul></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a><a class="nav-item" href="../despliegue/">🚀 Despliegue y Configuración</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../vistas/">&laquo; Previous</a></div>
+    <div class="next"><a href="../core-jugador/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="vista-de-combate-combaterequest-combate_id">⚔️ Vista de Combate: <code>combate(request, combate_id)</code><a class="headerlink" href="#vista-de-combate-combaterequest-combate_id" title="Permanent link">&para;</a></h1>
+<p><strong>Decoradores</strong>: <code>@login_required</code><br />
+<strong>Parámetros</strong>:</p>
+<ul>
+<li><code>request</code>: la solicitud del jugador.</li>
+<li><code>combate_id</code>: identificador del combate actual.</li>
+</ul>
+<p>La vista <code>combate</code> es el corazón del sistema jugable de Battlebound Tactics. Aquí ocurre toda la lógica de combate por
+turnos entre el jugador y el enemigo. Esta vista gestiona turnos, efectos de estado, resolución de acciones,
+condiciones de victoria o derrota y sincronización del estado del combate.</p>
+<h3 id="modulos">Módulos<a class="headerlink" href="#modulos" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Si desea conocer más a fondo los módulos que componen Battlebound Tactics, puede echar un vistazo a esta tabla de
+  contenidos, en ella, podrás encontrar enlaces a la documentación de cada archivo</li>
+</ul>
+<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">🎮 Módulos del juego, dentro de <code>core/</code></label><div class="tabbed-content"></div>
+</div>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../core-jugador/"><code>jugador.py</code></a></td>
+<td>Controla la lógica del jugador durante el combate: ataques, habilidades, energía, salud.</td>
+</tr>
+<tr>
+<td><a href="../core-enemigos/"><code>enemigos.py</code></a></td>
+<td>Implementa la IA enemiga. Decide acciones según el estado del combate, controla habilidades y cooldowns.</td>
+</tr>
+<tr>
+<td><a href="../core-efectos/"><code>efectos.py</code></a></td>
+<td>Sistema de estados: veneno, buffs, debuffs, curaciones. Aplica y gestiona sus duraciones y efectos.</td>
+</tr>
+<tr>
+<td><a href="../core-estadisticas/"><code>estadisticas.py</code></a></td>
+<td>Calcula estadísticas finales del jugador/enemigo: ataque, defensa, velocidad, etc. según nivel, pasiva y equipo.</td>
+</tr>
+<tr>
+<td><a href="../core-probabilidades/"><code>probabilidades.py</code></a></td>
+<td>Define y gestiona las probabilidades de efectos como críticos, evasión, adicionales, etc.</td>
+</tr>
+<tr>
+<td><a href="../core-utils-combate/"><code>utils_combate.py</code></a></td>
+<td>Funciones auxiliares para interpretar efectos y habilidades.</td>
+</tr>
+<tr>
+<td><a href="../core-utils-resolvedor/"><code>utils_resolvedor.py</code></a></td>
+<td>Controla la secuencia de turnos, efectos globales por turno, condiciones de victoria o derrota.</td>
+</tr>
+<tr>
+<td><a href="../core-session/"><code>session.py</code></a></td>
+<td>Controla la secuencia de turnos, efectos globales por turno, condiciones de victoria o derrota.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="autorizacion-y-control-de-acceso">🎬 Autorización y control de acceso<a class="headerlink" href="#autorizacion-y-control-de-acceso" title="Permanent link">&para;</a></h2>
+<p>Al comenzar, se recupera el combate mediante su ID. Se verifica que el usuario autenticado sea el propietario del
+combate. Si no lo es, se bloquea el acceso lanzando una excepción. Además, si el combate ya ha terminado, se redirige
+automáticamente a la vista de resultado, para evitar que se repita o se acceda a un estado inconsistente.</p>
+<hr />
+<h2 id="inicializacion-del-combate">⚙️ Inicialización del combate<a class="headerlink" href="#inicializacion-del-combate" title="Permanent link">&para;</a></h2>
+<p>Se inicializan las estadísticas del jugador y del enemigo a través de una función específica que calcula salud, energía,
+velocidad, evasión, daño y otros modificadores. Esto incluye factores como la clase del jugador, su equipo, su nivel y
+sus pasivas.</p>
+<p>También se crea una copia temporal del estado del enemigo antes del turno. Esto servirá más adelante para saber si
+recibió daño, y mostrar una animación de impacto.</p>
+<hr />
+<h2 id="aplicacion-de-efectos-al-inicio-del-turno">💡 Aplicación de efectos al inicio del turno<a class="headerlink" href="#aplicacion-de-efectos-al-inicio-del-turno" title="Permanent link">&para;</a></h2>
+<p>Al inicio de cada turno se aplican los efectos de estado activos en cada personaje. Primero se aplican los efectos del
+enemigo, otorgándole una ligera ventaja al jugador. Luego, se aplican los del jugador. Estos efectos pueden ser
+beneficiosos (curación, aumentos de defensa) o perjudiciales (veneno, reducción de estadísticas).</p>
+<p>Si alguno de los dos muere por un efecto, se detiene el flujo, se asigna una victoria o derrota al combate y se redirige
+a la vista de resultado correspondiente</p>
+<hr />
+<h2 id="procesamiento-de-la-accion-del-jugador">📥 Procesamiento de la acción del jugador<a class="headerlink" href="#procesamiento-de-la-accion-del-jugador" title="Permanent link">&para;</a></h2>
+<p>Cuando el jugador realiza una acción (por ejemplo, atacar o usar una habilidad), esta llega a través de un formulario.
+Si no se detecta ninguna acción, se muestra un mensaje de error en el registro del combate.</p>
+<hr />
+<h2 id="prioridad-por-velocidad">⏱️ Prioridad por velocidad<a class="headerlink" href="#prioridad-por-velocidad" title="Permanent link">&para;</a></h2>
+<p>Antes de ejecutar los turnos, se compara la estadística de velocidad del jugador y del enemigo. Quien tenga más
+velocidad actúa primero. Si están empatados, el jugador tiene prioridad.</p>
+<hr />
+<h2 id="ciclo-de-turnos">🔁 Ciclo de turnos<a class="headerlink" href="#ciclo-de-turnos" title="Permanent link">&para;</a></h2>
+<p>Dependiendo de quién actúe primero, se siguen dos posibles flujos:</p>
+<h3 id="si-el-jugador-actua-primero">Si el jugador actúa primero:<a class="headerlink" href="#si-el-jugador-actua-primero" title="Permanent link">&para;</a></h3>
+<ol>
+<li>El jugador realiza su acción.</li>
+<li>Si el enemigo muere, el combate termina con victoria.</li>
+<li>Si sigue vivo, el enemigo realiza su acción.</li>
+<li>Si el jugador muere, el combate termina con derrota.</li>
+</ol>
+<h3 id="si-el-enemigo-actua-primero">Si el enemigo actúa primero:<a class="headerlink" href="#si-el-enemigo-actua-primero" title="Permanent link">&para;</a></h3>
+<ol>
+<li>El enemigo realiza su acción.</li>
+<li>Si el jugador muere, termina en derrota.</li>
+<li>Si sigue vivo, el jugador ejecuta su turno.</li>
+<li>Si el enemigo muere, termina en victoria.</li>
+</ol>
+<p>Este sistema garantiza que ambos personajes puedan actuar, pero da ventaja a quien tenga mayor velocidad.</p>
+<hr />
+<h2 id="deteccion-de-dano-y-animacion">💢 Detección de daño y animación<a class="headerlink" href="#deteccion-de-dano-y-animacion" title="Permanent link">&para;</a></h2>
+<p>Después de ejecutar ambos turnos, se compara la salud del enemigo antes y después. Si ha cambiado, se activa una
+animación visual en pantalla para indicar que ha recibido daño. Esta animación se elige aleatoriamente entre varias
+disponibles, para darle dinamismo al combate.</p>
+<hr />
+<h2 id="persistencia-de-las-estadisticas">💾 Persistencia de las estadísticas<a class="headerlink" href="#persistencia-de-las-estadisticas" title="Permanent link">&para;</a></h2>
+<p>Al final del turno, las estadísticas de ambos personajes se almacenan en sesión. También se incrementa el
+contador de turnos del combate y se guarda la instancia en la base de datos. Esto asegura que, incluso si se recarga la
+página, el estado actual del combate se conserva correctamente.</p>
+<hr />
+<h2 id="renderizado-de-la-vista">🧾 Renderizado de la vista<a class="headerlink" href="#renderizado-de-la-vista" title="Permanent link">&para;</a></h2>
+<p>La plantilla del combate se renderiza con todos los datos relevantes:</p>
+<ul>
+<li>Estadísticas del jugador y del enemigo.</li>
+<li>Registro de acciones realizadas durante el turno.</li>
+<li>Estado del combate.</li>
+<li>Posibles animaciones activadas.</li>
+<li>Acciones disponibles para el próximo turno.</li>
+</ul>
+<p>La interfaz refleja todo lo que ocurre durante la batalla, y ofrece una experiencia fluida y visualmente agradable.</p>
+<hr />
+<h2 id="funciones-clave-utilizadas">📈 Funciones clave utilizadas<a class="headerlink" href="#funciones-clave-utilizadas" title="Permanent link">&para;</a></h2>
+<p>Esta vista depende fuertemente de funciones auxiliares, como:</p>
+<ul>
+<li>Una función para inicializar el combate. <code>inicializar_combate(request, combate)</code></li>
+<li>Otra para aplicar los efectos de turno. <code>registrar_efecto_turno(stats_enemigo, enemigo, log)</code>,
+  <code>registrar_efecto_turno(stats_jugador, jugador, log)</code></li>
+<li>Una función dedicada al turno del jugador, que interpreta la acción y ejecuta su acción. <code>ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)</code></li>
+<li>Una función similar para el enemigo, basada en una inteligencia artificial. <code>ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log,
+                                               combate)</code></li>
+<li>Funciones que resuelven el combate en caso de victoria o derrota.
+  <code>resolver_victoria(request, jugador, enemigo, combate)</code>, <code>resolver_derrota(request, jugador, combate)</code></li>
+</ul>
+<p>Estas funciones están organizadas en los módulos del core (<code>jugador.py</code>, <code>enemigos.py</code>, <code>efectos.py</code>, <code>estadisticas.py</code>,
+etc.) y permiten mantener la lógica bien modularizada.</p>
+<hr />
+<h2 id="vista-resultado_combate">🏁 Vista <code>resultado_combate</code><a class="headerlink" href="#vista-resultado_combate" title="Permanent link">&para;</a></h2>
+<p>Esta vista se ejecuta inmediatamente después de que el combate termina. Solo se encarga de mostrar al jugador lo que ha
+ocurrido:</p>
+<ul>
+<li>Si ha ganado o perdido.</li>
+<li>Calcular la experiencia obtenida y si ha subido de nivel.</li>
+</ul>
+<p>Se cargan todos los datos desde el modelo <code>Combate</code> y se pasan al contexto para renderizar la plantilla
+<code>resultado.html</code>. Aquí no se ejecuta ninguna lógica, solo presentación.</p>
+<hr />
+<h2 id="flujo-completo-del-combate">🔄 Flujo completo del combate<a class="headerlink" href="#flujo-completo-del-combate" title="Permanent link">&para;</a></h2>
+<p>[<code>iniciar_combate</code>]<br />
+↓</p>
+<p>[<strong>Iniciamos las estadísticas/ las recuperamos de la sesión</strong>]</p>
+<p>↓</p>
+<p>[<strong>Aplicamos los estados del enemigo y del jugador</strong>]<br />
+↓</p>
+<p>[<strong>Comprobamos victoria o derrota</strong>]<br />
+↓</p>
+<p>[<strong>Recogemos la acción del jugador</strong>]<br />
+↓</p>
+<p>[<strong>Decidimos quien va primero según la velociadad</strong>]<br />
+↓</p>
+<p>[<strong>Ejecutamos los turnos del enemigo y el jugador</strong>]<br />
+↓</p>
+<p>[<strong>Comprobamos victoria o derrota</strong>] ← Si nadie gana, se repite el flujo<br />
+↓</p>
+<p>[<code>resultado_combate</code>]</p>
+<hr />
+<h2 id="reflexion">🧠 Reflexión<a class="headerlink" href="#reflexion" title="Permanent link">&para;</a></h2>
+<p>La vista <code>combate</code> está diseñada para ofrecer una experiencia táctica rica y detallada, donde cada decisión cuenta. Su
+lógica modular permite integrar efectos complejos, decisiones de IA y estadísticas dinámicas.</p>
+<p>Este sistema se puede ampliar fácilmente para incluir nuevas mecánicas, como habilidades pasivas avanzadas, efectos en
+cadena o enemigos con fases. Es uno de los componentes más completos del proyecto, y demuestra el nivel de integración
+entre frontend, backend y lógica de juego.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../vistas/" title="🖥️ Vistas de Django"><span>Previous</span></a></div>
+        <div class="next"><a href="../core-jugador/" title="Jugador"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jonatan García Luna">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>🚀 Despliegue y Configuración &mdash; Battlebound Tactics</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> Battlebound Tactics</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">🏠 Presentación</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../modelos/">📦 Modelos del Proyecto</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../vistas/">🖥️ Vistas de Django</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../logica-combate/">⚔️ Lógica del combate</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">🧠 Módulos de core/</button>
+<ul class="subnav">
+    <li class="toctree-l2"><a class="nav-item" href="../core-jugador/">Jugador</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-enemigos/">Enemigos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-efectos/">Efectos</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-estadisticas/">Estadísticas</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-probabilidades/">Probabilidades</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-combate/">Utilidades de Combate</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a>
+<ul class="subnav">
+<li class="toctree-l2"><a class="nav-item toc" href="#contenedorizacion-con-docker">🐳 Contenedorización con Docker</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#archivos-de-despliegue">📁 Archivos de despliegue</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#dockerfile-imagen-base-del-proyecto">🏗️ Dockerfile: Imagen base del proyecto</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#despliegue-local-compose_localyml">💻 Despliegue local: compose_local.yml</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#despliegue-en-produccion-composeyml">☁️ Despliegue en producción: compose.yml</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#despliegue-automatizado-docker_awsyml-github-actions">🤖 Despliegue automatizado: docker_aws.yml (GitHub Actions)</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#resultado">📦 Resultado</a></li>
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../conclusiones/">🧾 Conclusiones</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/JonatanGarLun/proyecto_DAW" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../api/">&laquo; Previous</a></div>
+    <div class="next"><a href="../conclusiones/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> Battlebound Tactics</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><h1 id="despliegue-del-proyecto">🚀 Despliegue del Proyecto<a class="headerlink" href="#despliegue-del-proyecto" title="Permanent link">&para;</a></h1>
+<p>Battlebound Tactics ha sido diseñado para poder desplegarse fácilmente tanto en un entorno de desarrollo local como en
+un servidor en la nube (AWS), utilizando <strong>Docker</strong> como sistema de contenedores. A continuación, detallo el proceso
+completo de despliegue en ambas modalidades, así como los archivos utilizados para lograrlo.</p>
+<hr />
+<h2 id="contenedorizacion-con-docker">🐳 Contenedorización con Docker<a class="headerlink" href="#contenedorizacion-con-docker" title="Permanent link">&para;</a></h2>
+<p>Todo el proyecto se ha encapsulado en un entorno Docker, asegurando consistencia entre entornos de desarrollo y
+producción. Esto incluye:</p>
+<ul>
+<li>El backend con Django y sus dependencias.</li>
+<li>La base de datos <strong>PostgreSQL</strong>, tanto en local como en producción.</li>
+<li>Configuración de variables de entorno (gestionadas por archivos <code>.env</code>).</li>
+<li>Automatización del despliegue mediante <strong>GitHub Actions</strong>.</li>
+</ul>
+<hr />
+<h2 id="archivos-de-despliegue">📁 Archivos de despliegue<a class="headerlink" href="#archivos-de-despliegue" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Dockerfile</code></td>
+<td>Define la imagen base del proyecto. Instala dependencias, copia el código y lanza el servidor.</td>
+</tr>
+<tr>
+<td><code>compose.yml</code></td>
+<td>Archivo principal para el despliegue en <strong>AWS</strong>. Usa PostgreSQL y está optimizado para producción.</td>
+</tr>
+<tr>
+<td><code>compose_local.yml</code></td>
+<td>Versión adaptada para entorno de desarrollo local.</td>
+</tr>
+<tr>
+<td><code>docker_aws.yml</code></td>
+<td>Workflow de <strong>GitHub Actions</strong> que automatiza la construcción, subida de imagen y despliegue en AWS.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dockerfile-imagen-base-del-proyecto">🏗️ Dockerfile: Imagen base del proyecto<a class="headerlink" href="#dockerfile-imagen-base-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>Este archivo construye la imagen principal de Battlebound Tactics.</p>
+<h3 id="pasos-que-realiza">Pasos que realiza:<a class="headerlink" href="#pasos-que-realiza" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Utiliza una imagen oficial de Python como base.</li>
+<li>Instala las dependencias del proyecto desde <code>requirements.txt</code>.</li>
+<li>Copia todo el código del proyecto dentro del contenedor.</li>
+<li>Expone el puerto 8000.</li>
+<li>Ejecuta el servidor de Django en el puerto <code>0.0.0.0:8000</code>.</li>
+</ul>
+<h1 id="comando-final-de-ejecucion">Comando final de ejecución:<a class="headerlink" href="#comando-final-de-ejecucion" title="Permanent link">&para;</a></h1>
+<p>python manage.py runserver 0.0.0.0:8000</p>
+<hr />
+<h2 id="despliegue-local-compose_localyml">💻 Despliegue local: <code>compose_local.yml</code><a class="headerlink" href="#despliegue-local-compose_localyml" title="Permanent link">&para;</a></h2>
+<p>Este archivo se usa para desarrollo en entorno local.</p>
+<h3 id="caracteristicas">Características:<a class="headerlink" href="#caracteristicas" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Define un servicio <code>web</code> que ejecuta la aplicación Django.</li>
+<li>Expone el puerto 8000 en el host.</li>
+<li>Usa volúmenes para mantener sincronizado el código entre el host y el contenedor.</li>
+<li>Conecta con un contenedor de base de datos PostgreSQL también definido en el archivo.</li>
+</ul>
+<h1 id="comando-para-ejecutarlo">Comando para ejecutarlo:<a class="headerlink" href="#comando-para-ejecutarlo" title="Permanent link">&para;</a></h1>
+<p>docker compose -f compose_local.yml up --build</p>
+<hr />
+<h2 id="despliegue-en-produccion-composeyml">☁️ Despliegue en producción: <code>compose.yml</code><a class="headerlink" href="#despliegue-en-produccion-composeyml" title="Permanent link">&para;</a></h2>
+<p>Este archivo es el utilizado para el <strong>despliegue real en AWS</strong>. Está adaptado para correr la aplicación en un servidor
+EC2 con Docker.</p>
+<h3 id="caracteristicas_1">Características:<a class="headerlink" href="#caracteristicas_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Lanza dos servicios principales: <code>app</code> (Battlebound Tactics) y <code>db</code> (PostgreSQL).</li>
+<li>Usa traefik como reverse-proxy.</li>
+<li>Conecta a una base de datos PostgreSQL real y persistente.</li>
+<li>Exposición de puertos y variables de entorno según la configuración definida en <code>.env</code>.</li>
+</ul>
+<h1 id="comando-de-despliegue-en-aws">Comando de despliegue en AWS:<a class="headerlink" href="#comando-de-despliegue-en-aws" title="Permanent link">&para;</a></h1>
+<p>docker compose up -d</p>
+<hr />
+<h2 id="despliegue-automatizado-docker_awsyml-github-actions">🤖 Despliegue automatizado: <code>docker_aws.yml</code> (GitHub Actions)<a class="headerlink" href="#despliegue-automatizado-docker_awsyml-github-actions" title="Permanent link">&para;</a></h2>
+<p>Este archivo no es parte del despliegue manual, sino una automatización que se ejecuta al hacer <strong>push</strong> o <strong>pull
+request</strong> en el repositorio de GitHub.</p>
+<h3 id="funcionalidad">Funcionalidad:<a class="headerlink" href="#funcionalidad" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Se activa en eventos del repositorio.</li>
+<li>Construye una nueva imagen Docker a partir del código actualizado.</li>
+<li>Sube la imagen actualizada a Docker Hub.</li>
+<li>Se conecta por SSH a la instancia EC2 de AWS.</li>
+<li>Detiene cualquier contenedor anterior y lanza uno nuevo con la imagen actualizada.</li>
+</ul>
+<p>Gracias a este sistema, no es necesario acceder manualmente al servidor para desplegar una nueva versión: basta con
+hacer push al repositorio.</p>
+<hr />
+<h2 id="resultado">📦 Resultado<a class="headerlink" href="#resultado" title="Permanent link">&para;</a></h2>
+<p>Al completar el proceso de despliegue, el proyecto queda corriendo en un contenedor Docker en AWS, utilizando PostgreSQL
+como base de datos y estando completamente accesible desde su dominio vinculado (<a href="https://jonatan-daw2.tech/"><code>jonatan-daw2.tech</code></a>). Además, con la
+automatización configurada, cualquier cambio en el repositorio se refleja automáticamente tras cada push.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../api/" title="🧩 API y Endpoints Externos"><span>Previous</span></a></div>
+        <div class="next"><a href="../conclusiones/" title="🧾 Conclusiones"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>
