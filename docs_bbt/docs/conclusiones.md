@@ -102,4 +102,4 @@ Muchas gracias por acompañarme hasta el final de este viaje.
 
 **— Jonatan García Luna**
 
-![Portada del proyecto](../../static/resources/goku-final.gif)
+![Fin del proyecto](../../static/resources/goku-final.gif)
