@@ -7,8 +7,25 @@
 - `combate_id`: identificador del combate actual.
 
 La vista `combate` es el corazón del sistema jugable de Battlebound Tactics. Aquí ocurre toda la lógica de combate por
-turnos entre el jugador y un enemigo con IA. Esta vista gestiona turnos, efectos de estado, resolución de acciones,
+turnos entre el jugador y el enemigo. Esta vista gestiona turnos, efectos de estado, resolución de acciones,
 condiciones de victoria o derrota y sincronización del estado del combate.
+
+### Módulos
+
+- Si desea conocer más a fondo los módulos que componen Battlebound Tactics, puede echar un vistazo a esta tabla de
+  contenidos, en ella, podrás encontrar enlaces a la documentación de cada archivo
+
+=== "🎮 Módulos del juego, dentro de `core/`"
+
+| Módulo                                            | Descripción                                                                                                      |
+|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [`jugador.py`](core-jugador.md)                   | Controla la lógica del jugador durante el combate: ataques, habilidades, energía, defensa.                       |
+| [`enemigos.py`](core-enemigos.md)                 | Implementa la IA enemiga. Decide acciones según el estado del combate, controla habilidades y cooldowns.         |
+| [`efectos.py`](core-efectos.md)                   | Sistema de estados: veneno, buffs, debuffs, curaciones. Aplica y gestiona sus duraciones y efectos.              |
+| [`estadisticas.py`](core-estadisticas.md)         | Calcula estadísticas finales del jugador/enemigo: ataque, defensa, velocidad, etc. según nivel, pasiva y equipo. |
+| [`probabilidades.py`](core-probabilidades.md)     | Define y gestiona las probabilidades de efectos como críticos, evasión, multigolpes, etc.                        |
+| [`utils_combate.py`](core-utils-combate.md)       | Funciones auxiliares para interpretar efectos y habilidades. Traduce los textos a efectos aplicables.            |
+| [`utils_resolvedor.py`](core-utils-resolvedor.md) | Controla la secuencia de turnos, efectos globales por turno, condiciones de victoria o derrota.                  |
 
 ---
 
@@ -34,19 +51,18 @@ recibió daño, y mostrar una animación de impacto.
 ## 💡 Aplicación de efectos al inicio del turno
 
 Al inicio de cada turno se aplican los efectos de estado activos en cada personaje. Primero se aplican los efectos del
-enemigo, otorgándole una ligera ventaja estratégica. Luego, se aplican los del jugador. Estos efectos pueden ser
+enemigo, otorgándole una ligera ventaja al jugador. Luego, se aplican los del jugador. Estos efectos pueden ser
 beneficiosos (curación, aumentos de defensa) o perjudiciales (veneno, reducción de estadísticas).
 
-Si alguno de los dos muere por un efecto, se detiene el flujo y se redirige a la vista de resultado correspondiente:
-victoria o derrota.
+Si alguno de los dos muere por un efecto, se detiene el flujo, se asigna una victoria o derrota al combate y se redirige
+a la vista de resultado correspondiente
 
 ---
 
 ## 📥 Procesamiento de la acción del jugador
 
 Cuando el jugador realiza una acción (por ejemplo, atacar o usar una habilidad), esta llega a través de un formulario.
-Si no se detecta ninguna acción, se muestra un mensaje de error en el registro del combate y no se avanza al siguiente
-turno.
+Si no se detecta ninguna acción, se muestra un mensaje de error en el registro del combate.
 
 ---
 
@@ -75,8 +91,7 @@ Dependiendo de quién actúe primero, se siguen dos posibles flujos:
 3. Si sigue vivo, el jugador ejecuta su turno.
 4. Si el enemigo muere, termina en victoria.
 
-Este sistema garantiza que ambos personajes puedan actuar, pero también da una ventaja estratégica real a quien tenga
-mayor velocidad.
+Este sistema garantiza que ambos personajes puedan actuar, pero da ventaja a quien tenga mayor velocidad.
 
 ---
 
@@ -88,9 +103,9 @@ disponibles, para darle dinamismo al combate.
 
 ---
 
-## 💾 Persistencia del estado
+## 💾 Persistencia de las estadísticas
 
-Al final del turno, las estadísticas de ambos personajes se almacenan en la sesión del jugador. También se incrementa el
+Al final del turno, las estadísticas de ambos personajes se almacenan en sesión. También se incrementa el
 contador de turnos del combate y se guarda la instancia en la base de datos. Esto asegura que, incluso si se recarga la
 página, el estado actual del combate se conserva correctamente.
 
@@ -106,8 +121,7 @@ La plantilla del combate se renderiza con todos los datos relevantes:
 - Posibles animaciones activadas.
 - Acciones disponibles para el próximo turno.
 
-La interfaz refleja fielmente todo lo que ocurre durante la batalla, y ofrece una experiencia fluida y visualmente
-coherente.
+La interfaz refleja todo lo que ocurre durante la batalla, y ofrece una experiencia fluida y visualmente agradable.
 
 ---
 
@@ -115,11 +129,15 @@ coherente.
 
 Esta vista depende fuertemente de funciones auxiliares, como:
 
-- Una función para inicializar el estado del combate.
-- Otra para aplicar los efectos de turno.
-- Una función dedicada al turno del jugador, que interpreta la acción y ejecuta su lógica (ataque, habilidad, defensa).
-- Una función similar para el enemigo, basada en inteligencia artificial.
+- Una función para inicializar el combate. `inicializar_combate(request, combate)`
+- Otra para aplicar los efectos de turno. `registrar_efecto_turno(stats_enemigo, enemigo, log)`,
+  `registrar_efecto_turno(stats_jugador, jugador, log)`
+- Una función dedicada al turno del jugador, que interpreta la acción y ejecuta su acción. `ejecutar_turno_jugador(request, jugador, combate, stats_jugador, stats_enemigo, enemigo, accion,
+                                               log)`
+- Una función similar para el enemigo, basada en una inteligencia artificial. `ejecutar_turno_enemigo(request, jugador, stats_jugador, stats_enemigo, enemigo, log,
+                                               combate)`
 - Funciones que resuelven el combate en caso de victoria o derrota.
+  `resolver_victoria(request, jugador, enemigo, combate)`, `resolver_derrota(request, jugador, combate)`
 
 Estas funciones están organizadas en los módulos del core (`jugador.py`, `enemigos.py`, `efectos.py`, `estadisticas.py`,
 etc.) y permiten mantener la lógica bien modularizada.
@@ -132,8 +150,7 @@ Esta vista se ejecuta inmediatamente después de que el combate termina. Solo se
 ocurrido:
 
 - Si ha ganado o perdido.
-- Cuánta experiencia ha obtenido.
-- Si ha subido de nivel.
+- Calcular la experiencia obtenida y si ha subido de nivel.
 
 Se cargan todos los datos desde el modelo `Combate` y se pasan al contexto para renderizar la plantilla
 `resultado.html`. Aquí no se ejecuta ninguna lógica, solo presentación.
@@ -142,18 +159,39 @@ Se cargan todos los datos desde el modelo `Combate` y se pasan al contexto para 
 
 ## 🔄 Flujo completo del combate
 
-[iniciar_combate]  
-↓  
-[combate] ← lógica completa de turnos, efectos, IA  
-↓  
-[resultado_combate]
+[`iniciar_combate`]  
+↓
+
+[**Iniciamos las estadísticas/ las recuperamos de la sesión**]
+
+↓
+
+[**Aplicamos los estados del enemigo y del jugador**]  
+↓
+
+[**Comprobamos victoria o derrota**]  
+↓
+
+[**Recogemos la acción del jugador**]  
+↓
+
+[**Decidimos quien va primero según la velociadad**]  
+↓
+
+[**Ejecutamos los turnos del enemigo y el jugador**]  
+↓
+
+[**Comprobamos victoria o derrota**] ← Si nadie gana, se repite el flujo  
+↓
+
+[`resultado_combate`]
 
 ---
 
 ## 🧠 Reflexión
 
 La vista `combate` está diseñada para ofrecer una experiencia táctica rica y detallada, donde cada decisión cuenta. Su
-lógica modular permite integrar efectos complejos, decisiones de IA, sistemas de animación y estadísticas dinámicas.
+lógica modular permite integrar efectos complejos, decisiones de IA y estadísticas dinámicas.
 
 Este sistema se puede ampliar fácilmente para incluir nuevas mecánicas, como habilidades pasivas avanzadas, efectos en
 cadena o enemigos con fases. Es uno de los componentes más completos del proyecto, y demuestra el nivel de integración
