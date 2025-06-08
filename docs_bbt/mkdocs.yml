@@ -1,0 +1,42 @@
+site_name: Battlebound Tactics
+theme:
+  name: ivory
+
+nav:
+  - 🏠 Presentación: index.md
+  - 📦 Modelos del Proyecto: modelos.md
+  - 🖥️ Vistas de Django: vistas.md
+  - ⚔️ Lógica del combate: logica-combate.md
+  - 🧠 Módulos de core/:
+      - Jugador: core-jugador.md
+      - Enemigos: core-enemigos.md
+      - Efectos: core-efectos.md
+      - Estadísticas: core-estadisticas.md
+      - Probabilidades: core-probabilidades.md
+      - Utilidades de Combate: core-utils-combate.md
+      - Resolución de Turnos: core-utils-resolvedor.md
+  - 🧩 API y Endpoints Externos: api.md
+  - 🚀 Despliegue y Configuración: despliegue.md
+  - 🎮 Mecánicas y Diseño de Juego: mecanicas.md
+  - 🎨 Interfaz de Usuario: frontend.md
+  - 🧪 Pruebas del Sistema: pruebas.md
+  - ⚙️ Herramientas y Tecnologías: tecnologias.md
+  - 🧾 Conclusiones: conclusiones.md
+
+# Configuración adicional opcional
+site_description: "Documentación oficial de Battlebound Tactics"
+site_author: Jonatan García Luna
+repo_url: https://github.com/JonatanGarLun/proyecto_DAW
+edit_uri: ""
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - footnotes
+  - tables
+  - admonition
+  - codehilite
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
