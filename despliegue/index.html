@@ -54,13 +54,16 @@
     <li class="toctree-l2"><a class="nav-item" href="../core-utils-resolvedor/">Resolución de Turnos</a></li>
 </ul></li>
                     <li class="toctree-l1"><a class="nav-item" href="../api/">🧩 API y Endpoints Externos</a></li>
-                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">🚀 Despliegue y Configuración</a>
 <ul class="subnav">
 <li class="toctree-l2"><a class="nav-item toc" href="#contenedorizacion-con-docker">🐳 Contenedorización con Docker</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#archivos-de-despliegue">📁 Archivos de despliegue</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#dockerfile-imagen-base-del-proyecto">🏗️ Dockerfile: Imagen base del proyecto</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#comando-final-de-ejecucion">Comando final de ejecución:</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#despliegue-local-compose_localyml">💻 Despliegue local: compose_local.yml</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#comando-para-ejecutarlo">Comando para ejecutarlo:</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#despliegue-en-produccion-composeyml">☁️ Despliegue en producción: compose.yml</a></li>
+<li class="toctree-l2"><a class="nav-item toc" href="#comando-de-despliegue-en-aws">Comando de despliegue en AWS:</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#despliegue-automatizado-docker_awsyml-github-actions">🤖 Despliegue automatizado: docker_aws.yml (GitHub Actions)</a></li>
 <li class="toctree-l2"><a class="nav-item toc" href="#resultado">📦 Resultado</a></li>
 </ul></li>
@@ -140,7 +143,7 @@ producción. Esto incluye:</p>
 <li>Expone el puerto 8000.</li>
 <li>Ejecuta el servidor de Django en el puerto <code>0.0.0.0:8000</code>.</li>
 </ul>
-<h1 id="comando-final-de-ejecucion">Comando final de ejecución:<a class="headerlink" href="#comando-final-de-ejecucion" title="Permanent link">&para;</a></h1>
+<h2 id="comando-final-de-ejecucion">Comando final de ejecución:<a class="headerlink" href="#comando-final-de-ejecucion" title="Permanent link">&para;</a></h2>
 <p>python manage.py runserver 0.0.0.0:8000</p>
 <hr />
 <h2 id="despliegue-local-compose_localyml">💻 Despliegue local: <code>compose_local.yml</code><a class="headerlink" href="#despliegue-local-compose_localyml" title="Permanent link">&para;</a></h2>
@@ -152,7 +155,7 @@ producción. Esto incluye:</p>
 <li>Usa volúmenes para mantener sincronizado el código entre el host y el contenedor.</li>
 <li>Conecta con un contenedor de base de datos PostgreSQL también definido en el archivo.</li>
 </ul>
-<h1 id="comando-para-ejecutarlo">Comando para ejecutarlo:<a class="headerlink" href="#comando-para-ejecutarlo" title="Permanent link">&para;</a></h1>
+<h2 id="comando-para-ejecutarlo">Comando para ejecutarlo:<a class="headerlink" href="#comando-para-ejecutarlo" title="Permanent link">&para;</a></h2>
 <p>docker compose -f compose_local.yml up --build</p>
 <hr />
 <h2 id="despliegue-en-produccion-composeyml">☁️ Despliegue en producción: <code>compose.yml</code><a class="headerlink" href="#despliegue-en-produccion-composeyml" title="Permanent link">&para;</a></h2>
@@ -165,7 +168,7 @@ EC2 con Docker.</p>
 <li>Conecta a una base de datos PostgreSQL real y persistente.</li>
 <li>Exposición de puertos y variables de entorno según la configuración definida en <code>.env</code>.</li>
 </ul>
-<h1 id="comando-de-despliegue-en-aws">Comando de despliegue en AWS:<a class="headerlink" href="#comando-de-despliegue-en-aws" title="Permanent link">&para;</a></h1>
+<h2 id="comando-de-despliegue-en-aws">Comando de despliegue en AWS:<a class="headerlink" href="#comando-de-despliegue-en-aws" title="Permanent link">&para;</a></h2>
 <p>docker compose up -d</p>
 <hr />
 <h2 id="despliegue-automatizado-docker_awsyml-github-actions">🤖 Despliegue automatizado: <code>docker_aws.yml</code> (GitHub Actions)<a class="headerlink" href="#despliegue-automatizado-docker_awsyml-github-actions" title="Permanent link">&para;</a></h2>
