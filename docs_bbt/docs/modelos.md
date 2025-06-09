@@ -167,7 +167,10 @@ También incluye varios modelos desactivados, se usarán en el futuro:
 - Se usa `ImageField` para enriquecer visualmente la experiencia en el frontend (Aunque actualmente no hay ninguna imagen añadida, pero la idea es esa).
 - La lógica está diseñada para permitir fácil ampliación de funcionalidades futuras.
 
----
 
 > ✅ Los modelos sirven como columna vertebral del juego: representan al jugador, sus enemigos, sus batallas, y todo el
 > ecosistema de habilidades y objetos.
+
+---
+
+![Modelo entidad-relación](resources/modelo_entidad_relacion.png)
