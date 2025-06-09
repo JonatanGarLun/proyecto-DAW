@@ -41,7 +41,7 @@ Este archivo construye la imagen principal de Battlebound Tactics.
 - Expone el puerto 8000.
 - Ejecuta el servidor de Django en el puerto `0.0.0.0:8000`.
 
-# Comando final de ejecución:
+## Comando final de ejecución:
 
 python manage.py runserver 0.0.0.0:8000
 
@@ -58,7 +58,7 @@ Este archivo se usa para desarrollo en entorno local.
 - Usa volúmenes para mantener sincronizado el código entre el host y el contenedor.
 - Conecta con un contenedor de base de datos PostgreSQL también definido en el archivo.
 
-# Comando para ejecutarlo:
+## Comando para ejecutarlo:
 
 docker compose -f compose_local.yml up --build
 
@@ -76,7 +76,7 @@ EC2 con Docker.
 - Conecta a una base de datos PostgreSQL real y persistente.
 - Exposición de puertos y variables de entorno según la configuración definida en `.env`.
 
-# Comando de despliegue en AWS:
+## Comando de despliegue en AWS:
 
 docker compose up -d
 

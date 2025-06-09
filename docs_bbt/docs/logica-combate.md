@@ -19,13 +19,14 @@ condiciones de victoria o derrota y sincronización del estado del combate.
 
 | Módulo                                            | Descripción                                                                                                      |
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| [`jugador.py`](core-jugador.md)                   | Controla la lógica del jugador durante el combate: ataques, habilidades, energía, defensa.                       |
+| [`jugador.py`](core-jugador.md)                   | Controla la lógica del jugador durante el combate: ataques, habilidades, energía, salud.                         |
 | [`enemigos.py`](core-enemigos.md)                 | Implementa la IA enemiga. Decide acciones según el estado del combate, controla habilidades y cooldowns.         |
 | [`efectos.py`](core-efectos.md)                   | Sistema de estados: veneno, buffs, debuffs, curaciones. Aplica y gestiona sus duraciones y efectos.              |
 | [`estadisticas.py`](core-estadisticas.md)         | Calcula estadísticas finales del jugador/enemigo: ataque, defensa, velocidad, etc. según nivel, pasiva y equipo. |
-| [`probabilidades.py`](core-probabilidades.md)     | Define y gestiona las probabilidades de efectos como críticos, evasión, multigolpes, etc.                        |
-| [`utils_combate.py`](core-utils-combate.md)       | Funciones auxiliares para interpretar efectos y habilidades. Traduce los textos a efectos aplicables.            |
+| [`probabilidades.py`](core-probabilidades.md)     | Define y gestiona las probabilidades de efectos como críticos, evasión, adicionales, etc.                        |
+| [`utils_combate.py`](core-utils-combate.md)       | Funciones auxiliares para interpretar efectos y habilidades.                                                     |
 | [`utils_resolvedor.py`](core-utils-resolvedor.md) | Controla la secuencia de turnos, efectos globales por turno, condiciones de victoria o derrota.                  |
+| [`session.py`](core-session.md)                   | Controla la secuencia de turnos, efectos globales por turno, condiciones de victoria o derrota.                  |
 
 ---
 

@@ -4,7 +4,7 @@
 
 ---
 
-![Portada del proyecto](../../static/resources/portada.png)
+![Portada del proyecto](resources/portada.png)
 
 ## 📌 ¿Qué es Battlebound Tactics?
 

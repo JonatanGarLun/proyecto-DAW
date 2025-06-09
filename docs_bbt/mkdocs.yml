@@ -17,10 +17,6 @@ nav:
       - Resolución de Turnos: core-utils-resolvedor.md
   - 🧩 API y Endpoints Externos: api.md
   - 🚀 Despliegue y Configuración: despliegue.md
-  - 🎮 Mecánicas y Diseño de Juego: mecanicas.md
-  - 🎨 Interfaz de Usuario: frontend.md
-  - 🧪 Pruebas del Sistema: pruebas.md
-  - ⚙️ Herramientas y Tecnologías: tecnologias.md
   - 🧾 Conclusiones: conclusiones.md
 
 # Configuración adicional opcional

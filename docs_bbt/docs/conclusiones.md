@@ -96,10 +96,11 @@ solo sea funcional, sino también mantenible, escalable y atractiva visualmente.
 
 Battlebound Tactics no es solo un juego: es la culminación de todo lo aprendido durante mi formación. Estoy orgulloso
 del resultado y de haber podido entregar un producto completo, divertido y técnicamente sólido. Todo el trabajo —desde
-el código hasta la documentación— ha sido hecho desde cero y con máxima dedicación y cariño.
+el código hasta la documentación— ha sido hecho desde cero y con mucha dedicación y cariño.
 
 Muchas gracias por acompañarme hasta el final de este viaje.
 
+<img src="../resources/goku-final.gif" alt="Fin del proyecto" style="width: 400px; height: 400px;"/>
+
 **— Jonatan García Luna**
 
-![Fin del proyecto](../../static/resources/goku-final.gif)
