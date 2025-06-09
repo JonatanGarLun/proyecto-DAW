@@ -434,5 +434,3 @@ def fuente(request):
 #         return JsonResponse({"continuar": False, "redirect_url": reverse("resultado_combate", args=[combate_id])})
 #
 #     return JsonResponse({"error": "Parámetro no válido"}, status=400)
-
-
