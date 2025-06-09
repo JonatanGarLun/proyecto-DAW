@@ -101,7 +101,7 @@ decisiones tácticas, personalizar sus builds y enfrentarse a desafíos crecient
 - **Primeros bocetos**: ideas visuales de cómo debía lucir el mapa, el personaje y el combate.
 - **Preparación del sistema de autenticación**: integración de los formularios de registro y login básicos.
 
-#### 2. **Desarrollo de lógica de combate (2.5–3 semanas)**
+#### 2. **Desarrollo del backend (2.5–3 semanas)**
 
 - **Construcción de los módulos en `core/`**:
     - `jugador.py`: ataques, habilidades, defensa, evasión, regeneración de energía y salud.
