@@ -1,6 +1,8 @@
 site_name: Battlebound Tactics
 theme:
   name: ivory
+  favicon: resources/logo.ico
+
 
 nav:
   - 🏠 Presentación: index.md
@@ -22,7 +24,7 @@ nav:
 # Configuración adicional opcional
 site_description: "Documentación oficial de Battlebound Tactics"
 site_author: Jonatan García Luna
-repo_url: https://github.com/JonatanGarLun/proyecto_DAW
+repo_url: https://github.com/JonatanGarLun/proyecto-DAW
 edit_uri: ""
 
 markdown_extensions:
